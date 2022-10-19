@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "FlowClient": {
+    "admindashboard": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/flow-client",
+            "outputPath": "dist/admindashboard",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -25,7 +25,9 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+              "src/assets/js/main.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -64,10 +66,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "FlowClient:build:production"
+              "browserTarget": "admindashboard:build:production"
             },
             "development": {
-              "browserTarget": "FlowClient:build:development"
+              "browserTarget": "admindashboard:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -75,7 +77,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "FlowClient:build"
+            "browserTarget": "admindashboard:build"
           }
         },
         "test": {
@@ -97,5 +99,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "7c64ce7d-0abb-4421-935e-0fb388caa816"
   }
 }
