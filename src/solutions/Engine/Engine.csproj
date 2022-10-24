@@ -1,7 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <Compile Remove="BL\Actuators\StudentsBL.cs" />
+    <Compile Remove="Interfaces\DataCollector\IContactFamilyCollector.cs" />
+    <Compile Remove="Interfaces\DataCollector\IGroupStatsCollector.cs" />
+    <Compile Remove="Interfaces\DataCollector\IGroupStudentCollector.cs" />
+    <Compile Remove="Interfaces\DataCollector\IHistorialCollector.cs" />
+    <Compile Remove="Interfaces\DataCollector\IStudentCollector.cs" />
+    <Compile Remove="Services\DataCollector\ContactFamilyCollector.cs" />
+    <Compile Remove="Services\DataCollector\GroupStatsCollector.cs" />
+    <Compile Remove="Services\DataCollector\GroupStudentsCollector.cs" />
+    <Compile Remove="Services\DataCollector\HistorialCollector.cs" />
+    <Compile Remove="Services\DataCollector\StudentCollector.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\DataService\DataService.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="BO\FlowControl\" />
   </ItemGroup>
 
   <PropertyGroup>

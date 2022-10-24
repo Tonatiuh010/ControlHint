@@ -15,14 +15,14 @@ namespace Engine.Constants {
         public const string ENABLED = "ENABLED";
         public const string DISABLED = "DISABLED";
 
-        public const string TSU = "TSU";
-        public const string SCHOLARLY = "SCHOLARLY";
-        public const string ENGLISH = "ENGLISH";
-        public const string QUARTER = "QUARTER";
-        public const string EXAM_ENTRY = "EXAM_ENTRY";
-        public const string ING = "ING";
+        public const string EmployeeCsv = "employees.csv";
+        public const string AccessCsv = "access.csv";        
+        public const string JobsCsv = "jobs.csv";
+        public const string DepartamentsCsv = "department.csv";
+        public const string PositionsCsv = "positions.csv";
 
         /* Connection Strings */
-        public const string CLASSROOM = "DB_CLASSROOM";
+        public const string ACCESS_DB = "DB_ACCESS";
+        public const string HINT_DB = "DB_HINT";
     }
 }

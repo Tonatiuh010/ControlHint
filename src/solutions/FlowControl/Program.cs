@@ -1,25 +1,11 @@
-var builder = WebApplication.CreateBuilder(args);
+using Engine.BL;
+using Engine.Constants;
+using Engine.Services;
+using BaseAPI;
+using BaseAPI.Classes;
 
-// Add services to the container.
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+Builder.Build(new WebProperties("AccessControl", WebApplication.CreateBuilder(args))
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
+    ConnectionString = C.HINT_DB
+});

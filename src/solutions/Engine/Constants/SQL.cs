@@ -2,27 +2,35 @@ using System;
 
 namespace Engine.Constants {
     public class SQL {
+        
+        public const string CTL_ACCESS = "CTL_ACCESS";
+        public const string CTL_HINT = "CTL_HINT";        
 
-        public const string DB_CLASS = "CLASSROOM";
+        #region CTL_ACCESS 
+        public const string DB_ACC = "CTL_ACCESS";       
+        public const string SET_DEPARTMENT = "SET_DEPARTMENT";
+        public const string SET_EMPLOYEE = "SET_EMPLOYEE";
+        public const string SET_DOWN_EMPLOYEE = "SET_DOWN_EMPLOYEE";
+        public const string SET_JOB = "SET_JOB";
+        public const string SET_EMPLOYEE_ACCESS = "SET_ACCESS_EMPLOYEE";
+        public const string SET_ACCESS_LEVEL = "SET_ACCESS_LEVEL";
+        public const string SET_SHIFT = "SET_SHIFT";
+        public const string SET_POSITION = "SET_POSITION";
 
-
-        #region Procedures
-        public const string GET_STUDENTS = "GET_STUDENTS";
-        public const string GET_ADDRESSES = "GET_ADDRESSES";
-        public const string GET_ASSETS = "GET_ASSETS";
-        public const string GET_CONTACTS = "GET_CONTACTS";
-        public const string GET_FAMILY_CONTACTS = "GET_FAMILY_CONTACTS";
-        public const string GET_GROUPS = "GET_GROUPS";
-        public const string GET_GROUP_STUDENTS = "GET_GROUP_STUDENTS";
-        public const string GET_LABOR_STUDENTS = "GET_LABOR_STUDENTS";
-        public const string GET_LOCATION = "GET_LOCATION";
-        public const string GET_MAJOR = "GET_MAJOR";
-        public const string GET_SCHOLARLY = "GET_SCHOLARLY";
-        public const string GET_STUDENT_HISTORIAL = "GET_STUDENT_HISTORIAL";
-        public const string GET_ASSET_QUERY = "SELECT DISTINCT ATTR1 FROM ASSET";
-        public const string GET_ASSET_ID = "SELECT GET_ASSET('{{CODE}}')";
+        public const string GET_ACCESS_LEVEL = "SELECT * from access_level";
+        public const string GET_EMPLOYEE_DETAIL = "GET_EMPLOYEE_DETAIL";
+        public const string GET_EMPLOYEE_ACCESS_LEVEL = "GET_EMPLOYEE_ACCESS_LEVEL";
+        public const string GET_DEPARTMENTS = "GET_DEPARTMENTS";
+        public const string GET_JOBS = "GET_JOBS";
+        public const string GET_SHIFTS = "GET_SHIFTS";        
+        public const string GET_POSITIONS = "GET_POSITIONS";
+        public const string GET_CHECKS = "GET_CHECKS";        
+        public const string GET_CHECK_DETAILS = "GET_CHECK_DETAILS";
         #endregion
 
+        #region CTL_HINT
+
+        #endregion
 
     }
 }

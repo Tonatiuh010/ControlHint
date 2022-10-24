@@ -5,20 +5,19 @@ using System.Text;
 using System.Threading.Tasks;
 using Engine.DAL;
 using DataService.MySQL;
-using D = Engine.BL.Delegates;
 using Engine.Services;
+using Engine.Interfaces;
 
 namespace Engine.BL
 {
-    public abstract class BaseBL
-    {
-        protected static ClassroomDAL Dal => ClassroomDAL.Instance;        
+    public class BaseBL <T> where T : BaseDAL, new()
+    {        
+        protected T Dal => new();        
 
-        public static void SetErrorsCallback(MySqlDataBase.DataException onConnectionError)
+        public BaseBL()
         {
-            DAL.Classes.DAL.OnDALError = ExceptionManager.CallbackException;
-            MySqlDataBase.OnException = onConnectionError;
-        }      
+            
+        }
 
     }
 }
