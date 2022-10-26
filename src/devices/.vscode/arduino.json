@@ -1,0 +1,9 @@
+{
+    "sketch": "fingerprint_device\\fingerprint_device.ino",
+    "output": "./build",
+    "configuration": "FlashFreq=80,UploadSpeed=115200,DebugLevel=debug,EraseFlash=none",
+    "board": "esp32:esp32:esp32doit-devkit-v1",
+    "intelliSenseGen": "enable",
+    "port": "COM4",
+    "programmer": "esptool"
+}

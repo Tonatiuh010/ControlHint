@@ -1,0 +1,10 @@
+{
+    "sources": [
+        "../classes"
+    ],
+    "output": [
+        "C:\\Users\\${username}\\Documents\\Arduino\\libraries"
+    ],
+    "type": "copy",
+    "file": "cpp/header"
+}
