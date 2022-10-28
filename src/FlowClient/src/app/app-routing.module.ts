@@ -1,7 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { DashboardPrincipalComponent } from './pages/dashboard-principal/dashboard-principal.component';
+//El DASHBOARD DE PRUEBA SERA ELIMINADO AL FINALIZAR
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
-/* import { AlertsComponent } from './components/alerts/alerts.component';
+//DASHBOARD DE PRUEBA
+import { AlertsComponent } from './components/alerts/alerts.component';
 import { AccordionComponent } from './components/accordion/accordion.component';
 import { BadgesComponent } from './components/badges/badges.component';
 import { BreadcrumbsComponent } from './components/breadcrumbs/breadcrumbs.component';
@@ -31,11 +34,13 @@ import { PagesError404Component } from './pages/pages-error404/pages-error404.co
 import { PagesFaqComponent } from './pages/pages-faq/pages-faq.component';
 import { PagesLoginComponent } from './pages/pages-login/pages-login.component';
 import { PagesRegisterComponent } from './pages/pages-register/pages-register.component';
-import { UsersProfileComponent } from './pages/users-profile/users-profile.component'; */
+import { UsersProfileComponent } from './pages/users-profile/users-profile.component';
 
 const routes: Routes = [
-  { path: '', component: DashboardComponent },
-  /* { path: 'dashboard', component: DashboardComponent },
+  { path: '', component: DashboardPrincipalComponent },
+  //El DASHBOARD DE PRUEBA SERA ELIMINADO AL FINALIZAR
+  { path: 'dashboard', component: DashboardComponent },
+  //DASHBOARD DE PRUEBA
   { path: 'alerts', component: AlertsComponent },
   { path: 'accordion', component: AccordionComponent },
   { path: 'badges', component: BadgesComponent },
@@ -66,7 +71,7 @@ const routes: Routes = [
   { path: 'pages-faq', component: PagesFaqComponent },
   { path: 'pages-login', component: PagesLoginComponent },
   { path: 'pages-register', component: PagesRegisterComponent },
-  { path: 'user-profile', component: UsersProfileComponent }, */
+  { path: 'user-profile', component: UsersProfileComponent },
 ];
 
 @NgModule({
