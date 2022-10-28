@@ -30,12 +30,12 @@ namespace ControlAccess.Controllers
             return bl.SetPosition(
                 new Position()
                 {
-                    PositionId = JsonProperty<int?>.GetValue("position", jObj),
-                    Id = JsonProperty<int?>.GetValue("job", jObj, OnMissingProperty),
+                    PositionId = ParseProperty<int?>.GetValue("position", jObj),
+                    Id = ParseProperty<int?>.GetValue("job", jObj, OnMissingProperty),
                     Department =new Department() { 
-                        Id = JsonProperty<int?>.GetValue("departament", jObj, OnMissingProperty) 
+                        Id = ParseProperty<int?>.GetValue("departament", jObj, OnMissingProperty) 
                     },
-                    Alias = JsonProperty<string?>.GetValue("alias", jObj, OnMissingProperty)                    
+                    Alias = ParseProperty<string?>.GetValue("alias", jObj, OnMissingProperty)                    
                 },
                 C.GLOBAL_USER
             );

@@ -48,18 +48,20 @@ namespace BaseAPI
         {
             options.AddDefaultPolicy(policy =>
             {
-                policy.WithOrigins("http://localhost",
-                                    "http://localhost:4200");
+                policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                //policy.WithOrigins("http://localhost",
+                //                    "http://localhost:4200",
+                //                    "http://192.168.101.114");
             });
         }
 
         private static void SetApplication(string apiName, WebApplication app)
         {
 
-            if (!app.Environment.IsDevelopment())
-            {
-                app.UseHsts();
-            }
+            //if (!app.Environment.IsDevelopment())
+            //{
+            //    app.UseHsts();
+            //}
 
             app.MapGet("/", () => $"{apiName} API is working...");
 

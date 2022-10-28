@@ -29,7 +29,7 @@ public class EmployeeController : CustomController
 
         ImageData? img = null;
 
-        var imgString = JsonProperty<string>.GetValue("image", jObj);
+        var imgString = ParseProperty<string>.GetValue("image", jObj);
 
         if (!string.IsNullOrEmpty(imgString))
         {
@@ -44,19 +44,19 @@ public class EmployeeController : CustomController
         }
 
         Employee employee = new () {
-            Id = JsonProperty<int?>.GetValue("id", jObj),
-            Name = JsonProperty<string>.GetValue("name", jObj, OnMissingProperty),
-            LastName = JsonProperty<string>.GetValue("lastName", jObj, OnMissingProperty),
+            Id = ParseProperty<int?>.GetValue("id", jObj),
+            Name = ParseProperty<string>.GetValue("name", jObj, OnMissingProperty),
+            LastName = ParseProperty<string>.GetValue("lastName", jObj, OnMissingProperty),
             Job = new Position() {                    
-                PositionId = JsonProperty<int?>.GetValue("position", jObj),
+                PositionId = ParseProperty<int?>.GetValue("position", jObj),
             },
             Shift = new Shift() {
-                Id = JsonProperty<int>.GetValue("shift", jObj),
+                Id = ParseProperty<int>.GetValue("shift", jObj),
             },
             Image = img,            
         };
 
-        var levels = JsonProperty<JsonArray>.GetValue("accessLevels", jObj);
+        var levels = ParseProperty<JsonArray>.GetValue("accessLevels", jObj);
 
         var resultInsert = bl.SetEmployee(employee, C.GLOBAL_USER);
 
@@ -127,7 +127,7 @@ public class EmployeeController : CustomController
     [Route("DownEmployee")]
     public Result SetDownEmployee(dynamic obj) => RequestResponse(
         () => (Result)bl.SetDownEmployee(
-            JsonProperty<int>.GetValue(
+            ParseProperty<int>.GetValue(
                 "id", 
                 JsonObject.Parse(obj.ToString()), 
                 OnMissingProperty
@@ -142,9 +142,9 @@ public class EmployeeController : CustomController
     {
         JsonObject jObj = JsonObject.Parse(obj.ToString());
         return bl.SetEmployeeAccessLevel(
-            JsonProperty<int>.GetValue("employee", jObj, OnMissingProperty),
-            JsonProperty<int>.GetValue("level", jObj, OnMissingProperty),
-            JsonProperty<bool>.GetValue("status", jObj, OnMissingProperty),
+            ParseProperty<int>.GetValue("employee", jObj, OnMissingProperty),
+            ParseProperty<int>.GetValue("level", jObj, OnMissingProperty),
+            ParseProperty<bool>.GetValue("status", jObj, OnMissingProperty),
             C.GLOBAL_USER
         );
     });

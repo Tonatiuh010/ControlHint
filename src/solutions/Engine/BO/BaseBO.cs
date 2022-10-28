@@ -8,7 +8,7 @@ namespace Engine.BO
 {
     public class BaseBO
     {
-        private Type Type { get; set; }        
+        protected Type Type { get; set; }        
 
         public int? Id { get; set; }
         public bool IsValid() => Id != null && Id != 0;      

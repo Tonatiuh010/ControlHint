@@ -19,23 +19,10 @@ namespace Engine.DAL
 
         protected IConnectionString? ConnString { get; set; }
 
-        protected BaseDAL(IConnectionString? conn) : base(conn?.ConnectionString)
-        {
-            ConnString = conn;
-        }             
+        protected BaseDAL(IConnectionString? conn) : base(conn?.ConnectionString) => ConnString = conn;                     
 
-        protected void SetResultInsert(ResultInsert result, BaseBO bo)
-        {
-            int id = (int)GetLastId();
-
-            result.InsertDetails = bo.IsValid() ?
-                new InsertStatus(bo) :
-                new InsertStatus()
-                {
-                    Id = id,
-                    FromObject = bo.GetType()
-                };
-        }
+        protected void SetResultInsert(ResultInsert result, BaseBO bo) 
+            => result.InsertDetails = bo.IsValid() ? new InsertStatus(bo) : new InsertStatus(GetLastId(), bo);        
 
         protected int GetLastId()
         {

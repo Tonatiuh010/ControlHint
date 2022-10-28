@@ -3,6 +3,9 @@ using System.Text.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
+using Engine.BL;
+using System.Collections;
+using System.Reflection;
 
 namespace Engine.BO {
     public class Result {
@@ -17,29 +20,40 @@ namespace Engine.BO {
 
     public class ResultInsert : Result
     {
-        public InsertStatus InsertDetails { get; set; } = new InsertStatus(new BaseBO());
+        public InsertStatus? InsertDetails { get; set; } = new InsertStatus(new BaseBO());
     }
 
     public class InsertStatus : BaseBO
     {
-        public string ObjectType => FromObject != null? FromObject.ToString() : "NOT ASSOCIATED OBJECT";
+        private BaseBO Base { get; set; }
 
+        public string ObjectType => FromObject != null? FromObject.ToString() : "NOT ASSOCIATED OBJECT";
         [JsonIgnore]
-        public Type? FromObject { get; set; }
+        public Type FromObject { get => FromObject.GetType(); } 
         public DateTime InsertDate { get; set; }
 
         public InsertStatus(BaseBO baseBO)
         {
             Id = baseBO.Id;
-            FromObject = baseBO.GetType();
+            Base = baseBO;            
             InsertDate = DateTime.Now;
         }
 
-        public InsertStatus()
+        public InsertStatus(int id, BaseBO @base)
         {
-            Id = 0;
-            FromObject = typeof(object);
+            Id = id;
+            Base = @base;            
             InsertDate = DateTime.Now;
+        }
+
+        public T CastObject<T>() where T : BaseBO, new () {      
+     
+            if (typeof(T).FullName == FromObject.FullName)
+            {
+                return (T)Base;
+            }            
+            
+            return new T();            
         }
     }
 }

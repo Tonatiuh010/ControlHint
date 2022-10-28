@@ -26,12 +26,12 @@ public class ShiftController : CustomController
         Shift shift;
         
         JsonObject jObj = JsonObject.Parse(obj.ToString());        
-        shift = new (JsonProperty<string>.GetValue("inTime", jObj, OnMissingProperty), JsonProperty<string>.GetValue("outTime", jObj, OnMissingProperty)) 
+        shift = new (ParseProperty<string>.GetValue("inTime", jObj, OnMissingProperty), ParseProperty<string>.GetValue("outTime", jObj, OnMissingProperty)) 
         {
-            Id = JsonProperty<int?>.GetValue("id", jObj),
-            Name = JsonProperty<string>.GetValue("name", jObj, OnMissingProperty),
-            LunchTime = Shift.ConvertTime( JsonProperty<string>.GetValue("lunchTime", jObj, OnMissingProperty) ),
-            DayCount = JsonProperty<int?>.GetValue("dayCount", jObj),
+            Id = ParseProperty<int?>.GetValue("id", jObj),
+            Name = ParseProperty<string>.GetValue("name", jObj, OnMissingProperty),
+            LunchTime = Shift.ConvertTime( ParseProperty<string>.GetValue("lunchTime", jObj, OnMissingProperty) ),
+            DayCount = ParseProperty<int?>.GetValue("dayCount", jObj),
         };        
 
         return bl.SetShift(shift, C.GLOBAL_USER);

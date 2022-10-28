@@ -5,7 +5,7 @@ using Engine.BO;
 using Engine.BO.AccessControl;
 using Classes;
 using Engine.Constants;
-using ControlAccess.Hubs;
+//using ControlAccess.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using Engine.BL.Actuators;
 
@@ -14,11 +14,8 @@ namespace ControlAccess.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class CheckController : CustomController
-{
-    private readonly IHubContext<CheckHub> _hub;
-    private readonly CheckBL bl = new ();
-
-    public CheckController(IHubContext<CheckHub> hub) : base() => _hub = hub;
+{    
+    private readonly CheckBL bl = new ();    
 
     [HttpGet]
     public Result Get() => RequestResponse(() => bl.GetChecks());
@@ -28,15 +25,13 @@ public class CheckController : CustomController
         return CheckDetails.GetChecksByDepto(bl.GetCheckDetails(DateTime.Today.AddDays(-1), DateTime.Now), DateTime.Today.AddDays(-1));
     });
 
-    [HttpGet("employee/{id:int?}")]
-    public Result GetWeeklyChecks(int? id) => RequestResponse(() => $"Getting checks of employee ({id})");
+    //[HttpGet("employee/{id:int}")]
+    //public Result GetWeeklyChecks(int id) => RequestResponse(() => $"Getting checks of employee ({id})");
 
-    [HttpGet("{id:int?}")]
-    public Result GetCheck(int? id) => RequestResponse(() => 
-        GetItem( bl.GetChecks(id) )
-    );
+    [HttpGet("{id:int}")]
+    public Result GetCheck(int id) => RequestResponse(() => bl.GetCheck(id));
 
-    [HttpPost]
+    [HttpPost] // Add header token
     public Result Set(dynamic obj) => RequestResponse(() => {
         JsonObject jObj = JsonObject.Parse(obj.ToString());
         ResultInsert result = new ();

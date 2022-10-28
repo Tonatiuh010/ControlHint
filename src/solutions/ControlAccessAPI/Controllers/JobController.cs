@@ -29,9 +29,9 @@ public class JobController : CustomController
 
         return bl.SetJob(
             new Job() {
-                Id = JsonProperty<int>.GetValue("id", jObj),
-                Description = JsonProperty<string>.GetValue("description", jObj),
-                Name = JsonProperty<string>.GetValue("name", jObj, OnMissingProperty)
+                Id = ParseProperty<int>.GetValue("id", jObj),
+                Description = ParseProperty<string>.GetValue("description", jObj),
+                Name = ParseProperty<string>.GetValue("name", jObj, OnMissingProperty)
             },
             C.GLOBAL_USER
         );

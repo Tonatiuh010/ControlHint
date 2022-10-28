@@ -44,8 +44,7 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "C:\\Users\\${env:Username}\\AppData\\Local\\Arduino15\\",
-                "C:\\Users\\${env:Username}\\Documents\\Arduino\\libraries"
-                //,"${workspaceFolder}/classes/*"
+                "C:\\Users\\${env:Username}\\Documents\\Arduino\\libraries"                
             ],
             "defines": [
                 "_DEBUG",

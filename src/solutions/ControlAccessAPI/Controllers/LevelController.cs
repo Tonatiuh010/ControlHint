@@ -30,8 +30,8 @@ public class LevelController : CustomController
         return bl.SetAccessLevel(
             new () 
             { 
-                Id = JsonProperty<int?>.GetValue("id", jObj), 
-                Name = JsonProperty<string>.GetValue("name", jObj, OnMissingProperty) 
+                Id = ParseProperty<int?>.GetValue("id", jObj), 
+                Name = ParseProperty<string>.GetValue("name", jObj, OnMissingProperty) 
             }, 
             C.GLOBAL_USER
         );
