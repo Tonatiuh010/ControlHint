@@ -10,6 +10,9 @@ using Microsoft.AspNetCore.Authorization.Infrastructure;
 using FlowControl.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using Engine.BO.FlowControl;
+using Engine.BO.AccessControl;
+using System.Xml.Linq;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace FlowControl.Controllers
 {
@@ -19,11 +22,9 @@ namespace FlowControl.Controllers
     {
         private readonly IHubContext<DeviceHub> _hub;
         private readonly DeviceBL bl = new ();
+        private readonly EngineFlowBL flowBl = new();
 
-        public DeviceController(IHubContext<DeviceHub> hub) : base()
-        {
-            _hub = hub;
-        }
+        public DeviceController(IHubContext<DeviceHub> hub) : base() => _hub = hub;        
 
         [HttpGet]
         public Result Get() => RequestResponse(() => bl.GetDevices());
@@ -47,6 +48,33 @@ namespace FlowControl.Controllers
                 _hub.Clients.All.SendAsync("DeviceMonitor", result?.InsertDetails?.CastObject<Device>());
 
             return result;
+        });
+
+        [HttpPost("setHint")]
+        public Result SetHint(dynamic obj) => RequestResponse(() =>
+        {
+            JsonObject jObj = JsonObject.Parse(obj.ToString());
+            
+            string? deviceName = ParseProperty<string>.GetValue("deviceName", jObj, OnMissingProperty);
+            int employeeId = ParseProperty<int>.GetValue("employeeId", jObj, OnMissingProperty);
+            int hintKey = ParseProperty<int>.GetValue("hintKey", jObj, OnMissingProperty);
+
+            if (string.IsNullOrEmpty(deviceName))
+                throw new Exception("Device name Property is empty!");
+
+            return bl.SetDeviceEmployeeHint(deviceName, employeeId, hintKey);
+        });
+
+        [HttpPost("signal")]
+        public Result EmitHint(dynamic obj) => RequestResponse(() =>
+        {
+            JsonObject jObj = JsonObject.Parse(obj.ToString());
+
+            string? deviceName = ParseProperty<string>.GetValue("deviceName", jObj, OnMissingProperty);
+            string? b64 = ParseProperty<string>.GetValue("b64", jObj, OnMissingProperty);
+            bool auth = ParseProperty<bool>.GetValue("auth", jObj, OnMissingProperty);
+
+            return C.OK; //flowBl;
         });
         
     }

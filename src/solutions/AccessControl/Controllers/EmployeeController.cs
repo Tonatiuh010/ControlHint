@@ -26,7 +26,6 @@ public class EmployeeController : CustomController
     [HttpPost]  
     public Result SetEmployee(dynamic obj) => RequestResponse(() => {       
         JsonObject jObj = JsonObject.Parse(obj.ToString());
-
         ImageData? img = null;
 
         var imgString = ParseProperty<string>.GetValue("image", jObj);
@@ -102,6 +101,45 @@ public class EmployeeController : CustomController
 
         return resultInsert;
     });
+
+    //[HttpPost("showHint")]
+    //public IActionResult ShowHint(dynamic obj)
+    //{
+    //    try
+    //    {
+    //        JsonObject jObj = JsonObject.Parse(obj.ToString());
+
+    //        ImageData img = new (ParseProperty<string>.GetValue("base64", jObj, OnMissingProperty));
+    //        string? deviceName = ParseProperty<string>.GetValue("device", jObj, OnMissingProperty);
+
+
+
+    //        return Ok();
+    //    } catch
+    //    {
+    //        return Ok();
+    //    }
+    //}
+
+    [HttpPost("hint")]
+    public Result SetEmployeeHint(dynamic obj)
+    {
+        return RequestResponse(() =>
+        {
+            JsonObject jObj = JsonObject.Parse(obj.ToString());
+
+            var hint = new EmployeeHint()
+            {
+                Id = ParseProperty<int?>.GetValue("hintId", jObj),
+                Employee = new Employee() { 
+                    Id = ParseProperty<int?>.GetValue("employeeId", jObj, OnMissingProperty)
+                },
+                ImageData = new ImageData(ParseProperty<string>.GetValue("base64", jObj, OnMissingProperty))
+            };
+
+            return bl.SetEmployeeHint(hint).InsertDetails;
+        });
+    }
 
     [HttpGet("image/{id:int?}")]    
     public IActionResult GetEmployeeImage(int? id)

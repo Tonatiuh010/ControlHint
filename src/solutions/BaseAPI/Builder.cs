@@ -11,17 +11,20 @@ using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Security.Cryptography.X509Certificates;
 
 namespace BaseAPI
 {
     public static class Builder
-    {        
+    {
+        public static string URL { get; set; } = string.Empty;
+
         public static void Build(
             WebProperties props, 
             Action<WebApplicationBuilder>? builderCallback = null, 
             Action<WebApplication>? appCallback = null 
         )
-        {
+        {            
             var builder = props.Builder;
             SetServices(builder.Services);
             builderCallback?.Invoke(builder);
@@ -32,6 +35,10 @@ namespace BaseAPI
 
             SetConnections(props);
             SetErrorsCallback();
+            SetUrl(props);
+
+            props.SubscriptionAPI.SendAPI();
+
             BinderBL.Start();
 
             app.Run();
@@ -100,6 +107,25 @@ namespace BaseAPI
                     );
                 }
             }
+        }
+        
+        private static void SetUrl(WebProperties props)
+        {
+
+            try
+            {
+                var builder = props.Builder;
+                var url = builder.Configuration.GetSection("Configuration").GetValue<string>("Url");
+
+                if (!string.IsNullOrEmpty(url))
+                {
+                    URL = url;
+                }
+
+            } catch
+            {
+
+            }        
         }
 
         private static void SetErrorsCallback()

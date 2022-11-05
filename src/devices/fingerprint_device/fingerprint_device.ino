@@ -2,16 +2,22 @@
 #include <JSON.h>
 #include <JSONVar.h>
 #include <WiFi.h>
+#include <WebSocketsClient.h>
 #include <HardwareSerial.h>
 #include <Adafruit_Fingerprint.h>
 #include <HTTPClient.h>
 
-char *ssid = "UTT-CUERVOS"; //"test-ard";
-char *pass = "CU3RV@S2022"; //"12345678";
-char deviceName[] = "ESP-FG-TNT";
+/* on send -> { "deviceName": "", "data": { } } */
+/* on receive/response -> { "status": "OK", "msg": "COMPLETE", "data": { "action": "" } } */
 
-String host = "http://172.17.5.194:81/api/";
-// int port = 81;
+char *ssid = "IZZI-99D0"; // "UTT-CUERVOS"; //"test-ard";
+char *pass = "VBBPMSZNNEJV"; // "CU3RV@S2022"; // "12345678";
+String deviceName = "ESP-FG-TNT";
+
+String host = "http://192.168.0.125:81/api/"; // "http://172.18.7.153:81/api";
+String domain = "192.168.0.125";
+
+int port = 81;
 
 int wifiStatus = WL_IDLE_STATUS;
 
@@ -21,10 +27,246 @@ int current = 0;
 JSONVar deviceProps;
 JSONVar fingerProps;
 
+WebSocketsClient webSocket;
 Adafruit_Fingerprint finger = Adafruit_Fingerprint(&Serial1, 0x00000000);
 
 String combine(String urlExtension) {
   return host + urlExtension;
+}
+
+String getPayloadData(JSONVar data) {
+  JSONVar body;
+
+  body["deviceName"] = deviceName;
+  body["data"] = data;
+
+  return JSONVar::stringify(body);
+}
+
+JSONVar getReceivedData(JSONVar data) {
+  JSONVar received;
+
+  if(data.hasOwnProperty("status")) {
+    String status = String((const char *)data["status"]);
+
+    if (status != "OK") {
+      Serial.println("[WSc][ERROR RESPONSE] " + status + " - MSG: " + String((const char *)data["msg"]));
+    } else {
+      received = data["data"];
+    }
+  }
+
+  return received;
+}
+
+String getResult(HTTPClient * client, int httpCode) {
+  String payload = "";
+
+  if (httpCode > 0) {
+    payload = client->getString();
+    printResult("[HTTP] Payload from request: ", payload);      
+  } else {
+    printResult("[HTTP] Error: ", client->errorToString(httpCode).c_str());
+  }
+
+  return payload;
+}
+
+String getRequest(String url) {
+  HTTPClient client;
+
+  client.begin(url);  
+  String payload = getResult(&client, client.GET());
+  client.end();
+
+  return payload;
+}
+
+String postRequest(String url, JSONVar content) {
+  HTTPClient client;  
+  String contentStr = JSONVar::stringify(content);
+
+  client.begin(url);
+  client.addHeader("Content-Type", "application/json");
+  client.addHeader("Content-Length", String(sizeof(contentStr)));  
+  String payload = getResult(&client, client.POST(contentStr));
+  client.end();
+
+  return payload;
+}
+
+int getFingerImage() {
+  int p = -1;
+  while (p != FINGERPRINT_OK) {
+    p = finger.getImage();
+    switch (p) {
+    case FINGERPRINT_OK:
+      Serial.println("[FINGER] Image taken!");
+      break;
+    case FINGERPRINT_NOFINGER:
+      Serial.println("[FINGER] Waiting to finger...");
+      break;
+    case FINGERPRINT_PACKETRECIEVEERR:
+      Serial.println("[FINGER] Communication error!");
+      break;
+    case FINGERPRINT_IMAGEFAIL:
+      Serial.println("[FINGER] Imaging error!");
+      break;
+    default:
+      Serial.println("[FINGER] Unknown error...");
+      break;
+    }
+  }
+
+  return p;
+}
+
+int takeFingerImage(int type = 1) {
+  int p = finger.image2Tz(type);
+  switch (p) {
+    case FINGERPRINT_OK:
+      Serial.println("[FINGER] Image converted");
+      return p;
+    case FINGERPRINT_IMAGEMESS:
+      Serial.println("[FINGER] Image too messy");
+      return p;
+    case FINGERPRINT_PACKETRECIEVEERR:
+      Serial.println("[FINGER] Communication error");
+      return p;
+    case FINGERPRINT_FEATUREFAIL:
+      Serial.println("[FINGER] Could not find fingerprint features");
+      return p;
+    case FINGERPRINT_INVALIDIMAGE:
+      Serial.println("[FINGER] Could not find fingerprint features");
+      return p;
+    default:
+      Serial.println("[FINGER] Unknown error");
+      return p;
+  }
+}
+
+int removeFinger() {
+  Serial.println("[FINGER] Remove finger");
+  delay(2000);
+  int p = 0;
+  while (p != FINGERPRINT_NOFINGER) {
+    p = finger.getImage();
+  }
+  return p;
+}
+
+int createModelFinger() {
+  int p = finger.createModel();
+  if (p == FINGERPRINT_OK) {
+    Serial.println("[FINGER] Prints matched!");
+    return p;
+  } else if (p == FINGERPRINT_PACKETRECIEVEERR) {
+    Serial.println("[FINGER] Communication error");
+    return p;
+  } else if (p == FINGERPRINT_ENROLLMISMATCH) {
+    Serial.println("[FINGER] Fingerprints did not match");
+    return p;
+  } else {
+    Serial.println("[FINGER] Unknown error");
+    return p;
+  }
+}
+
+int storeModelFinger(int id) {
+  Serial.print("[FINGER] ID "); Serial.println(id);
+  int p = finger.storeModel(id);
+  if (p == FINGERPRINT_OK) {
+    Serial.println("[FINGER] Stored!");
+    return p;
+  } else if (p == FINGERPRINT_PACKETRECIEVEERR) {
+    Serial.println("[FINGER] Communication error");
+    return p;
+  } else if (p == FINGERPRINT_BADLOCATION) {
+    Serial.println("[FINGER] Could not store in that location");
+    return p;
+  } else if (p == FINGERPRINT_FLASHERR) {
+    Serial.println("[FINGER] Error writing to flash");
+    return p;
+  } else {
+    Serial.println("[FINGER] Unknown error");
+    return p;
+  }
+}
+
+int registerFinger() {
+  int hintId = finger.getTemplateCount();
+  int p = getFingerImage();
+  p = takeFingerImage(1);
+  p = removeFinger();
+  p = getFingerImage();
+  p = takeFingerImage(2);
+  p = createModelFinger();
+  p = storeModelFinger(hintId + 1);
+
+  return p;
+}
+
+void bindAction(JSONVar data) {
+  if(data.hasOwnProperty("action")) {
+    String action = String((const char *)data["action"]);       
+    if( action == "REGISTER_FINGER") {
+      int employeeId = data["employeeId"];      
+      int tokenKey = data["tokenKey"];
+
+      if (tokenKey == 0) {
+        tokenKey = finger.getTemplateCount() + 1;
+      }
+
+      
+
+      registerFinger();
+    } else if ( action == "GET_HINTS") {
+
+    } else if ( action == "SET_HINTS") {
+
+    } else {
+      Serial.println("[ACTION] not recognized! " + action);
+    }
+                    
+    
+    
+  } else {
+    Serial.println("[ACTION] No action key was found in payload response!");
+  }
+}
+
+void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
+  String sPayload;
+	switch(type) {
+		case WStype_DISCONNECTED:
+			Serial.printf("[WSc] Disconnected!\n");
+			break;
+		case WStype_CONNECTED:
+			Serial.printf("[WSc] Connected to url: %s\n", payload);
+			// send message to server when Connected
+			// webSocket.sendTXT("CONNECTED");
+			break;
+		case WStype_TEXT:
+			Serial.printf("[WSc] get text: %s\n", payload);
+      sPayload = String((char*) payload);      
+      bindAction( 
+        getReceivedData(JSONVar::parse(sPayload)) 
+      );
+			break;
+		case WStype_BIN:
+			Serial.printf("[WSc] get binary length: %u\n", length);
+			//hexdump(payload, length);
+
+			// send data to server
+			// webSocket.sendBIN(payload, length);
+			break;
+		case WStype_ERROR:			
+		case WStype_FRAGMENT_TEXT_START:
+		case WStype_FRAGMENT_BIN_START:
+		case WStype_FRAGMENT:
+		case WStype_FRAGMENT_FIN:
+			break;
+	}
 }
 
 void connectWifi() {
@@ -76,6 +318,12 @@ bool connectFingerprint(bool showMsg = true) {
   }
 }
 
+void connectSocket() {
+  webSocket.begin(domain, port, "/webSocket/" + deviceName);
+	webSocket.onEvent(webSocketEvent);
+  webSocket.setReconnectInterval(3000);
+}
+
 void loadDetails() {   
   finger.getParameters();
 
@@ -113,42 +361,6 @@ void printResult(char *name, uint32_t value) { Serial.print(F(name)); Serial.pri
 void printResult(char *name, int value) { Serial.print(F(name)); Serial.println(value); }
 void printResult(char *name, String value) { Serial.print(F(name)); Serial.println(value); }
 
-String getResult(HTTPClient * client, int httpCode) {
-  String payload = "";
-
-  if (httpCode > 0) {
-    payload = client->getString();
-    printResult("[HTTP] Payload from request: ", payload);      
-  } else {
-    printResult("[HTTP] Error: ", client->errorToString(httpCode).c_str());
-  }
-
-  return payload;
-}
-
-String getRequest(String url) {
-  HTTPClient client;
-
-  client.begin(url);  
-  String payload = getResult(&client, client.GET());
-  client.end();
-
-  return payload;
-}
-
-String postRequest(String url, JSONVar content) {
-  HTTPClient client;  
-  String contentStr = JSONVar::stringify(content);
-
-  client.begin(url);
-  client.addHeader("Content-Type", "application/json");
-  client.addHeader("Content-Length", String(sizeof(contentStr)));  
-  String payload = getResult(&client, client.POST(contentStr));
-  client.end();
-
-  return payload;
-}
-
 void setup() {
   Serial1.begin(57600, SERIAL_8N1, 16, 17);
   Serial.begin(115200);
@@ -161,18 +373,20 @@ void setup() {
   scanWifis();
   connectFingerprint();
   connectWifi();
+  connectSocket();
   showDetails();
 }
 
 void loop() {  
   wifiStatus = WiFi.status();  
   if(wifiStatus != WL_CONNECTED) connectWifi();
+  webSocket.loop();
   connectFingerprint(false);
 
   if (current > intervalLoop) {
     loadDetails();
     // printResult("Payload to send: ", JSONVar::stringify(deviceProps));
-    postRequest(combine("Device"), deviceProps);        
+    postRequest(combine("Device"), deviceProps);
     current = 0;
   }
 

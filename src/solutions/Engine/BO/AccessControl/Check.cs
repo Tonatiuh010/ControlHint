@@ -11,7 +11,7 @@ namespace Engine.BO.AccessControl
     public class CheckBase : BaseBO
     {
         public DateTime? CheckDt { get; set; }
-        public string? Type { get; set; }
+        public string? CheckType { get; set; }
 
     }
 

@@ -59,14 +59,9 @@ namespace Engine.Services
         private ConnectionString(IConnectionString.SearchConnection callback) => GetConnection = callback;
 
         private ConnectionString(IConnectionString connection)
-        {
-            if (string.IsNullOrEmpty(connection.Name))
-            {
-                Name = connection.Name;
-            }
-
+        {            
+            Name = connection.Name;
             GetConnection = connection.GetConnection;
-
         }
 
         private ConnectionString(IConnectionString.SearchConnection callback, string name) {

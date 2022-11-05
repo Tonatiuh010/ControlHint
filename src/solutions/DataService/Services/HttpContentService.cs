@@ -10,6 +10,8 @@ namespace DataService.Services
 {
     public class HttpContentService : IHttpContentConverter
     {
+        public static HttpContent GetContent(object obj) => new HttpContentService(obj).GetContent();
+
         public object Params { get; set; }
 
         public HttpContentService(object @params) => Params = @params;

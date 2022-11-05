@@ -39,6 +39,8 @@ namespace Engine.BL.Actuators
 
         public Result SetDownEmployee(int employeeId, string txnUser) => Dal.SetDownEmployee(employeeId, txnUser);
 
+        public ResultInsert SetEmployeeHint(EmployeeHint hint) => Dal.SetEmployeeHint(hint, C.GLOBAL_USER);
+
         public List<EmployeeAccessLevel> GetEmployeeAccessLevels(int? employeeId) => Dal.GetEmployeeAccessLevels(employeeId);        
         
     }

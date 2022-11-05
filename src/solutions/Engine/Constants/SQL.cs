@@ -15,6 +15,7 @@ namespace Engine.Constants {
         public const string SET_ACCESS_LEVEL = "SET_ACCESS_LEVEL";
         public const string SET_SHIFT = "SET_SHIFT";
         public const string SET_POSITION = "SET_POSITION";
+        public const string SET_EMPLOYEE_HINT = "SET_EMPLOYEE_HINT";
         public const string GET_ACCESS_LEVEL = "SELECT * from access_level";
         public const string GET_EMPLOYEE_DETAIL = "GET_EMPLOYEE_DETAIL";
         public const string GET_EMPLOYEE_ACCESS_LEVEL = "GET_EMPLOYEE_ACCESS_LEVEL";
@@ -30,6 +31,11 @@ namespace Engine.Constants {
         public const string GET_FLOW = "GET_FLOW";
         public const string GET_FLOW_PARAMETERS = "GET_FLOW_PARAMETERS";
         public const string GET_TRANSACTIONS = "GET_TRANSACTIONS";
+        public const string SET_API = "SET_API";
+        public const string SET_HINT_CONFIG = "SET_HINT_CONFIG";
+        public const string SET_URL_ENDPOINT = "SET_URL_ENDPOINT";
+        public const string SET_ENDPOINT_PARAMETER = "SET_ENDPOINT_PARAMETER";
+        public const string SET_FLOW_DETAIL = "SET_FLOW_DETAIL";
         #endregion
 
     }

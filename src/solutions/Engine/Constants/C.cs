@@ -12,6 +12,9 @@ namespace Engine.Constants {
         public const string PENDING = "PENDING";
         public const string ROLLABACK = "ROLLBACK";
 
+        public const string URL = "URL";
+        public const string RESOURCE = "RESOURCE";
+
         public const string ENABLED = "ENABLED";
         public const string DISABLED = "DISABLED";
 
@@ -21,8 +24,15 @@ namespace Engine.Constants {
         public const string DepartamentsCsv = "department.csv";
         public const string PositionsCsv = "positions.csv";
 
+        /* ACTIONS Device */
+
+        public const string REGISTER_FINGER = "REGISTER_FINGER";
+        public const string GET_HINTS = "GET_HINTS";
+        public const string SET_HINTS = "SET_HINTS";
+
+
         /* Connection Strings */
         public const string ACCESS_DB = "DB_ACCESS";
-        public const string HINT_DB = "DB_HINT";
+        public const string HINT_DB = "DB_HINT";        
     }
 }

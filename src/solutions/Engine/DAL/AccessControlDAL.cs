@@ -1,4 +1,4 @@
-using System;
+    using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Data;
@@ -10,6 +10,7 @@ using Engine.BO;
 using Engine.Interfaces;
 using Engine.Services;
 using Engine.BO.AccessControl;
+using Engine.BL.Actuators;
 
 namespace Engine.DAL {
     public class AccessControlDAL : BaseDAL
@@ -39,7 +40,7 @@ namespace Engine.DAL {
                     {
                         Id = Validate.getDefaultIntIfDBNull(reader["CHECK_ID"]),                
                         CheckDt = Validate.getDefaultDateIfDBNull(reader["CHECK_DT"]),
-                        Type = Validate.getDefaultStringIfDBNull(reader["TYPE"]),
+                        CheckType = Validate.getDefaultStringIfDBNull(reader["TYPE"]),
                         Device = Validate.getDefaultIntIfDBNull(reader["DEVICE_ID"])
                     });
                 }
@@ -253,7 +254,7 @@ namespace Engine.DAL {
                     {
                         Id = Validate.getDefaultIntIfDBNull(reader["CARD_CHECK_ID"]),
                         CheckDt = Validate.getDefaultDateIfDBNull(reader["CHECK_DT"]),
-                        Type = Validate.getDefaultStringIfDBNull(reader["TYPE"]),
+                        CheckType = Validate.getDefaultStringIfDBNull(reader["TYPE"]),
                         Position = new Position()
                         {
                             PositionId = Validate.getDefaultIntIfDBNull(reader["POSITION_ID"]),
@@ -347,8 +348,6 @@ namespace Engine.DAL {
                 () => SetResultInsert(result, new Check() {                    
                 })
             );
-
-
 
             return result;
         }
@@ -534,7 +533,6 @@ namespace Engine.DAL {
             return result;
         }
 
-
         public Result SetEmployeeAccessLevel(int employeeNumber, int accessLevel, string status, string user) {
             Result result = new();
             string sSp = SQL.SET_EMPLOYEE_ACCESS;
@@ -555,6 +553,33 @@ namespace Engine.DAL {
             }, (ex, msg) => SetExceptionResult("ControlAccessDAL.SetAccessLevel", msg, ex, result));
 
             return result;                      
-        }        
+        }
+
+        public ResultInsert SetEmployeeHint(EmployeeHint hint, string user)
+        {
+            ResultInsert result = new(); 
+            string sSp = SQL.SET_EMPLOYEE_HINT;
+
+            TransactionBlock(this, () => {
+                using var cmd = CreateCommand(sSp, CommandType.StoredProcedure);
+
+                IDataParameter pResult = CreateParameterOut("OUT_RESULT", MySqlDbType.String);
+
+                cmd.Parameters.Add(CreateParameter("IN_HINT_ID", hint.Id, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_EMPLOYEE_ID", hint.Employee.Id, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_IMG", hint.ImageData.Hex, MySqlDbType.LongText));
+                cmd.Parameters.Add(CreateParameter("IN_EXTENSION", "JPEG", MySqlDbType.String));
+                cmd.Parameters.Add(CreateParameter("IN_USER", user, MySqlDbType.String));
+                cmd.Parameters.Add(pResult);
+
+                NonQueryBlock(cmd, () => GetResult(pResult, sSp, result));
+
+            }, 
+                (ex, msg) => SetExceptionResult("ControlAccessDAL.SetEmployeeHint", msg, ex, result),
+                () => SetResultInsert(result, hint)                
+            );
+
+            return result;
+        }
     }
 }

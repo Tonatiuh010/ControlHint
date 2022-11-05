@@ -7,6 +7,11 @@ using Engine.Constants;
 using Org.BouncyCastle.Security;
 using System.Data;
 using MySql.Data.MySqlClient;
+using Engine.BL.Actuators2;
+using Google.Protobuf.WellKnownTypes;
+using System.Net.NetworkInformation;
+using Engine.BO.AccessControl;
+using System.Net;
 
 namespace Engine.DAL
 {
@@ -19,7 +24,7 @@ namespace Engine.DAL
 
         public FlowControlDAL() : base(_ConnectionString) { }
 
-        public List<Flow> GetFlows(int? id, string? flowName, int? flowDetailId)
+        public List<Flow> GetFlows(int? id, int? flowDetailId, string? flowName)
         {
             List<Flow> model = new();
 
@@ -42,11 +47,13 @@ namespace Engine.DAL
 
                     if (flow == null) 
                     {
-                        model.Add( new Flow()
+                        flow = new Flow()
                         {
                             Id = flowId,
                             Name = Validate.getDefaultStringIfDBNull(reader["FLOW_NAME"]),
-                        });
+                        };
+
+                        model.Add(flow);
                     }
 
                     if(flow != null)
@@ -64,7 +71,7 @@ namespace Engine.DAL
                                 {
                                     Id = Validate.getDefaultIntIfDBNull(reader["API_ID"]),
                                     Url = Validate.getDefaultStringIfDBNull(reader["URL_BASE"])
-                                }
+                                }                                
                             },
                             IsRequired = Validate.getDefaultBoolIfDBNull(reader["IS_REQUIRED"]),
                             Sequence = Validate.getDefaultIntIfDBNull(reader["SEQUENCE"])
@@ -84,7 +91,7 @@ namespace Engine.DAL
 
             TransactionBlock(this, () =>
             {
-                using var cmd = CreateCommand(SQL.GET_FLOW, CommandType.StoredProcedure);
+                using var cmd = CreateCommand(SQL.GET_FLOW_PARAMETERS, CommandType.StoredProcedure);
                 IDataParameter pResult = CreateParameterOut("OUT_MSG", MySqlDbType.String);
 
                 cmd.Parameters.Add(CreateParameter("IN_PARAMETER_ID", parameterId, MySqlDbType.Int32));
@@ -97,38 +104,39 @@ namespace Engine.DAL
 
                 while (reader.Read())
                 {
-                    int id = Validate.getDefaultIntIfDBNull(reader["FLOW_ID"]);
+                    int id = Validate.getDefaultIntIfDBNull(reader["FLOW_DET_ID"]);
                     Step? step = model.Find(x => x.Id == id);
 
                     if (step == null)
                     {
-                        model.Add(new ()
+                        step = new()
                         {
-                            Id = stepId,
-                            Sequence = Validate.getDefaultIntIfDBNull(reader["SEQUENCE"]),                            
+                            Id = id,
+                            Sequence = Validate.getDefaultIntIfDBNull(reader["SEQUENCE"]),
                             IsRequired = Validate.getDefaultBoolIfDBNull(reader["FLOW_DETAIL_REQUIRED"]),
                             Description = Validate.getDefaultStringIfDBNull(reader["FLOW_DETAIL_DESCRIPTION"]),
                             Endpoint = new Endpoint()
                             {
                                 Id = Validate.getDefaultIntIfDBNull(reader["ENDPOINT_ID"]),
                                 RequestType = Validate.getDefaultStringIfDBNull(reader["REQUEST_TYPE"]),
-                                Route = Validate.getDefaultStringIfDBNull(reader["REQUEST_TYPE"]),
+                                Route = Validate.getDefaultStringIfDBNull(reader["ENDPOINT"]),
                                 Api = new API()
                                 {
                                     Id = Validate.getDefaultIntIfDBNull(reader["API_ID"])
                                 },
-                                
                             }
-                        });
+                        };
+
+                        model.Add(step);
                     }
 
                     if (step != null)
                     {
                         step.Endpoint.Params.Add(new Parameter()
                         {
-                            Id = Validate.getDefaultIntIfDBNull(reader["FLOW_DET_ID"]),
+                            Id = Validate.getDefaultIntIfDBNull(reader["PARAMETER_ID"]),
                             Description = Validate.getDefaultStringIfDBNull(reader["DESCRIPTION"]),
-                            ContentType = Validate.getDefaultStringIfDBNull(reader["REQUEST_TYPE"]),
+                            ContentType = Validate.getDefaultStringIfDBNull(reader["TYPE"]),
                             IsRequired = Validate.getDefaultBoolIfDBNull(reader["URL_ENDPOINT_REQUIRED"]),
                             Name = Validate.getDefaultStringIfDBNull(reader["PARAMETER"])
                         });
@@ -137,6 +145,56 @@ namespace Engine.DAL
                 }
                 reader.Close();
             }, (ex, msg) => SetExceptionResult("FlowControl.GetSteps", msg, ex));
+
+            return model;
+        }
+
+        public List<API> GetAPIs(int? id)
+        {
+            List<API> model = new List<API>();
+
+            TransactionBlock(this, () =>
+            {
+                using var cmd = CreateCommand($"SELECT * FROM CON_API{( id != null? $" WHERE API_ID = {id}" : "" )}", CommandType.Text);
+                using var reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {                                                            
+                    model.Add(new API()
+                    {
+                        Id = Validate.getDefaultIntIfDBNull(reader["API_ID"]),
+                        Url = Validate.getDefaultStringIfDBNull(reader["URL_BASE"]),
+                        Description = Validate.getDefaultStringIfDBNull(reader["DESCRIPTION"])
+                    });                    
+                }
+                reader.Close();
+            }, (ex, msg) => SetExceptionResult("FlowControl.GetAPIs", msg, ex));
+
+            return model;
+        }
+
+        public List<Parameter> GetParameters(int? id, int? endpointId)
+        {
+            List<Parameter> model = new ();
+
+            TransactionBlock(this, () =>
+            {
+                using var cmd = CreateCommand( QueryParamter(id, endpointId) , CommandType.Text);
+                using var reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    model.Add(new ()
+                    {
+                        Id = Validate.getDefaultIntIfDBNull(reader["PARAMETER_ID"]),
+                        Name = Validate.getDefaultStringIfDBNull(reader["PARAMETER"]),
+                        ContentType = Validate.getDefaultStringIfDBNull(reader["TYPE"]),                        
+                        IsRequired = Validate.getDefaultBoolIfDBNull(reader["IS_REQUIRED"]),                        
+                        Description = Validate.getDefaultStringIfDBNull(reader["DESCRIPTION"])
+                    });
+                }
+                reader.Close();
+            }, (ex, msg) => SetExceptionResult("FlowControl.GetParameters", msg, ex));
 
             return model;
         }
@@ -164,6 +222,91 @@ namespace Engine.DAL
             };
         }
 
+        public int GetDeviceId(string deviceName)
+        {
+            int id = 0;
+
+            TransactionBlock(this, () =>
+            {
+                using var cmd = CreateCommand(QueryGetDeviceId(deviceName), CommandType.Text);
+
+                var result = cmd.ExecuteScalar();
+
+                if(result != null)
+                {
+                    _ = int.TryParse(result.ToString(), out id);
+                }
+                
+            }, (ex, msg) => SetExceptionResult("FlowControl.GetDeviceId", msg, ex));
+
+            return id;
+        }
+
+        public int GetDeviceFlow(int? deviceId, int? flowId)
+        {
+            int model = 0;
+
+            TransactionBlock(this, () =>
+            {
+                using var cmd = CreateCommand(QueryDeviceFlow(deviceId, flowId), CommandType.Text);
+                using var reader = cmd.ExecuteReader();
+
+                if (reader.Read())                
+                    model = Validate.getDefaultIntIfDBNull(reader["FLOW_ID"]);
+                
+                reader.Close();
+            }, (ex, msg) => SetExceptionResult("FlowControl.GetDeviceFlow", msg, ex));
+
+            return model;
+        }
+
+        public List<DeviceHintConfig> GetDeviceEmployeeHints(int? deviceId, int? employeeId, int? hintKey)
+        {
+            List<DeviceHintConfig> model = new();
+
+            TransactionBlock(this, () =>
+            {
+                using var cmd = CreateCommand(QueryHintKeyDevice(deviceId, employeeId, hintKey), CommandType.Text);
+                using var reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    model.Add(new(
+                        Validate.getDefaultIntIfDBNull(reader["DEVICE_ID"]),
+                        Validate.getDefaultIntIfDBNull(reader["EMPLOYEE_ID"]),
+                        Validate.getDefaultIntIfDBNull(reader["HINT_KEY_ID"])
+                    ));
+                }
+                reader.Close();
+            }, (ex, msg) => SetExceptionResult("FlowControl.GetDeviceEmployeeHints", msg, ex));
+
+            return model;
+        }
+
+        public Result SetDeviceEmployeeHint(int deviceId, int employeeId, int hintKey, string txnUser)
+        {
+            Result result = new();
+            string sSp = SQL.SET_HINT_CONFIG;
+
+            TransactionBlock(this, () => {
+                using var cmd = CreateCommand(sSp, CommandType.StoredProcedure);
+
+                IDataParameter pResult = CreateParameterOut("OUT_MSG", MySqlDbType.String);
+                cmd.Parameters.Add(CreateParameter("IN_DEVICE_ID", deviceId, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_EMPLOYEE_ID", employeeId, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_HINT_KEY", hintKey, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_USER", txnUser, MySqlDbType.String));
+                cmd.Parameters.Add(pResult);
+
+                NonQueryBlock(cmd, () => GetResult(pResult, sSp, result));
+
+            },
+                (ex, msg) => SetExceptionResult("FlowControlDAL.SetDeviceEmployeeHint", msg, ex, result)
+            );
+
+            return result;
+        }
+
         public ResultInsert SetDevice(Device device, string txnUser)
         {
             return new ResultInsert() { 
@@ -173,6 +316,145 @@ namespace Engine.DAL
                 }
             };
 
+        }
+
+        public ResultInsert SetAPI(API api, string txnUser)
+        {
+            ResultInsert result = new();
+            string sSp = SQL.SET_API;
+
+            int id = 0;
+
+            TransactionBlock(this, () => {
+                using var cmd = CreateCommand(sSp, CommandType.StoredProcedure);
+
+                IDataParameter apiId = CreateParameterOut("OUT_API_ID", MySqlDbType.Int32);
+                IDataParameter pResult = CreateParameterOut("OUT_MSG", MySqlDbType.String);
+                cmd.Parameters.Add(CreateParameter("IN_API_ID", api.Id, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_URL", api.Url, MySqlDbType.String));
+                cmd.Parameters.Add(CreateParameter("IN_DESCRIPTION", api.Description, MySqlDbType.String));
+                cmd.Parameters.Add(CreateParameter("IN_USER", txnUser, MySqlDbType.String));
+                cmd.Parameters.Add(apiId);
+                cmd.Parameters.Add(pResult);
+
+                NonQueryBlock(cmd, () => GetResult(pResult, sSp, result));
+
+                id = Validate.getDefaultIntIfDBNull(apiId.Value);
+
+            },
+                (ex, msg) => SetExceptionResult("FlowControlDAL.SetAPI", msg, ex, result),
+                () => {                     
+                    SetResultInsert(result, api);
+                    //if(result?.InsertDetails?.Id != id)
+                    //{
+                    //    throw new Exception("Ids are not the same!! FlowControlDAL.SetAPI()");
+                    //}
+                }
+            );
+
+            return result;
+        }
+
+        public ResultInsert SetEndpoint(Endpoint endpoint, string txnUser)
+        {
+            ResultInsert result = new();
+            string sSp = SQL.SET_URL_ENDPOINT;
+
+            TransactionBlock(this, () => {
+                using var cmd = CreateCommand(sSp, CommandType.StoredProcedure);
+
+                IDataParameter pResult = CreateParameterOut("OUT_MSG", MySqlDbType.String);
+                cmd.Parameters.Add(CreateParameter("IN_ENDPOINT_ID", endpoint.Id, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_ENDPOINT", endpoint.Route, MySqlDbType.String));
+                cmd.Parameters.Add(CreateParameter("IN_TYPE", endpoint.RequestType, MySqlDbType.String));
+                cmd.Parameters.Add(CreateParameter("IN_API_ID", endpoint.Api.Id, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_USER", txnUser, MySqlDbType.String));
+                cmd.Parameters.Add(pResult);
+
+                NonQueryBlock(cmd, () => GetResult(pResult, sSp, result));
+            },
+                (ex, msg) => SetExceptionResult("FlowControlDAL.SetEndpoint", msg, ex, result),
+                () => SetResultInsert(result, endpoint)
+            );
+
+            return result;
+        }
+
+        public ResultInsert SetParameter(Parameter parameter, int endpointId, string txnUser)
+        {
+            ResultInsert result = new();
+            string sSp = SQL.SET_ENDPOINT_PARAMETER;
+
+            TransactionBlock(this, () => {
+                using var cmd = CreateCommand(sSp, CommandType.StoredProcedure);
+
+                IDataParameter pResult = CreateParameterOut("OUT_MSG", MySqlDbType.String);
+                cmd.Parameters.Add(CreateParameter("IN_PARAMETER_ID", parameter.Id, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_PARAMETER", parameter.Name, MySqlDbType.String));
+                cmd.Parameters.Add(CreateParameter("IN_TYPE", parameter.ContentType, MySqlDbType.String));
+                cmd.Parameters.Add(CreateParameter("IN_REQUIRED", parameter.IsRequired, MySqlDbType.Int16));
+                cmd.Parameters.Add(CreateParameter("IN_DESCRIPTION", parameter.Description, MySqlDbType.String));
+                cmd.Parameters.Add(CreateParameter("IN_ENDPOINT_ID", endpointId, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_USER", txnUser, MySqlDbType.String));
+                cmd.Parameters.Add(pResult);
+
+                NonQueryBlock(cmd, () => GetResult(pResult, sSp, result));
+            },
+                (ex, msg) => SetExceptionResult("FlowControlDAL.SetParameter", msg, ex, result),
+                () => SetResultInsert(result, parameter)
+            );
+
+            return result;
+        }
+
+        private string QueryDeviceFlow(int? deviceId = null, int? flowId = null)
+        {
+            string condition =
+                $" WHERE FLOW_ID = IFNULL({(flowId != null ? flowId : "null")}, FLOW_ID) " +
+                $"AND DEVICE_ID = IFNULL({(deviceId != null ? deviceId: "null")}, DEVICE_ID )"
+            ;
+
+            return @"                
+                SELECT 
+                    * 
+                FROM 
+                    DEV_FLOW
+            " + condition;
+        }
+
+        private string QueryParamter(int? id = null, int? endpointId = null)
+        {
+            string condition = 
+                $" WHERE PARAMETER_ID = IFNULL({ (id != null? id : "null") }, PARAMETER_ID) " +
+                $"AND ENDPOINT_ID = IFNULL({ (endpointId != null? endpointId : "null" ) }, ENDPOINT_ID )"
+            ;
+
+            return @"                
+                SELECT 
+                    * 
+                FROM 
+                    CON_ENDPOINT_PARAMETER
+            " + condition;
+        }
+
+        private string QueryHintKeyDevice(int? deviceId, int? employeeId, int? hintKey)
+        {
+            string condition =
+                $" WHERE DEVICE_ID = IFNULL({(deviceId != null ? deviceId : "null")}, DEVICE_ID) " +
+                $"AND HINT_KEY_ID = IFNULL({(hintKey != null ? hintKey : "null")}, HINT_KEY_ID) " +
+                $"AND EMPLOYEE_ID = IFNULL({(employeeId != null ? employeeId : "null")}, EMPLOYEE_ID)";
+
+            return @"
+                SELECT
+                    *
+                FROM
+                    DEV_HINT_CONFIG
+            " + condition;
+        }
+
+        private string QueryGetDeviceId(string deviceName)
+        {
+            return $"SELECT GET_DEVICE('{deviceName}') AS DEVICE_ID";
         }
 
     }

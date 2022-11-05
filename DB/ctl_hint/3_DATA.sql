@@ -1,6 +1,10 @@
 /* ########################## FLOW_SERVICE ########################## */
 
-INSERT INTO FLOW_SERVICE (FLOW_NAME) VALUES ('REGISTER_EMPLOYEE'), ('ACCESS'), ('SIGN_APPROVED');
+INSERT INTO FLOW_SERVICE (FLOW_NAME) 
+	VALUES 
+('REGISTER_HINT'), 
+('ACCESS'), 
+('SIGN_APPROVED');
 
 /* ########################## TXN_STATUS ########################## */
 
@@ -19,3 +23,13 @@ INSERT INTO TXN_STATUS (TXN_STS_GROUP, STATUS_VALUE)
 -- ('DETAIL', 'CANCELLED'),
 -- ('DETAIL', 'ERROR')
 ;
+
+/* devices */
+INSERT INTO DEV_CONNECTION (DEVICE_ID, DEVICE_NAME, DEVICE_MODEL, IP_ADDRESS, IS_ACTIVE) VALUES 
+(  
+	1,
+    'ESP-FG-TNT',
+    'ESP-32-DEV-KIT',
+    INET_ATON("127.0.0.1"),
+    true
+); 

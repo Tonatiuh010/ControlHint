@@ -92,6 +92,8 @@ namespace DataService.WebClient
 
     public class RequestProperties
     {
+        private HttpContent? _content { get; set; }
+
         public string EndPoint { get; set; }
         public HttpMethod Method { get; set; }
         public IHttpContentConverter? Params { get; set; }
@@ -114,7 +116,7 @@ namespace DataService.WebClient
             Headers = headers;
         }
 
-        public HttpContent? GetContent() => Params?.GetContent();
+        public HttpContent? GetContent() => _content; // Params?.GetContent();
 
         public RequestProperties SetGetMethod()
         {
@@ -126,6 +128,22 @@ namespace DataService.WebClient
         {
             Method = HttpMethod.Post;
             return this;
+        }
+
+        public void SetContent(IHttpContentConverter contentConverter)
+        {
+            _content = contentConverter.GetContent();
+        }
+
+        public static HttpMethod GetMethod(string method)
+        {
+            switch (method) {
+                case "GET": return HttpMethod.Get;
+                case "POST": return HttpMethod.Post;
+                case "PUT": return HttpMethod.Put;
+                case "DELETE": return HttpMethod.Delete;                
+                default: return HttpMethod.Get;
+            }
         }
 
     }
