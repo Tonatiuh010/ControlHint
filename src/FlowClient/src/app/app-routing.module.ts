@@ -37,8 +37,9 @@ import { PagesRegisterComponent } from './pages/pages-register/pages-register.co
 import { UsersProfileComponent } from './pages/users-profile/users-profile.component';
 
 const routes: Routes = [
-  { path: '', component: DashboardPrincipalComponent },
+  { path: '',   redirectTo: '/pages-login', pathMatch: 'full' },
   //El DASHBOARD DE PRUEBA SERA ELIMINADO AL FINALIZAR
+  { path: 'dashboards', component: DashboardPrincipalComponent },
   { path: 'dashboard', component: DashboardComponent },
   //DASHBOARD DE PRUEBA
   { path: 'alerts', component: AlertsComponent },
