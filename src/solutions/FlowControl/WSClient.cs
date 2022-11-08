@@ -1,7 +1,12 @@
-﻿using Engine.BL.Actuators2;
+﻿using Classes;
+using Engine.BL.Actuators2;
 using Engine.BO;
 using Engine.Constants;
+using FlowControl.Hubs;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging.Abstractions;
+using NuGet.Common;
+using System.ComponentModel.Design.Serialization;
 using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
@@ -16,9 +21,9 @@ namespace FlowControl
         private readonly static DeviceBL bl = new();
         private readonly static List<DeviceClient> Clients = new ();
 
-        public static async Task AddClient(string deviceName, WebSocket ws)
+        public static async Task AddClient(string deviceName, WebSocket ws, IHubContext<DeviceHub> hub)
         {
-            DeviceClient client = new (deviceName, ws);            
+            DeviceClient client = new (deviceName, ws, hub);
             int index = Clients.FindIndex(x => x.DeviceName == deviceName);
 
             if (index != -1)
@@ -34,30 +39,6 @@ namespace FlowControl
         }
 
         public static DeviceClient? FindClient(string deviceName) => Clients.Find(x => x.DeviceName == deviceName);
-
-        public static Result ProcessAction(string response)
-        {
-            try
-            {
-                Result actionResult = new () { };
-                JsonNode? jObj = JsonNode.Parse(response);
-
-                if (jObj != null)
-                {
-
-                }
-
-                return actionResult;
-            } catch (Exception ex)
-            {
-                return new Result()
-                {
-                    Status = C.ERROR,
-                    Message = ex.Message,
-                    Data = ex.ToString()
-                };
-            }            
-        }
 
         public static JsonObject RegisterFingerRequest(string deviceName, int employeeId)
         {
@@ -79,22 +60,91 @@ namespace FlowControl
 
             return result;
         }
+
+        internal static Result ProcessAction(string response, IHubContext<DeviceHub> hub)
+        {
+            try
+            {
+                Result actionResult = new() { };
+                JsonNode? jObj = JsonNode.Parse(response);
+
+                if (jObj != null)
+                {
+                    string? deviceName = ParseProperty<string>.GetValue("deviceName", (JsonObject)jObj);
+                    JsonNode? data = jObj["data"];
+
+                    if (data != null && !string.IsNullOrEmpty(deviceName))
+                    {
+                        string? action = ParseProperty<string>.GetValue("action", (JsonObject)data);
+
+                        if(!string.IsNullOrEmpty(action))                        
+                            SelectAction(deviceName, action, (JsonObject)data, hub);
+                        else
+                        {
+                            actionResult.Status = C.ERROR;
+                            actionResult.Message = "No action property founded!";
+                        }
+
+                    } else
+                    {
+                        actionResult.Status = C.ERROR;
+                        actionResult.Message = "No data or deviceName property founded!";
+                    }
+                } else
+                {
+                    actionResult.Status = C.ERROR;
+                    actionResult.Message = "Request is Empty...";
+                }
+
+                return actionResult;
+            }
+            catch (Exception ex)
+            {
+                return new Result()
+                {
+                    Status = C.ERROR,
+                    Message = ex.Message,
+                    Data = ex.ToString()
+                };
+            }
+        }
+
+        private static async void SelectAction(string deviceName, string action, JsonObject data, IHubContext<DeviceHub> hub)
+        {
+            switch(action)
+            {
+                case C.INFO:
+
+                    string? msg = ParseProperty<string>.GetValue("msg", data);
+                    string? type = ParseProperty<string>.GetValue("type", data);
+
+                    await hub.Clients.Group(deviceName).SendAsync(C.HUB_DEVICE_INFO, type, msg);
+
+                    break;
+                default:
+
+                    break;
+            }
+        }
+
     }
 
     public class DeviceClient
     {
         public string DeviceName { get; set; }
         private WebSocket Socket { get; set; }
+        private IHubContext<DeviceHub> Hub { get; set; }
         private CancellationTokenSource TokenSource { get; set; }
 
-        public DeviceClient(string deviceName, WebSocket ws)
+        public DeviceClient(string deviceName, WebSocket ws, IHubContext<DeviceHub> hub)
         {
             DeviceName = deviceName;
             Socket = ws;
+            Hub = hub;
             TokenSource = new CancellationTokenSource();
         }
 
-        public async Task Start() => await LoopThread(Socket, TokenSource.Token);
+        public async Task Start() => await LoopThread(this);
 
         public async Task SendMessage(string msg)
         {
@@ -114,7 +164,7 @@ namespace FlowControl
             }
         }
 
-        public void SetSocket(WebSocket ws) => Socket = ws;        
+        // public void SetSocket(WebSocket ws) => Socket = ws;
 
         public void Close()
         {
@@ -123,10 +173,14 @@ namespace FlowControl
             Socket.Dispose();
         }
 
-        public static async Task LoopThread(WebSocket ws, CancellationToken token)
+        public static async Task LoopThread(DeviceClient client)
         {
             try
             {
+                WebSocket ws = client.Socket;
+                CancellationToken token = client.TokenSource.Token;
+                IHubContext<DeviceHub> hub = client.Hub;
+
                 var buffer = new byte[1024 * 100];
                 var receiveResult = await ws.ReceiveAsync(new ArraySegment<byte>(buffer), token);
 
@@ -136,7 +190,9 @@ namespace FlowControl
                     
                     if (response != null)
                     {
-                        string callbackPayload = JsonSerializer.Serialize(WSClient.ProcessAction(response));
+                        response = response.Replace("\0", string.Empty);
+                        var result = WSClient.ProcessAction(response, hub);
+                        string callbackPayload = JsonSerializer.Serialize(result, options: new () { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
                         byte[] callbackBytes = Encoding.Default.GetBytes(callbackPayload);
 
                         await ws.SendAsync(

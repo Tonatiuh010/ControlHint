@@ -29,7 +29,7 @@ namespace FlowControl.Controllers
             if (HttpContext.WebSockets.IsWebSocketRequest)
             {
                 using var webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
-                await WSClient.AddClient(deviceName, webSocket);
+                await WSClient.AddClient(deviceName, webSocket, _hub);
             }
             else
             {
@@ -67,7 +67,6 @@ namespace FlowControl.Controllers
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase                
             });
-
 
             if (client != null)
                 await client.SendMessage(str);

@@ -13,9 +13,8 @@ namespace Engine.BL.Actuators2
     public class DeviceBL : BaseBL<FlowControlDAL>
     {
         public List<Device> GetDevices(int? id = null, string? name = null, bool? status = true) => Dal.GetDevices(id, name, status);
-
-        public Device? GetDevice(int id) => GetDevices(id).FirstOrDefault();        
-
+        public Device? GetDevice(int id) => GetDevices(id).FirstOrDefault();
+        public Device? GetDevice(string deviceName) => GetDevices( Dal.GetDeviceId(deviceName) ).FirstOrDefault();
         public ResultInsert SetDevice(Device device) => Dal.SetDevice(device, C.GLOBAL_USER);
 
         public List<DeviceHintConfig> GetDeviceHintConfigs(string deviceName, int? employeeId = null, int? hintKey = null )
@@ -33,7 +32,6 @@ namespace Engine.BL.Actuators2
 
         public DeviceHintConfig? GetDeviceHintConfig(string deviceName, int employeeId) 
             => GetDeviceHintConfigs(deviceName, employeeId).FirstOrDefault();
-
 
         public Result SetDeviceEmployeeHint(string deviceName, int employeeId, int hintKey)
         {

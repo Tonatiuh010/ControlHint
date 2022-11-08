@@ -7,10 +7,17 @@
 #include <Adafruit_Fingerprint.h>
 #include <HTTPClient.h>
 
-/* on send -> { "deviceName": "", "data": { } } */
+#define DOWNLOAD_IMAGE 0x0b;
+#define UPLOAD_IMAGE 0x0a;
+
+/* on send -> { "deviceName": "", "data": { "action": "" } } */
 /* on receive/response -> { "status": "OK", "msg": "COMPLETE", "data": { "action": "" } } */
 
-char *ssid = "IZZI-99D0"; // "UTT-CUERVOS"; //"test-ard";
+const String TYPE_FINGER_DETECTED = "FINGER_DETECTED";
+const String TYPE_FINGER_MODEL = "FINGER_MODEL";
+//const char * TYPE_FINGER_DETECTED = "FINGER_DETECTED";
+
+char *ssid = "IZZI-99D0"; // "UTT-CUERVOS"; // "test-ard";
 char *pass = "VBBPMSZNNEJV"; // "CU3RV@S2022"; // "12345678";
 String deviceName = "ESP-FG-TNT";
 
@@ -34,6 +41,17 @@ String combine(String urlExtension) {
   return host + urlExtension;
 }
 
+void printHex(int num, int precision) {
+  char tmp[16];
+  char format[128];  
+
+
+  sprintf(format, "%%.%dX", precision);
+
+  sprintf(tmp, format, num);
+  Serial.print(tmp);
+}
+
 String getPayloadData(JSONVar data) {
   JSONVar body;
 
@@ -43,12 +61,22 @@ String getPayloadData(JSONVar data) {
   return JSONVar::stringify(body);
 }
 
+String getPayloadDataMsg(String msg, String type) {
+  JSONVar data;
+
+  data["action"] = "INFO";
+  data["msg"] = msg;
+  data["type"] = type;
+
+  return getPayloadData(data);
+}
+
 JSONVar getReceivedData(JSONVar data) {
   JSONVar received;
 
   if(data.hasOwnProperty("status")) {
     String status = String((const char *)data["status"]);
-
+ 
     if (status != "OK") {
       Serial.println("[WSc][ERROR RESPONSE] " + status + " - MSG: " + String((const char *)data["msg"]));
     } else {
@@ -96,112 +124,224 @@ String postRequest(String url, JSONVar content) {
 }
 
 int getFingerImage() {
-  int p = -1;
-  while (p != FINGERPRINT_OK) {
+  int p = -1;  
+  String fingerMsg;
+  while (p != FINGERPRINT_OK) {    
     p = finger.getImage();
     switch (p) {
-    case FINGERPRINT_OK:
-      Serial.println("[FINGER] Image taken!");
-      break;
-    case FINGERPRINT_NOFINGER:
-      Serial.println("[FINGER] Waiting to finger...");
-      break;
-    case FINGERPRINT_PACKETRECIEVEERR:
-      Serial.println("[FINGER] Communication error!");
-      break;
-    case FINGERPRINT_IMAGEFAIL:
-      Serial.println("[FINGER] Imaging error!");
-      break;
-    default:
-      Serial.println("[FINGER] Unknown error...");
-      break;
-    }
-  }
+      case FINGERPRINT_OK:
+        fingerMsg = "[FINGER] Image taken!";      
+        break;
+      case FINGERPRINT_NOFINGER:
+        fingerMsg = "[FINGER] Waiting to finger...";      
+        break;
+      case FINGERPRINT_PACKETRECIEVEERR:
+        fingerMsg = "[FINGER] Communication error!";      
+        break;
+      case FINGERPRINT_IMAGEFAIL:
+        fingerMsg = "[FINGER] Imaging error!";      
+        break;
+      default:
+        fingerMsg = "[FINGER] Unknown error...";      
+        break;
+    }    
+    
+    Serial.println(fingerMsg);
+    String jsonMsg = getPayloadDataMsg(fingerMsg, TYPE_FINGER_DETECTED);
+    webSocket.sendTXT(jsonMsg);
+  }  
 
   return p;
 }
 
 int takeFingerImage(int type = 1) {
   int p = finger.image2Tz(type);
+  String fingerMsg;
+  
   switch (p) {
     case FINGERPRINT_OK:
-      Serial.println("[FINGER] Image converted");
-      return p;
+      fingerMsg = "[FINGER] Image converted";
+      break;
     case FINGERPRINT_IMAGEMESS:
-      Serial.println("[FINGER] Image too messy");
-      return p;
+      fingerMsg = "[FINGER] Image too messy";
+      break;
     case FINGERPRINT_PACKETRECIEVEERR:
-      Serial.println("[FINGER] Communication error");
-      return p;
+      fingerMsg = "[FINGER] Communication error";
+      break;
     case FINGERPRINT_FEATUREFAIL:
-      Serial.println("[FINGER] Could not find fingerprint features");
-      return p;
+      fingerMsg = "[FINGER] Could not find fingerprint features";
+      break;
     case FINGERPRINT_INVALIDIMAGE:
-      Serial.println("[FINGER] Could not find fingerprint features");
-      return p;
+      fingerMsg = "[FINGER] Invalid image";
+      break;
     default:
-      Serial.println("[FINGER] Unknown error");
-      return p;
+      fingerMsg = "[FINGER] Unknown error";
+      break;
   }
+
+  Serial.println(fingerMsg);
+  String jsonMsg = getPayloadDataMsg(fingerMsg, TYPE_FINGER_DETECTED);
+  webSocket.sendTXT(jsonMsg);
+
+  return p;
 }
 
-int removeFinger() {
-  Serial.println("[FINGER] Remove finger");
+int removeFinger() {  
+  String fingerMsg;
   delay(2000);
   int p = 0;
   while (p != FINGERPRINT_NOFINGER) {
+    fingerMsg = "[FINGER] Remove finger";
+    Serial.println(fingerMsg);
+    String jsonMsg = getPayloadDataMsg(fingerMsg, TYPE_FINGER_DETECTED);
+    webSocket.sendTXT(jsonMsg);
     p = finger.getImage();
+    delay(100);
   }
+
   return p;
 }
 
 int createModelFinger() {
+  String fingerMsg;
   int p = finger.createModel();
+
   if (p == FINGERPRINT_OK) {
-    Serial.println("[FINGER] Prints matched!");
-    return p;
+    fingerMsg = "[FINGER] Prints matched!";
   } else if (p == FINGERPRINT_PACKETRECIEVEERR) {
-    Serial.println("[FINGER] Communication error");
-    return p;
+    fingerMsg = "[FINGER] Communication error";
   } else if (p == FINGERPRINT_ENROLLMISMATCH) {
-    Serial.println("[FINGER] Fingerprints did not match");
-    return p;
+    fingerMsg = "[FINGER] Fingerprints did not match";
   } else {
-    Serial.println("[FINGER] Unknown error");
-    return p;
+    fingerMsg = "[FINGER] Unknown error";
   }
+
+  Serial.println(fingerMsg);
+  String jsonMsg = getPayloadDataMsg(fingerMsg, TYPE_FINGER_DETECTED);
+  webSocket.sendTXT(jsonMsg);
+
+  return p;
 }
 
 int storeModelFinger(int id) {
-  Serial.print("[FINGER] ID "); Serial.println(id);
+  String fingerMsg;
   int p = finger.storeModel(id);
+
+  Serial.print("[FINGER] ID "); Serial.println(id);  
   if (p == FINGERPRINT_OK) {
-    Serial.println("[FINGER] Stored!");
-    return p;
+    fingerMsg = "[FINGER] Stored!";
   } else if (p == FINGERPRINT_PACKETRECIEVEERR) {
-    Serial.println("[FINGER] Communication error");
-    return p;
+    fingerMsg = "[FINGER] Communication error";    
   } else if (p == FINGERPRINT_BADLOCATION) {
-    Serial.println("[FINGER] Could not store in that location");
-    return p;
+    fingerMsg = "[FINGER] Could not store in that location";    
   } else if (p == FINGERPRINT_FLASHERR) {
-    Serial.println("[FINGER] Error writing to flash");
+    fingerMsg = "[FINGER] Error writing to flash";
     return p;
   } else {
-    Serial.println("[FINGER] Unknown error");
-    return p;
+    fingerMsg = "[FINGER] Unknown error";    
   }
+
+  Serial.println(fingerMsg);
+  String jsonMsg = getPayloadDataMsg(fingerMsg, TYPE_FINGER_DETECTED);
+  webSocket.sendTXT(jsonMsg);
+
+  return p;
 }
 
-int registerFinger() {
-  int hintId = finger.getTemplateCount();
+int loadFingerModel(int id) {
+  String fingerMsg;
+  int p = finger.loadModel(id);
+
+  switch (p) {
+    case FINGERPRINT_OK:      
+      fingerMsg = "[FINGER] Template " + String(id) + " loaded";
+      break;
+    case FINGERPRINT_PACKETRECIEVEERR:
+      fingerMsg = "[FINGER] Communication error";
+      break;
+    default:
+      fingerMsg = "[FINGER] Unknown error...";
+      break;
+  }
+
+  Serial.println(fingerMsg);
+  String jsonMsg = getPayloadDataMsg(fingerMsg, TYPE_FINGER_DETECTED);
+  webSocket.sendTXT(jsonMsg);
+
+  return p;
+}
+
+int getFingerModel() {
+  String fingerMsg;
+  int p = finger.getModel();
+  switch (p) {
+    case FINGERPRINT_OK:
+      fingerMsg = "[FINGER] Transferring Template";
+      break;
+    default:
+      fingerMsg = "[FINGER] Unknown error";
+      break;
+  }
+
+  Serial.println(fingerMsg);
+  String jsonMsg = getPayloadDataMsg(fingerMsg, TYPE_FINGER_DETECTED);
+  webSocket.sendTXT(jsonMsg);
+
+  return p;
+}
+
+int registerFinger(int tokenKey) {  
   int p = getFingerImage();
-  p = takeFingerImage(1);
+  p = takeFingerImage(1);  
   p = removeFinger();
   p = getFingerImage();
   p = takeFingerImage(2);
   p = createModelFinger();
-  p = storeModelFinger(hintId + 1);
+  p = storeModelFinger(tokenKey);
+
+  // downloadFingerprintTemplate(tokenKey);
+
+  return p;
+}
+
+int downloadFingerprintTemplate(int id)
+{
+  int p = loadFingerModel(id);
+  p = getFingerModel();
+
+  // uint8_t bytesReceived[534];
+
+  // Adafruit_Fingerprint_Packet imagePacket(DOWNLOAD_IMAGE, sizeof(data), data);       
+
+  // // one data packet is 267 bytes. in one data packet, 11 bytes are 'usesless' :D
+  // uint8_t bytesReceived[534]; // 2 data packets
+  // memset(bytesReceived, 0xff, 534);
+
+  // uint32_t starttime = millis();
+  // int i = 0;
+  // while (i < 534 && (millis() - starttime) < 20000) {
+  //   if (Serial1.available()) {
+  //     bytesReceived[i++] = Serial1.read();
+  //   }
+  // }  
+
+  // uint8_t fingerTemplate[512]; // the real template
+  // memset(fingerTemplate, 0xff, 512);
+
+  // // filtering only the data packets
+  // int uindx = 9, index = 0;
+  // memcpy(fingerTemplate + index, bytesReceived + uindx, 256);   // first 256 bytes
+  // uindx += 256;       // skip data
+  // uindx += 2;         // skip checksum
+  // uindx += 9;         // skip next header
+  // index += 256;       // advance pointer
+  // memcpy(fingerTemplate + index, bytesReceived + uindx, 256);   // second 256 bytes
+
+  // for (int i = 0; i < 512; ++i) {    
+  //   printHex(fingerTemplate[i], 2);    
+  // }
+
+  // Serial.println("\ndone.");
 
   return p;
 }
@@ -217,9 +357,12 @@ void bindAction(JSONVar data) {
         tokenKey = finger.getTemplateCount() + 1;
       }
 
-      
+      int result = registerFinger(tokenKey);
 
-      registerFinger();
+      if (result == FINGERPRINT_OK) {
+        
+      }
+
     } else if ( action == "GET_HINTS") {
 
     } else if ( action == "SET_HINTS") {
@@ -227,9 +370,7 @@ void bindAction(JSONVar data) {
     } else {
       Serial.println("[ACTION] not recognized! " + action);
     }
-                    
-    
-    
+
   } else {
     Serial.println("[ACTION] No action key was found in payload response!");
   }

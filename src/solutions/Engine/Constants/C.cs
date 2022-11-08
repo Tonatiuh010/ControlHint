@@ -14,6 +14,7 @@ namespace Engine.Constants {
 
         public const string URL = "URL";
         public const string RESOURCE = "RESOURCE";
+        public const string INFO = "INFO";
 
         public const string ENABLED = "ENABLED";
         public const string DISABLED = "DISABLED";
@@ -23,6 +24,11 @@ namespace Engine.Constants {
         public const string JobsCsv = "jobs.csv";
         public const string DepartamentsCsv = "department.csv";
         public const string PositionsCsv = "positions.csv";
+
+        #region HUB Methods
+        public const string HUB_DEVICE_MONITOR = "DeviceMonitor";
+        public const string HUB_DEVICE_INFO = "DeviceInfo";
+        #endregion
 
         /* ACTIONS Device */
 

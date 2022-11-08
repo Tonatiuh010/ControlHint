@@ -45,7 +45,7 @@ namespace FlowControl.Controllers
             });
 
             if (result.Message == C.OK)
-                _hub.Clients.All.SendAsync("DeviceMonitor", result?.InsertDetails?.CastObject<Device>());
+                _hub.Clients.All.SendAsync(C.HUB_DEVICE_MONITOR, result?.InsertDetails?.CastObject<Device>());
 
             return result;
         });
@@ -71,8 +71,8 @@ namespace FlowControl.Controllers
             JsonObject jObj = JsonObject.Parse(obj.ToString());
 
             string? deviceName = ParseProperty<string>.GetValue("deviceName", jObj, OnMissingProperty);
+            string? type = ParseProperty<string>.GetValue("type", jObj, OnMissingProperty);
             string? b64 = ParseProperty<string>.GetValue("b64", jObj, OnMissingProperty);
-            bool auth = ParseProperty<bool>.GetValue("auth", jObj, OnMissingProperty);
 
             return C.OK; //flowBl;
         });

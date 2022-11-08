@@ -28,7 +28,7 @@ Builder.Build(new WebProperties("FlowControl", WebApplication.CreateBuilder(args
         {
             KeepAliveInterval = TimeSpan.FromMinutes(2)
         });
-        app.MapHub<CheckHub>("/checkMonitor");
-        app.MapHub<DeviceHub>("/deviceMonitor");
+        app.MapHub<CheckHub>("/Check");
+        app.MapHub<DeviceHub>("/Device");
     }
 );
