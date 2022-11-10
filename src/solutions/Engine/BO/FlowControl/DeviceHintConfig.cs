@@ -19,5 +19,12 @@ namespace Engine.BO.FlowControl
             Device = new Device() { Id = deviceId };
             HintKey = hintKey;
         }
+
+        public DeviceHintConfig(Employee employee, Device device, int hintKey)
+        {
+            Employee = employee;
+            Device = device;
+            HintKey = hintKey;
+        }
     }
 }

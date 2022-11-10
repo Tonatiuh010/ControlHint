@@ -12,6 +12,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace FlowControl
 {
@@ -61,11 +62,34 @@ namespace FlowControl
             return result;
         }
 
-        internal static Result ProcessAction(string response, IHubContext<DeviceHub> hub)
+        public static JsonObject DeleteFingersRequest(string deviceName)
+        {
+            JsonObject result = new()
+            {
+                ["action"] = C.DELETE_HINTS,
+                ["deviceName"] = deviceName,
+            };
+
+            return result;
+        }
+
+        public static JsonObject DeleteFingerRequest(string deviceName, int hintKey)
+        {
+            JsonObject result = new()
+            {
+                ["action"] = C.DELETE_HINT,
+                ["deviceName"] = deviceName,
+                ["hintKey"] = hintKey
+            };
+
+            return result;
+        }
+
+        internal static async Task<Result> ProcessAction(string response, IHubContext<DeviceHub> hub)
         {
             try
             {
-                Result actionResult = new() { };
+                Result actionResult = new();
                 JsonNode? jObj = JsonNode.Parse(response);
 
                 if (jObj != null)
@@ -78,7 +102,7 @@ namespace FlowControl
                         string? action = ParseProperty<string>.GetValue("action", (JsonObject)data);
 
                         if(!string.IsNullOrEmpty(action))                        
-                            SelectAction(deviceName, action, (JsonObject)data, hub);
+                            actionResult = await SelectAction(deviceName, action, (JsonObject)data, hub);
                         else
                         {
                             actionResult.Status = C.ERROR;
@@ -109,7 +133,7 @@ namespace FlowControl
             }
         }
 
-        private static async void SelectAction(string deviceName, string action, JsonObject data, IHubContext<DeviceHub> hub)
+        private static async Task<Result> SelectAction(string deviceName, string action, JsonObject data, IHubContext<DeviceHub> hub)
         {
             switch(action)
             {
@@ -120,10 +144,18 @@ namespace FlowControl
 
                     await hub.Clients.Group(deviceName).SendAsync(C.HUB_DEVICE_INFO, type, msg);
 
-                    break;
+                    return new Result()
+                    {
+                        Status = C.NO_CALLBACK,
+                        Message = C.COMPLETE
+                    };
+                    
                 default:
-
-                    break;
+                    return new()
+                    {
+                        Status = C.NO_CALLBACK,
+                        Message = "Do Nothing"                        
+                    };                    
             }
         }
 
@@ -191,16 +223,21 @@ namespace FlowControl
                     if (response != null)
                     {
                         response = response.Replace("\0", string.Empty);
-                        var result = WSClient.ProcessAction(response, hub);
-                        string callbackPayload = JsonSerializer.Serialize(result, options: new () { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
-                        byte[] callbackBytes = Encoding.Default.GetBytes(callbackPayload);
+                        var result = await WSClient.ProcessAction(response, hub);                        
 
-                        await ws.SendAsync(
-                            new ArraySegment<byte>(callbackBytes),
-                            WebSocketMessageType.Text,
-                            true,
-                            token
-                        );
+                        if(result.Status != C.NO_CALLBACK && result.Status != C.ERROR)
+                        {
+                            string callbackPayload = JsonSerializer.Serialize(result, options: C.CustomJsonOptions);
+                            byte[] callbackBytes = Encoding.Default.GetBytes(callbackPayload);
+
+                            await ws.SendAsync(
+                                new ArraySegment<byte>(callbackBytes),
+                                WebSocketMessageType.Text,
+                                true,
+                                token
+                            );
+                        }
+
                     }
 
                     receiveResult = await ws.ReceiveAsync(new ArraySegment<byte>(buffer), token);

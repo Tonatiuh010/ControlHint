@@ -12,6 +12,7 @@ using Google.Protobuf.WellKnownTypes;
 using System.Net.NetworkInformation;
 using Engine.BO.AccessControl;
 using System.Net;
+using Engine.BL.Actuators;
 
 namespace Engine.DAL
 {
@@ -199,27 +200,37 @@ namespace Engine.DAL
             return model;
         }
 
-        public List<Device> GetDevices(int? id, string? name, bool? status = true)
+        public List<Device> GetDevices(int? id, string? name, string? _model, string? ip)
         {
-            return new List<Device>()
+            List<Device> model = new();
+
+            TransactionBlock(this, () =>
             {
-                new () {
-                    Id = 1,
-                    Ip = "0.0.0.1",
-                    Name = "Test 1",
-                    Activations = 2,
-                    LastUpdate = DateTime.Now,
-                    Status = "ENABLED"
-                },
-                new () {
-                    Id = 2,
-                    Ip = "255.255.255.0",
-                    Name = "Test 2",
-                    Activations = 4,
-                    LastUpdate = DateTime.Now,
-                    Status = "ENABLED"
-                },
-            };
+                using var cmd = CreateCommand(SQL.GET_DEV_CONNECTION, CommandType.StoredProcedure);
+                IDataParameter pResult = CreateParameterOut("OUT_MSG", MySqlDbType.String);
+                cmd.Parameters.Add(CreateParameter("IN_DEVICE_ID", id, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_DEVICE_NAME", name, MySqlDbType.String));
+                cmd.Parameters.Add(CreateParameter("IN_DEVICE_MODEL", _model, MySqlDbType.String));
+                cmd.Parameters.Add(CreateParameter("IN_IP_ADDRESS", ip, MySqlDbType.String));
+                cmd.Parameters.Add(pResult);
+                using var reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    model.Add(new()
+                    {
+                        Id = Validate.getDefaultIntIfDBNull(reader["DEVICE_ID"]),
+                        Name = Validate.getDefaultStringIfDBNull(reader["DEVICE_NAME"]),
+                        Ip = Validate.getDefaultStringIfDBNull(reader["IP"]),
+                        Model = Validate.getDefaultStringIfDBNull(reader["DEVICE_MODEL"]),
+                        IsActive = Validate.getDefaultBoolIfDBNull(reader["IS_ACTIVE"]),
+                        LastUpdate = Validate.getDefaultDateIfDBNull(reader["LAST_UPDATE"])
+                    });
+                }
+                reader.Close();
+            }, (ex, msg) => SetExceptionResult("FlowControl.GetDevices", msg, ex));
+
+            return model;
         }
 
         public int GetDeviceId(string deviceName)
@@ -309,13 +320,28 @@ namespace Engine.DAL
 
         public ResultInsert SetDevice(Device device, string txnUser)
         {
-            return new ResultInsert() { 
-                InsertDetails = new InsertStatus(device)
-                {
-                    
-                }
-            };
+            ResultInsert result = new();
+            string sSp = SQL.SET_DEV_CONNECTION;
 
+            TransactionBlock(this, () => {
+                using var cmd = CreateCommand(sSp, CommandType.StoredProcedure);
+
+                IDataParameter pResult = CreateParameterOut("OUT_MSG", MySqlDbType.String);
+                cmd.Parameters.Add(CreateParameter("IN_DEVICE_ID", device.Id, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_DEVICE_NAME", device.Name, MySqlDbType.String));
+                cmd.Parameters.Add(CreateParameter("IN_DEVICE_MODEL", device.Model, MySqlDbType.String));
+                cmd.Parameters.Add(CreateParameter("IN_IP_ADDRESS", device.Ip, MySqlDbType.String));
+                cmd.Parameters.Add(CreateParameter("IN_USER", txnUser, MySqlDbType.String));
+                cmd.Parameters.Add(pResult);
+
+                NonQueryBlock(cmd, () => GetResult(pResult, sSp, result));
+
+            },
+                (ex, msg) => SetExceptionResult("FlowControlDAL.SetDevice", msg, ex, result),
+                () => SetResultInsert(result, device)
+            );
+
+            return result;
         }
 
         public ResultInsert SetAPI(API api, string txnUser)
@@ -407,7 +433,8 @@ namespace Engine.DAL
             return result;
         }
 
-        private string QueryDeviceFlow(int? deviceId = null, int? flowId = null)
+        #region Crazy Queries
+        private static string QueryDeviceFlow(int? deviceId = null, int? flowId = null)
         {
             string condition =
                 $" WHERE FLOW_ID = IFNULL({(flowId != null ? flowId : "null")}, FLOW_ID) " +
@@ -422,7 +449,7 @@ namespace Engine.DAL
             " + condition;
         }
 
-        private string QueryParamter(int? id = null, int? endpointId = null)
+        private static string QueryParamter(int? id = null, int? endpointId = null)
         {
             string condition = 
                 $" WHERE PARAMETER_ID = IFNULL({ (id != null? id : "null") }, PARAMETER_ID) " +
@@ -437,7 +464,7 @@ namespace Engine.DAL
             " + condition;
         }
 
-        private string QueryHintKeyDevice(int? deviceId, int? employeeId, int? hintKey)
+        private static string QueryHintKeyDevice(int? deviceId, int? employeeId, int? hintKey)
         {
             string condition =
                 $" WHERE DEVICE_ID = IFNULL({(deviceId != null ? deviceId : "null")}, DEVICE_ID) " +
@@ -452,10 +479,11 @@ namespace Engine.DAL
             " + condition;
         }
 
-        private string QueryGetDeviceId(string deviceName)
+        private static string QueryGetDeviceId(string deviceName)
         {
             return $"SELECT GET_DEVICE('{deviceName}') AS DEVICE_ID";
         }
 
+        #endregion
     }
 }

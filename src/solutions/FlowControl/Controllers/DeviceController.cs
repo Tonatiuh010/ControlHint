@@ -13,6 +13,7 @@ using Engine.BO.FlowControl;
 using Engine.BO.AccessControl;
 using System.Xml.Linq;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Org.BouncyCastle.Crypto.Digests;
 
 namespace FlowControl.Controllers
 {
@@ -41,7 +42,10 @@ namespace FlowControl.Controllers
             {
                 Id = ParseProperty<int?>.GetValue("id", jObj),
                 Name = ParseProperty<string?>.GetValue("deviceName", jObj, OnMissingProperty),
-                Ip = ParseProperty<string?>.GetValue("ip", jObj, OnMissingProperty)
+                Model = ParseProperty<string?>.GetValue("deviceModel", jObj, OnMissingProperty),
+                Ip = ParseProperty<string?>.GetValue("ip", jObj, OnMissingProperty),
+                IsActive = true,
+                LastUpdate = DateTime.Now
             });
 
             if (result.Message == C.OK)
@@ -68,13 +72,44 @@ namespace FlowControl.Controllers
         [HttpPost("signal")]
         public Result EmitHint(dynamic obj) => RequestResponse(() =>
         {
+            Result result = new ()
+            {
+                Status = C.OK,
+                Message = C.COMPLETE
+            };
+
             JsonObject jObj = JsonObject.Parse(obj.ToString());
 
             string? deviceName = ParseProperty<string>.GetValue("deviceName", jObj, OnMissingProperty);
-            string? type = ParseProperty<string>.GetValue("type", jObj, OnMissingProperty);
-            string? b64 = ParseProperty<string>.GetValue("b64", jObj, OnMissingProperty);
+            string? status = ParseProperty<string>.GetValue("status", jObj, OnMissingProperty);
+            int? confidence = ParseProperty<int?>.GetValue("confidence", jObj);
+            int? hintKey = ParseProperty<int?>.GetValue("hintKey", jObj);
 
-            return C.OK; //flowBl;
+            if (!string.IsNullOrEmpty(deviceName)) { 
+
+                if (status == C.NOT_MATCH)
+                {
+                    result = new()
+                    {
+                        Status = C.NOT_MATCH,
+                        Message = "Finger print did not match!",
+                        Data = new object()
+                    };
+
+                } else if (!string.IsNullOrEmpty(status) && confidence != null && hintKey != null)
+                {
+                    var config = bl.GetDeviceHintConfigByHint(deviceName, (int)hintKey);
+
+                    if(config != null)
+                    {
+                        var signal = new DeviceSignal(config, status, (int)confidence);
+                        _hub.Clients.Group(deviceName).SendAsync(C.HUB_DEVICE_SIGNAL, signal);
+                    }
+                }                           
+
+            } else throw new Exception("Device name Property is empty!");
+
+            return  result;
         });
         
     }

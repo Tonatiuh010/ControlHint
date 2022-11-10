@@ -20,6 +20,7 @@ const String TYPE_FINGER_MODEL = "FINGER_MODEL";
 char *ssid = "IZZI-99D0"; // "UTT-CUERVOS"; // "test-ard";
 char *pass = "VBBPMSZNNEJV"; // "CU3RV@S2022"; // "12345678";
 String deviceName = "ESP-FG-TNT";
+String model = "ESP-32";
 
 String host = "http://192.168.0.125:81/api/"; // "http://172.18.7.153:81/api";
 String domain = "192.168.0.125";
@@ -351,7 +352,7 @@ void bindAction(JSONVar data) {
     String action = String((const char *)data["action"]);       
     if( action == "REGISTER_FINGER") {
       int employeeId = data["employeeId"];      
-      int tokenKey = data["tokenKey"];
+      int tokenKey = data["hintKey"];
 
       if (tokenKey == 0) {
         tokenKey = finger.getTemplateCount() + 1;
@@ -359,13 +360,31 @@ void bindAction(JSONVar data) {
 
       int result = registerFinger(tokenKey);
 
-      if (result == FINGERPRINT_OK) {
-        
+      if (result == FINGERPRINT_OK) {        
+        data["hintKey"] = tokenKey;
+        postRequest(combine("device/setHint"), data);
       }
 
     } else if ( action == "GET_HINTS") {
+      // This one is kinda difficult to do...
+    } else if ( action == "DELETE_HINT") {
+      int tokenKey = data["hintKey"];
+      int result = finger.deleteModel(tokenKey);
+      
+      if (result == FINGERPRINT_OK) {
+        String fingerMsg = "[FINGER] Delete Model for finger ID: " + String(tokenKey);
+        Serial.println(fingerMsg);
+        String jsonMsg = getPayloadDataMsg(fingerMsg, TYPE_FINGER_MODEL);
+        webSocket.sendTXT(jsonMsg);
+      }
 
-    } else if ( action == "SET_HINTS") {
+    } else if ( action == "DELETE_HINTS") {
+
+      finger.emptyDatabase();
+      String fingerMsg = "[FINGER] Empty Fingers Data Base";
+      Serial.println(fingerMsg);
+      String jsonMsg = getPayloadDataMsg(fingerMsg, TYPE_FINGER_MODEL);
+      webSocket.sendTXT(jsonMsg);
 
     } else {
       Serial.println("[ACTION] not recognized! " + action);
@@ -477,6 +496,7 @@ void loadDetails() {
   fingerProps["baudRate"] = finger.baud_rate;
 
   deviceProps["deviceName"] = deviceName;
+  deviceProps["deviceModel"] = model;
   deviceProps["ip"] = WiFi.localIP().toString().c_str();;
   deviceProps["fingerPrint"] = fingerProps;
 }
@@ -522,13 +542,44 @@ void loop() {
   wifiStatus = WiFi.status();  
   if(wifiStatus != WL_CONNECTED) connectWifi();
   webSocket.loop();
-  connectFingerprint(false);
+  connectFingerprint(false);  
 
   if (current > intervalLoop) {
-    loadDetails();
-    // printResult("Payload to send: ", JSONVar::stringify(deviceProps));
+    loadDetails();    
     postRequest(combine("Device"), deviceProps);
     current = 0;
+  }
+
+  int p = finger.getImage();
+
+  if (p == FINGERPRINT_OK) {
+    String fingerMsg;
+    JSONVar fingerPost;
+    
+    p = getFingerImage();
+    p = takeFingerImage(1);
+    p = finger.fingerSearch();
+    removeFinger();
+
+    if( p == FINGERPRINT_OK ) {      
+      fingerPost["deviceName"] = deviceName;
+      fingerPost["hintKey"] = finger.fingerID;
+      fingerPost["confidence"] = finger.confidence;
+      fingerPost["status"] = "OK";
+
+      fingerMsg = "[FINGER] Finger Match ID: " + String(finger.fingerID) + ". Confidence: " + String(finger.confidence);
+    } else {
+      fingerPost["deviceName"] = deviceName;
+      fingerPost["status"] = "NOT_MATCH";
+      fingerMsg = "[FINGER] Finger did not MATCH!";
+    }  
+
+    Serial.println(fingerMsg);
+    String jsonMsg = getPayloadDataMsg(fingerMsg, TYPE_FINGER_DETECTED);
+    webSocket.sendTXT(jsonMsg);
+
+    postRequest(combine("device/signal"), fingerPost);
+
   }
 
   delay(100);

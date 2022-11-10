@@ -31,15 +31,15 @@ namespace Engine.BL.Actuators2
 
         }
 
-        public Result ProcessTransaction(string deviceName, JsonObject data)
+        public void ProcessTransaction(string deviceName, JsonObject data)
         {
             int flowId = GetDeviceFlowId(deviceName);
             Flow? flow = bl.GetFlow(flowId);
 
-            if (flow != null)                            
+            if (flow != null)
+            {
                 ExecuteFlow(flow, data);
-
-            return null;
+            }
         }
 
         private int GetDeviceFlowId(string deviceName) => Dal.GetDeviceFlow(
