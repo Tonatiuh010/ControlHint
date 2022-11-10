@@ -9,12 +9,12 @@ namespace Engine.BO.FlowControl
 {
     public class Device : BaseBO
     {
-        public string? Name { get; set; }
-        public string? Status { get; set; }
+        public string? Name { get; set; }        
         public string? Ip { get; set; }
+        public string? Model { get; set; }
+        public bool IsActive { get; set; }
 
         [JsonPropertyName("last_update")]
-        public DateTime? LastUpdate { get; set; }
-        public int? Activations { get; set; }
+        public DateTime? LastUpdate { get; set; }        
     }
 }

@@ -18,6 +18,14 @@ namespace FlowControl.Hubs
         public async Task BroadcastDevice(Device device)
             => await Clients.All.SendAsync(C.HUB_DEVICE_MONITOR, device);
 
+        public async Task EmitSignal(DeviceSignal signal)
+        {
+            string? deviceName = signal.HintConfig.Device.Name;
+
+            if (!string.IsNullOrEmpty(deviceName))
+                await Clients.Group(deviceName).SendAsync(C.HUB_DEVICE_SIGNAL, signal);
+        }
+
         public async Task AddToGroup(string groupName)
         {
             var device = bl.GetDevice(groupName);

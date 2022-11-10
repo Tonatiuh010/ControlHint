@@ -1,6 +1,7 @@
 ﻿using Classes;
 using Engine.BL.Actuators2;
 using Engine.BO;
+using Engine.Constants;
 using FlowControl.Hubs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -17,8 +18,7 @@ namespace FlowControl.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class FlowDeviceController : CustomController
-    {
-        private readonly EngineFlowBL bl = new();        
+    {             
         private readonly IHubContext<DeviceHub> _hub;
 
         public FlowDeviceController(IHubContext<DeviceHub> hub) => _hub = hub;
@@ -35,6 +35,77 @@ namespace FlowControl.Controllers
             {
                 HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
             }
+        }
+
+        [HttpPost("actionDeleteHints")]
+        public async Task<Result> DeleteHints(dynamic obj)
+        {
+            DeviceClient? client = null;
+
+            var msg = RequestResponse(() =>
+            {
+                JsonObject requestBody;
+                JsonObject jObj = JsonObject.Parse(obj.ToString());
+                string? deviceName = ParseProperty<string>.GetValue("deviceName", jObj, OnMissingProperty);                
+
+                if (deviceName != null)
+                {
+                    client = WSClient.FindClient(deviceName);
+                    requestBody = WSClient.DeleteFingersRequest(deviceName);
+                }
+                else
+                {
+                    requestBody = new()
+                    {
+                        ["info"] = "No Device Name Property Attached"
+                    };
+                }
+
+                return requestBody;
+            });
+
+            var str = JsonSerializer.Serialize(msg, options: C.CustomJsonOptions);
+
+            if (client != null)
+                await client.SendMessage(str);
+
+            return msg;
+        }
+
+        [HttpPost("actionDeleteHint")]
+        public async Task<Result> DeleteHint(dynamic obj)
+        {
+            DeviceClient? client = null;
+
+            var msg = RequestResponse(() =>
+            {
+                JsonObject requestBody;
+                JsonObject jObj = JsonObject.Parse(obj.ToString());
+                string? deviceName = ParseProperty<string>.GetValue("deviceName", jObj, OnMissingProperty);
+                int hintKey = ParseProperty<int>.GetValue("hintKey", jObj, OnMissingProperty);
+
+                if (deviceName != null)
+                {
+                    client = WSClient.FindClient(deviceName);
+                    requestBody = WSClient.DeleteFingerRequest(deviceName, hintKey);
+                }
+                else
+                {
+                    requestBody = new()
+                    {
+                        ["info"] = "No Device Name Property Attached"
+                    };
+                }
+
+                return requestBody;
+            });
+
+            var str = JsonSerializer.Serialize(msg, options: C.CustomJsonOptions);
+
+            if (client != null)
+                await client.SendMessage(str);
+
+            return msg;
         }
 
         [HttpPost("actionRegisterHint")]
@@ -63,10 +134,7 @@ namespace FlowControl.Controllers
                 return requestBody;
             });
 
-            var str = JsonSerializer.Serialize<Result>(msg, options: new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase                
-            });
+            var str = JsonSerializer.Serialize(msg, options: C.CustomJsonOptions);
 
             if (client != null)
                 await client.SendMessage(str);
@@ -80,7 +148,7 @@ namespace FlowControl.Controllers
             var client = WSClient.FindClient(deviceName);
 
             if (client != null)
-                await client.SendMessage("Testing this crazy outcome msg");
+                await client.SendMessage("Holi!");
             
         }
     }

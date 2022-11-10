@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json;
 
 namespace Engine.Constants {
     public class C {
@@ -11,10 +12,12 @@ namespace Engine.Constants {
         public const string COMPLETE = "COMPLETE";
         public const string PENDING = "PENDING";
         public const string ROLLABACK = "ROLLBACK";
+        public const string NOT_MATCH = "NOT_MATCH";
 
         public const string URL = "URL";
         public const string RESOURCE = "RESOURCE";
         public const string INFO = "INFO";
+        public const string NO_CALLBACK = "NO_CALLBACK";
 
         public const string ENABLED = "ENABLED";
         public const string DISABLED = "DISABLED";
@@ -28,17 +31,24 @@ namespace Engine.Constants {
         #region HUB Methods
         public const string HUB_DEVICE_MONITOR = "DeviceMonitor";
         public const string HUB_DEVICE_INFO = "DeviceInfo";
+        public const string HUB_DEVICE_SIGNAL = "DeviceSignal";
         #endregion
 
         /* ACTIONS Device */
-
         public const string REGISTER_FINGER = "REGISTER_FINGER";
         public const string GET_HINTS = "GET_HINTS";
-        public const string SET_HINTS = "SET_HINTS";
+        public const string DELETE_HINT = "DELETE_HINT";
+        public const string DELETE_HINTS = "DELETE_HINTS";
 
 
         /* Connection Strings */
         public const string ACCESS_DB = "DB_ACCESS";
-        public const string HINT_DB = "DB_HINT";        
+        public const string HINT_DB = "DB_HINT";
+
+        /* Json Options */
+        public static readonly JsonSerializerOptions CustomJsonOptions = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
     }
 }
