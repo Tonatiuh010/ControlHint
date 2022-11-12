@@ -10,7 +10,11 @@ export class SignalRService {
 
   id: string | null;
 
-  constructor(url: string, actions: IHubAction[], onConnected : () => void ) {
+  constructor(
+    url: string,
+    actions: IHubAction[],
+    onConnected : () => void = () => this.logHub('Connection started')
+  ) {
     this.actions = actions;
     this.onConnected = onConnected;
     this.connection = new signalR.HubConnectionBuilder()
@@ -42,7 +46,7 @@ export class SignalRService {
     this.connection.stop();
   }
 
-  private logHub(msg: string, ...args: any[]) {
+  logHub(msg: string, ...args: any[]) {
     console.log(`[${Date.now.toString()}]: ${msg}`, ...args);
   }
 }

@@ -4,4 +4,14 @@ interface IHubAction {
   action: (...args: any[]) => any;
 };
 
-export { IHubAction }
+function InstanceAction(
+  methodName: string,
+  fn: (...args: any[]) => any = () => {}
+) : IHubAction {
+  return {
+    actionName: methodName,
+    action: fn
+  }
+}
+
+export { IHubAction, InstanceAction  }
