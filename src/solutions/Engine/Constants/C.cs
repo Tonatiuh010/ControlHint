@@ -44,6 +44,7 @@ namespace Engine.Constants {
         /* Connection Strings */
         public const string ACCESS_DB = "DB_ACCESS";
         public const string HINT_DB = "DB_HINT";
+        public const string DOCS_DB = "DB_DOCS";
 
         /* Json Options */
         public static readonly JsonSerializerOptions CustomJsonOptions = new JsonSerializerOptions

@@ -11,7 +11,8 @@ Builder.Build(new WebProperties("AccessControl", WebApplication.CreateBuilder(ar
         ConnectionStrings = new List<string>()
         {
             C.ACCESS_DB,
-            C.HINT_DB
+            C.HINT_DB,
+            C.DOCS_DB
         }
     }
 );

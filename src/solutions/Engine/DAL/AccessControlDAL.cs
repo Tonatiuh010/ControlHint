@@ -17,8 +17,7 @@ namespace Engine.DAL {
     {
         public delegate void DALCallback(AccessControlDAL dal);
         private static ConnectionString? _ConnectionString => ConnectionString.InstanceByName(C.ACCESS_DB);
-
-        public static AccessControlDAL Instance => new();
+        public static AccessControlDAL Instance => new(); 
         public AccessControlDAL() : base(_ConnectionString) { }
 
         public List<Check> GetChecks(int? checkId, int? employeeId) {

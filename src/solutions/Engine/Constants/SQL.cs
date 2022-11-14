@@ -4,7 +4,8 @@ namespace Engine.Constants {
     public class SQL {
         
         public const string CTL_ACCESS = "CTL_ACCESS";
-        public const string CTL_HINT = "CTL_HINT";        
+        public const string CTL_HINT = "CTL_HINT";
+        public const string CTL_DOCS = "CTL_DOCS";
 
         #region CTL_ACCESS            
         public const string SET_DEPARTMENT = "SET_DEPARTMENT";
@@ -38,6 +39,15 @@ namespace Engine.Constants {
         public const string SET_ENDPOINT_PARAMETER = "SET_ENDPOINT_PARAMETER";
         public const string SET_FLOW_DETAIL = "SET_FLOW_DETAIL";
         public const string SET_DEV_CONNECTION = "SET_DEV_CONNECTION";
+        #endregion
+
+        #region CTL_DOCS
+        public const string CONTROL_ACCESS_APPROVER_INSERT = "SET_APPROVER";
+        public const string CONTROL_ACCESS_DOCAPPROVER_INSERT = "SET_DOCS_APPROVER";
+        public const string CONTROL_ACCESS_DOC_FILE_INSERT = "SET_DOCS_FILE";
+        public const string CONTROL_ACCESS_DOC_FLOW_INSERT = "SET_DOCS_FLOW";
+        public const string CONTROL_ACCESS_DOC_TYPE_INSERT = "SET_DOCS_TYPE";
+        public const string CONTROL_ACCESS_DOCUMENT_INSERT = "SET_DOCUMENT";
         #endregion
 
     }
