@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
+import { HttpClientModule } from "@angular/common/http";
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './layouts/header/header.component';
@@ -39,6 +40,8 @@ import { PagesLoginComponent } from './pages/pages-login/pages-login.component';
 import { PagesError404Component } from './pages/pages-error404/pages-error404.component';
 import { PagesBlankComponent } from './pages/pages-blank/pages-blank.component';
 import { DashboardPrincipalComponent } from './pages/dashboard-principal/dashboard-principal.component';
+import { ListEmployeesComponent } from './pages/list-employees/list-employees.component';
+import { PagesDeviceComponent } from './pages/pages-device/pages-device.component';
 
 @NgModule({
   declarations: [
@@ -78,9 +81,12 @@ import { DashboardPrincipalComponent } from './pages/dashboard-principal/dashboa
     PagesLoginComponent,
     PagesError404Component,
     PagesBlankComponent,
-    DashboardPrincipalComponent
+    DashboardPrincipalComponent,
+    ListEmployeesComponent,
+    PagesDeviceComponent
   ],
   imports: [
+    HttpClientModule,
     BrowserModule,
     AppRoutingModule
   ],

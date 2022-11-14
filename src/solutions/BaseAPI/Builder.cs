@@ -55,10 +55,19 @@ namespace BaseAPI
         {
             options.AddDefaultPolicy(policy =>
             {
-                policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
-                //policy.WithOrigins("http://localhost",
-                //                    "http://localhost:4200",
-                //                    "http://192.168.101.114");
+                policy
+                .AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod();//.AllowCredentials();                
+            });
+
+            options.AddPolicy("SignalR", policy =>
+            {
+                policy
+                .WithOrigins("http://localhost", "http://localhost:4200", "http://192.168.0.114")
+                .AllowAnyHeader()
+                .WithMethods("GET", "POST")
+                .AllowCredentials();
             });
         }
 

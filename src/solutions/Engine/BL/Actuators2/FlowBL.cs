@@ -26,6 +26,23 @@ namespace Engine.BL.Actuators2
 
         public Flow? GetFlow(int id) => GetFlows(id).FirstOrDefault();
 
+        public Flow? GetFlowByDevice(int deviceId)
+        {
+            int flowId = Dal.GetDeviceFlow(deviceId, null);
+            return GetFlow(flowId);
+        }
+
+        public Flow? GetFlowByDeviceName(string deviceName)
+        {
+            int flowId = GetDeviceFlowId(deviceName);            
+            return GetFlow(flowId);
+        }
+
+        private int GetDeviceFlowId(string deviceName) => Dal.GetDeviceFlow(
+           Dal.GetDeviceId(deviceName),
+           null
+       );
+
         public List<Step> GetSteps(int? id = null, int? parameterId = null, int? apiId = null, int? flowId = null)
         {
             var steps = Dal.GetSteps(id, parameterId, apiId, flowId);
