@@ -20,7 +20,7 @@ const C = {
       }
     },
     check: {
-      _url: combineUrl(urls.flowControl, "Hub"),
+      _url: combineUrl(urls.flowControl, "Check"),
       methods: {
         Broadcast: "BroadcastCheck",
 

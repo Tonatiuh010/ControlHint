@@ -22,7 +22,7 @@ char *pass = "VBBPMSZNNEJV"; // "CU3RV@S2022"; // "12345678";
 String deviceName = "ESP-FG-TNT";
 String model = "ESP-32";
 
-String host = "http://192.168.0.125:81/api/"; // "http://172.18.7.153:81/api";
+String host = "http://192.168.0.125:81/api/"; // "http://172.17.4.132:81/api"; //
 String domain = "192.168.0.125";
 
 int port = 81;
@@ -531,18 +531,18 @@ void setup() {
   
   Serial.println("[STARTUP] Starting!...");
 
-  scanWifis();
   connectFingerprint();
+  scanWifis();  
   connectWifi();
   connectSocket();
   showDetails();
 }
 
-void loop() {  
+void loop() {
+  connectFingerprint(false);
   wifiStatus = WiFi.status();  
   if(wifiStatus != WL_CONNECTED) connectWifi();
-  webSocket.loop();
-  connectFingerprint(false);  
+  webSocket.loop();  
 
   if (current > intervalLoop) {
     loadDetails();    
