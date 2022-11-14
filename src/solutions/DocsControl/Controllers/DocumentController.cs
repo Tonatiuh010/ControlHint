@@ -14,8 +14,7 @@ namespace DocsControl.Controllers
     public class DocumentController : CustomController
     {
         private readonly DocumentBL bl = new();
-
-        // POST: DocumentController/Create
+        
         [HttpPost]
         public Result SetDocument(dynamic obj) => RequestResponse(() =>
         {
@@ -23,8 +22,11 @@ namespace DocsControl.Controllers
             return bl.SetDocument(new Document() {
                 Id = ParseProperty<int>.GetValue("id", jObj),
                 Name = ParseProperty<string>.GetValue("name", jObj, OnMissingProperty),
-                TypeID = ParseProperty<int>.GetValue("typeID", jObj)
-            }, C.GLOBAL_USER);
+                DocType = new DocType()
+                {
+                    Id = ParseProperty<int>.GetValue("typeId", jObj)
+                }                
+            });
         });        
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Engine.BO;
 using Engine.BO.DocsControl;
+using Engine.Constants;
 using Engine.DAL;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,6 @@ namespace Engine.BL.Actuators3
 {
     public class ApproverBL : BaseBL<DocsControlDAL>
     {
-        public ResultInsert SetApprover(Approver approver, string txnUser) => Dal.SetApprover(approver, txnUser);
+        public ResultInsert SetApprover(Approver approver) => Dal.SetApprover(approver, C.GLOBAL_USER);
     }
 }

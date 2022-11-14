@@ -6,11 +6,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Engine.Constants;
 
 namespace Engine.BL.Actuators3
 {
     public class DocFlowBL : BaseBL<DocsControlDAL>
     {
-        public ResultInsert SetDocFlow(DocFlow docFlow, string txnUser) => Dal.SetDocFlow(docFlow, txnUser);
+        public ResultInsert SetDocFlow(DocFlow docFlow) => Dal.SetDocFlow(docFlow, C.GLOBAL_USER);
     }
 }

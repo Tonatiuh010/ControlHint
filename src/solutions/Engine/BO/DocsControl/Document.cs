@@ -9,6 +9,6 @@ namespace Engine.BO.DocsControl
     public class Document : BaseBO
     {
         public string? Name { get; set; }
-        public int TypeID { get; set; }
+        public DocType? DocType { get; set; }
     }
 }

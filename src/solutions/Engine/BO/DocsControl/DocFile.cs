@@ -8,8 +8,8 @@ namespace Engine.BO.DocsControl
 {
     public class DocFile : BaseBO
     {
-        public int DocumentID { get; set; }
-        public string? DocImg { get; set; }
+        public Document? Document { get; set; }
+        public byte[]? DocImg { get; set; }
 
     }
 }

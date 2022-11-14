@@ -23,19 +23,19 @@ namespace Engine.DAL
         public ResultInsert SetApprover(Approver Approver, string txnUser)
         {
             ResultInsert result = new();
-            string sSp = SQL.CONTROL_ACCESS_APPROVER_INSERT;
+            string sSp = SQL.SET_APPROVER;
 
             TransactionBlock(this, () => {
                 using var cmd = CreateCommand(sSp, CommandType.StoredProcedure);
 
-                IDataParameter pResult = CreateParameterOut("OUT_RESULT", MySqlDbType.String);
+                IDataParameter pResult = CreateParameterOut("OUT_MSG", MySqlDbType.String);
 
                 cmd.Parameters.Add(CreateParameter("IN_APPROVER", Approver.Id, MySqlDbType.Int32));
                 cmd.Parameters.Add(CreateParameter("IN_FULLNAME", Approver.FullName, MySqlDbType.String));
-                cmd.Parameters.Add(CreateParameter("IN_POSITION", Approver.PositionID, MySqlDbType.Int32));
-                cmd.Parameters.Add(CreateParameter("IN_DEPTO", Approver.DeptoID, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_POSITION", Approver.Position.PositionId, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_DEPTO", Approver.Depto.Id, MySqlDbType.Int32));
                 cmd.Parameters.Add(CreateParameter("IN_USER", txnUser, MySqlDbType.String));
-                cmd.Parameters.Add(sSp);
+                cmd.Parameters.Add(pResult);
 
                 NonQueryBlock(cmd, () => GetResult(pResult, sSp, result));
             },
@@ -48,16 +48,16 @@ namespace Engine.DAL
         public ResultInsert SetDocApprover(DocsApprover DocsApprover, string txnUser)
         {
             ResultInsert result = new();
-            string sSp = SQL.CONTROL_ACCESS_DOCAPPROVER_INSERT;
+            string sSp = SQL.SET_DOCS_APPROVER;
 
             TransactionBlock(this, () => {
                 using var cmd = CreateCommand(sSp, CommandType.StoredProcedure);
 
-                IDataParameter pResult = CreateParameterOut("OUT_RESULT", MySqlDbType.String);
+                IDataParameter pResult = CreateParameterOut("OUT_MSG", MySqlDbType.String);
 
                 cmd.Parameters.Add(CreateParameter("IN_DOCAPPROVER", DocsApprover.Id, MySqlDbType.Int32));
-                cmd.Parameters.Add(CreateParameter("IN_DOCFLOW", DocsApprover.DocFlowID, MySqlDbType.Int32));
-                cmd.Parameters.Add(CreateParameter("IN_APPROVER", DocsApprover.ApproverID, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_DOCFLOW", DocsApprover.DocFlow.Id, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_APPROVER", DocsApprover.Approver.Id, MySqlDbType.Int32));
                 cmd.Parameters.Add(CreateParameter("IN_SEQUENCE", DocsApprover.Sequence, MySqlDbType.Int32));
                 cmd.Parameters.Add(CreateParameter("IN_NAME", DocsApprover.Name, MySqlDbType.String));
                 cmd.Parameters.Add(CreateParameter("IN_ACTION", DocsApprover.Action, MySqlDbType.Int32));
@@ -76,15 +76,15 @@ namespace Engine.DAL
         public ResultInsert SetDocFile(DocFile DocFile, string txnUser)
         {
             ResultInsert result = new();
-            string sSp = SQL.CONTROL_ACCESS_DOC_FILE_INSERT;
+            string sSp = SQL.SET_DOCS_FILE;
 
             TransactionBlock(this, () => {
                 using var cmd = CreateCommand(sSp, CommandType.StoredProcedure);
 
-                IDataParameter pResult = CreateParameterOut("OUT_RESULT", MySqlDbType.String);
+                IDataParameter pResult = CreateParameterOut("OUT_MSG", MySqlDbType.String);
 
                 cmd.Parameters.Add(CreateParameter("IN_FILE_ID", DocFile.Id, MySqlDbType.Int32));
-                cmd.Parameters.Add(CreateParameter("IN_DOCUMENT_ID", DocFile.DocumentID, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_DOCUMENT_ID", DocFile.Document.Id, MySqlDbType.Int32));
                 cmd.Parameters.Add(CreateParameter("IN_DOC_IMG", DocFile.DocImg, MySqlDbType.String));
                 cmd.Parameters.Add(CreateParameter("IN_USER", txnUser, MySqlDbType.String));
                 cmd.Parameters.Add(pResult);
@@ -101,15 +101,15 @@ namespace Engine.DAL
         public ResultInsert SetDocFlow(DocFlow DocFlow, string txnUser)
         {
             ResultInsert result = new();
-            string sSp = SQL.CONTROL_ACCESS_DOC_FLOW_INSERT;
+            string sSp = SQL.SET_DOCS_FLOW;
 
             TransactionBlock(this, () => {
                 using var cmd = CreateCommand(sSp, CommandType.StoredProcedure);
 
-                IDataParameter pResult = CreateParameterOut("OUT_RESULT", MySqlDbType.String);
+                IDataParameter pResult = CreateParameterOut("OUT_MSG", MySqlDbType.String);
 
                 cmd.Parameters.Add(CreateParameter("IN_DOC_FLOW_ID", DocFlow.Id, MySqlDbType.Int32));
-                cmd.Parameters.Add(CreateParameter("IN_TYPE_ID", DocFlow.TypeID, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_TYPE_ID", DocFlow.DocType.Id, MySqlDbType.Int32));
                 cmd.Parameters.Add(CreateParameter("IN_KEY1", DocFlow.Key1, MySqlDbType.String));
                 cmd.Parameters.Add(CreateParameter("IN_KEY2", DocFlow.Key2, MySqlDbType.String));
                 cmd.Parameters.Add(CreateParameter("IN_KEY3", DocFlow.Key3, MySqlDbType.String));
@@ -128,12 +128,12 @@ namespace Engine.DAL
         public ResultInsert SetDocType(DocType DocType, string txnUser)
         {
             ResultInsert result = new ();
-            string sSp = SQL.CONTROL_ACCESS_DOC_TYPE_INSERT;
+            string sSp = SQL.SET_DOCS_TYPE;
 
             TransactionBlock(this, () => {
                 using var cmd = CreateCommand(sSp, CommandType.StoredProcedure);
 
-                IDataParameter pResult = CreateParameterOut("OUT_RESULT", MySqlDbType.String);
+                IDataParameter pResult = CreateParameterOut("OUT_MSG", MySqlDbType.String);
 
                 cmd.Parameters.Add(CreateParameter("IN_TYPE_ID", DocType.Id, MySqlDbType.Int32));
                 cmd.Parameters.Add(CreateParameter("IN_TYPE_CODE", DocType.TypeCode, MySqlDbType.String));
@@ -151,17 +151,17 @@ namespace Engine.DAL
         public ResultInsert SetDocument(Document Document, string txnUser)
         {
             ResultInsert result = new();
-            string sSp = SQL.CONTROL_ACCESS_DOCUMENT_INSERT;
+            string sSp = SQL.SET_DOCUMENT;
 
             TransactionBlock(this, () =>
             {
                 using var cmd = CreateCommand(sSp, CommandType.StoredProcedure);
 
-                IDataParameter pResult = CreateParameterOut("OUT_RESULT", MySqlDbType.String);
+                IDataParameter pResult = CreateParameterOut("OUT_MSG", MySqlDbType.String);
 
                 cmd.Parameters.Add(CreateParameter("IN_DOCUMENT_ID", Document.Id, MySqlDbType.Int32));
                 cmd.Parameters.Add(CreateParameter("IN_NAME", Document.Name, MySqlDbType.String));
-                cmd.Parameters.Add(CreateParameter("IN_TYPE_ID", Document.TypeID, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_TYPE_ID", Document.DocType.Id, MySqlDbType.Int32));
                 cmd.Parameters.Add(CreateParameter("IN_USER", txnUser, MySqlDbType.String));
                 cmd.Parameters.Add(pResult);
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Engine.BO.AccessControl;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ namespace Engine.BO.DocsControl
     public class Approver : BaseBO
     {
         public string? FullName { get; set; }
-        public int PositionID { get; set; }
-        public int DeptoID { get; set; }
+        public Position? Position { get; set; }
+        public Department? Depto { get; set; }
     }
 }

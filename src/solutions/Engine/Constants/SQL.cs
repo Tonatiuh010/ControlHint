@@ -42,12 +42,12 @@ namespace Engine.Constants {
         #endregion
 
         #region CTL_DOCS
-        public const string CONTROL_ACCESS_APPROVER_INSERT = "SET_APPROVER";
-        public const string CONTROL_ACCESS_DOCAPPROVER_INSERT = "SET_DOCS_APPROVER";
-        public const string CONTROL_ACCESS_DOC_FILE_INSERT = "SET_DOCS_FILE";
-        public const string CONTROL_ACCESS_DOC_FLOW_INSERT = "SET_DOCS_FLOW";
-        public const string CONTROL_ACCESS_DOC_TYPE_INSERT = "SET_DOCS_TYPE";
-        public const string CONTROL_ACCESS_DOCUMENT_INSERT = "SET_DOCUMENT";
+        public const string SET_APPROVER = "SET_APPROVER";
+        public const string SET_DOCS_APPROVER = "SET_DOCS_APPROVER";
+        public const string SET_DOCS_FILE = "SET_DOCS_FILE";
+        public const string SET_DOCS_FLOW = "SET_DOCS_FLOW";
+        public const string SET_DOCS_TYPE = "SET_DOCS_TYPE";
+        public const string SET_DOCUMENT = "SET_DOCUMENT";
         #endregion
 
     }

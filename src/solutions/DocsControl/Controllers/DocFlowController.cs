@@ -14,8 +14,7 @@ namespace DocsControl.Controllers
     public class DocFlowController : CustomController
     {
         private readonly DocFlowBL bl = new();
-
-        // POST: DocumentController/Create
+        
         [HttpPost]
         public Result SetDocument(dynamic obj) => RequestResponse(() =>
         {
@@ -23,12 +22,14 @@ namespace DocsControl.Controllers
             return bl.SetDocFlow(new DocFlow()
             {
                 Id = ParseProperty<int>.GetValue("id", jObj),
-                TypeID = ParseProperty<int>.GetValue("TypeID", jObj),
-                Key1 = ParseProperty<int>.GetValue("Key1", jObj),
-                Key2 = ParseProperty<int>.GetValue("Key2", jObj),
-                Key3 = ParseProperty<int>.GetValue("Key3", jObj),
-                Key4 = ParseProperty<int>.GetValue("Key4", jObj)
-            }, C.GLOBAL_USER);
+                DocType = new DocType() { 
+                    Id = ParseProperty<int>.GetValue("typeId", jObj, OnMissingProperty), 
+                },
+                Key1 = ParseProperty<string>.GetValue("key1", jObj, OnMissingProperty),
+                Key2 = ParseProperty<string>.GetValue("key2", jObj),
+                Key3 = ParseProperty<string>.GetValue("key3", jObj),
+                Key4 = ParseProperty<string>.GetValue("key4", jObj)
+            });
         });
     }
 }

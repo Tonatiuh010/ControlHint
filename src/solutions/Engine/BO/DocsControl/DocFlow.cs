@@ -8,10 +8,10 @@ namespace Engine.BO.DocsControl
 {
     public class DocFlow : BaseBO
     {
-        public int TypeID { get; set; }
-        public int Key1 { get; set; }
-        public int Key2 { get; set; }
-        public int Key3 { get; set; }
-        public int Key4 { get; set; }
+        public DocType? DocType { get; set; }
+        public string? Key1 { get; set; }
+        public string? Key2 { get; set; }
+        public string? Key3 { get; set; }
+        public string? Key4 { get; set; }
     }
 }

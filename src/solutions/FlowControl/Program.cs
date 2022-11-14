@@ -13,8 +13,9 @@ Builder.Build(new WebProperties("FlowControl", WebApplication.CreateBuilder(args
         ConnectionString = C.HINT_DB,
         ConnectionStrings = new List<string>()
         {
+            C.ACCESS_DB,
             C.HINT_DB,
-            C.ACCESS_DB
+            C.DOCS_DB
         }
     },
     builderCallback: builder =>

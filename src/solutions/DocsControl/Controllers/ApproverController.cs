@@ -1,6 +1,7 @@
 ﻿using Classes;
 using Engine.BL.Actuators3;
 using Engine.BO;
+using Engine.BO.AccessControl;
 using Engine.BO.DocsControl;
 using Engine.Constants;
 using Microsoft.AspNetCore.Http;
@@ -15,7 +16,7 @@ namespace DocsControl.Controllers
     {
         private readonly ApproverBL bl = new();
 
-        // POST: DocumentController/Create
+        
         [HttpPost]
         public Result SetApprover(dynamic obj) => RequestResponse(() =>
         {
@@ -24,9 +25,9 @@ namespace DocsControl.Controllers
             {
                 Id = ParseProperty<int>.GetValue("id", jObj),
                 FullName = ParseProperty<string>.GetValue("fullName", jObj, OnMissingProperty),
-                PositionID = ParseProperty<int>.GetValue("positionId", jObj),
-                DeptoID = ParseProperty<int>.GetValue("deptoId", jObj)
-            }, C.GLOBAL_USER);
+                Position = new Position() { PositionId = ParseProperty<int>.GetValue("positionId", jObj, OnMissingProperty) },
+                Depto = new Department() { Id = ParseProperty<int>.GetValue("deptoId", jObj, OnMissingProperty) }
+            });
         });
     }
 }
