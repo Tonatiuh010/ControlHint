@@ -39,6 +39,7 @@ import { PagesLoginComponent } from './pages/pages-login/pages-login.component';
 import { PagesError404Component } from './pages/pages-error404/pages-error404.component';
 import { PagesBlankComponent } from './pages/pages-blank/pages-blank.component';
 import { DashboardPrincipalComponent } from './pages/dashboard-principal/dashboard-principal.component';
+import { PagesDeviceComponent } from './pages/pages-device/pages-device.component';
 
 @NgModule({
   declarations: [
@@ -78,7 +79,9 @@ import { DashboardPrincipalComponent } from './pages/dashboard-principal/dashboa
     PagesLoginComponent,
     PagesError404Component,
     PagesBlankComponent,
-    DashboardPrincipalComponent
+    DashboardPrincipalComponent,
+    PagesDeviceComponent
+
   ],
   imports: [
     BrowserModule,
