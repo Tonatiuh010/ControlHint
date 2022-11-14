@@ -36,13 +36,15 @@ import { PagesFaqComponent } from './pages/pages-faq/pages-faq.component';
 import { PagesLoginComponent } from './pages/pages-login/pages-login.component';
 import { PagesRegisterComponent } from './pages/pages-register/pages-register.component';
 import { UsersProfileComponent } from './pages/users-profile/users-profile.component';
+import { PagesDeviceComponent } from './pages/pages-device/pages-device.component';
 
 
 const routes: Routes = [
   { path: '',   redirectTo: '/pages-login', pathMatch: 'full' },
   { path: 'listEmployees', component: ListEmployeesComponent},
+  { path: 'pages-login', component: PagesLoginComponent },
+  { path: 'home', component: DashboardPrincipalComponent },
   //El DASHBOARD DE PRUEBA SERA ELIMINADO AL FINALIZAR
-  { path: 'dashboards', component: DashboardPrincipalComponent },
   { path: 'dashboard', component: DashboardComponent },
   //DASHBOARD DE PRUEBA
   { path: 'alerts', component: AlertsComponent },
@@ -73,9 +75,9 @@ const routes: Routes = [
   { path: 'pages-contact', component: PagesContactComponent },
   { path: 'pages-error404', component: PagesError404Component },
   { path: 'pages-faq', component: PagesFaqComponent },
-  { path: 'pages-login', component: PagesLoginComponent },
   { path: 'pages-register', component: PagesRegisterComponent },
   { path: 'user-profile', component: UsersProfileComponent },
+  { path: 'pages-device', component: PagesDeviceComponent}
 ];
 
 @NgModule({
