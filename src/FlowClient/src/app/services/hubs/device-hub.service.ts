@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { SignalRService } from './base-signalr';
+import { SignalRService } from '../base-signalr';
 import { C } from 'src/interfaces/constants';
 import { IHubAction, InstanceAction } from 'src/interfaces/hubAction';
 

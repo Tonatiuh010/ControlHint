@@ -28,7 +28,7 @@ Builder.Build(new WebProperties("FlowControl", WebApplication.CreateBuilder(args
         {
             KeepAliveInterval = TimeSpan.FromMinutes(2)
         });
-        app.MapHub<CheckHub>("/Check");
-        app.MapHub<DeviceHub>("/Device");
+        app.MapHub<CheckHub>("/Check").RequireCors("SignalR");
+        app.MapHub<DeviceHub>("/Device").RequireCors("SignalR");
     }
 );

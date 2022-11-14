@@ -1,7 +1,7 @@
 import { Observable } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { C } from "src/interfaces/constants";
-import { dataBody } from "src/interfaces/catalog/dataBody";
+import { dataBody } from "src/interfaces/catalog/DataBody";
 
 export class BaseHttp {
   url : string;
@@ -30,7 +30,6 @@ export class BaseHttp {
 
     response.subscribe({
       next(res: dataBody){
-
         if(ref.isValidResponse(res))
           onComplete(res);
         else
