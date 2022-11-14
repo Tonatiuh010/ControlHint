@@ -23,11 +23,11 @@ namespace DocsControl.Controllers
             return bl.SetDocFlow(new DocFlow()
             {
                 Id = ParseProperty<int>.GetValue("id", jObj),
-                TypeID = ParseProperty<int>.GetValue("name", jObj),
-                Key1 = ParseProperty<int>.GetValue("typeID", jObj),
-                Key2 = ParseProperty<int>.GetValue("typeID", jObj),
-                Key3 = ParseProperty<int>.GetValue("typeID", jObj),
-                Key4 = ParseProperty<int>.GetValue("typeID", jObj)
+                TypeID = ParseProperty<int>.GetValue("TypeID", jObj),
+                Key1 = ParseProperty<int>.GetValue("Key1", jObj),
+                Key2 = ParseProperty<int>.GetValue("Key2", jObj),
+                Key3 = ParseProperty<int>.GetValue("Key3", jObj),
+                Key4 = ParseProperty<int>.GetValue("Key4", jObj)
             }, C.GLOBAL_USER);
         });
     }

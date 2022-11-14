@@ -23,9 +23,9 @@ namespace DocsControl.Controllers
             return bl.SetApprover(new Approver()
             {
                 Id = ParseProperty<int>.GetValue("id", jObj),
-                FullName = ParseProperty<string>.GetValue("name", jObj, OnMissingProperty),
-                PositionID = ParseProperty<int>.GetValue("typeID", jObj),
-                DeptoID = ParseProperty<int>.GetValue("typeID", jObj)
+                FullName = ParseProperty<string>.GetValue("fullName", jObj, OnMissingProperty),
+                PositionID = ParseProperty<int>.GetValue("positionId", jObj),
+                DeptoID = ParseProperty<int>.GetValue("deptoId", jObj)
             }, C.GLOBAL_USER);
         });
     }
