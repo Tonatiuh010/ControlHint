@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardPrincipalComponent } from './pages/dashboard-principal/dashboard-principal.component';
+import { ListEmployeesComponent } from "./pages/list-employees/list-employees.component";
 //El DASHBOARD DE PRUEBA SERA ELIMINADO AL FINALIZAR
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 //DASHBOARD DE PRUEBA
@@ -36,8 +37,10 @@ import { PagesLoginComponent } from './pages/pages-login/pages-login.component';
 import { PagesRegisterComponent } from './pages/pages-register/pages-register.component';
 import { UsersProfileComponent } from './pages/users-profile/users-profile.component';
 
+
 const routes: Routes = [
   { path: '',   redirectTo: '/pages-login', pathMatch: 'full' },
+  { path: 'listEmployees', component: ListEmployeesComponent},
   //El DASHBOARD DE PRUEBA SERA ELIMINADO AL FINALIZAR
   { path: 'dashboards', component: DashboardPrincipalComponent },
   { path: 'dashboard', component: DashboardComponent },
