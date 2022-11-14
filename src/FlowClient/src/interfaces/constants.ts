@@ -2,7 +2,7 @@ let combineUrl = (base : string, extension: string) => base + extension
 
 const urls = {
   flowControl: "http://localhost:81/",
-  accessControl: "http://localhost:81/",
+  accessControl: "http://localhost:82/api/",
   docsControl: "http://localhost:81/",
 }
 

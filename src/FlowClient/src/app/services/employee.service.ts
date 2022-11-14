@@ -5,6 +5,10 @@ import { BaseHttp as service } from "./base-Http";
 import { C } from "src/interfaces/constants";
 import { Employee } from "src/interfaces/catalog/Employee";
 
+@Injectable({
+  providedIn: 'root'
+})
+
 export class EmployeeService {
   private service : service;
   private urlExtension : string = "employee";

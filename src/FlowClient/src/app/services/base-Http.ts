@@ -43,6 +43,6 @@ export class BaseHttp {
   }
 
   public isValidResponse(data: any) : boolean {
-    return data.status == C.keyword.OK && data.nessage == C.keyword.COMPLETE;
+    return data.status == C.keyword.OK && data.message == C.keyword.COMPLETE;
   }
 }
