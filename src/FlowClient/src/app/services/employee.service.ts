@@ -20,7 +20,14 @@ export class EmployeeService {
   public getEmployees(fn: (res: Employee[]) => void) {
     this.service.getRequest(
       this.urlExtension,
-      res => fn(res.data as Employee[])
+      res => {
+        let employees : Employee[] = res.data as Employee[];
+        employees.map(e => {
+          e.image = this.concatUrl("image/" + e.id);
+          return e;
+        });
+        fn(employees);
+      }
     );
   }
 

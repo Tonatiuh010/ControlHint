@@ -1,4 +1,4 @@
-import { Job } from "./Job";
+import { Position } from "./Position";
 import { Level } from "./Level";
 import { Shift } from "./Shift";
 
@@ -6,8 +6,8 @@ import { Shift } from "./Shift";
 export interface Employee {
   name: string;
   lastName: string;
-  /* image: Image; */
-  job: Job;
+  image?: string;
+  position: Position;
   accessLevels: Level[];
   shift: Shift;
   status: string;

@@ -1,4 +1,3 @@
-
 <main id="main" class="main text-break">
   <div class="pagetitle">
      <h1>Lista de empleados</h1>
@@ -9,62 +8,37 @@
         </ol>
      </nav>
   </div>
-  <div class="container-fluid !direction !spacing">
+  <div *ngIf="employees" class="container-fluid !direction !spacing">
     <div class="row">
       <div class="col-7">
         <div class="card text-left">
           <img class="card-img-top" src="holder.js/100px180/" alt="">
           <div class="card-body">
             <h5 class="card-title">Empleados</h5>
-                   <table class="table table-hover">
-                      <thead>
-                         <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Position</th>
-                            <th scope="col">Age</th>
-                            <th scope="col">Start Date</th>
-                         </tr>
-                      </thead>
-                      <tbody>
-                         <tr>
-                            <th scope="row">1</th>
-                            <td>Brandon Jacob</td>
-                            <td>Designer</td>
-                            <td>28</td>
-                            <td>2016-05-25</td>
-                         </tr>
-                         <tr>
-                            <th scope="row">2</th>
-                            <td>Bridie Kessler</td>
-                            <td>Developer</td>
-                            <td>35</td>
-                            <td>2014-12-05</td>
-                         </tr>
-                         <tr>
-                            <th scope="row">3</th>
-                            <td>Ashleigh Langosh</td>
-                            <td>Finance</td>
-                            <td>45</td>
-                            <td>2011-08-12</td>
-                         </tr>
-                         <tr>
-                            <th scope="row">4</th>
-                            <td>Angus Grady</td>
-                            <td>HR</td>
-                            <td>34</td>
-                            <td>2012-06-11</td>
-                         </tr>
-                         <tr>
-                            <th scope="row">5</th>
-                            <td>Raheem Lehner</td>
-                            <td>Dynamic Division Officer</td>
-                            <td>47</td>
-                            <td>2011-04-19</td>
-                         </tr>
-                      </tbody>
-                   </table>
-
+              <table class="table table-hover">
+                <thead>
+                    <tr>
+                      <th >#</th>
+                      <th>Nombre</th>
+                      <th >Apellidoo</th>
+                      <th>Posicion</th>
+                      <th >Turno</th>
+                      <th >Activo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let employee of employees" >
+                      <th>{{ employee.id}}</th>
+                      <td>{{ employee.name }}</td>
+                      <td>{{ employee.lastName }}</td>
+                      <td>
+                        <!-- {{ employee.position.name}} -->
+                      </td>
+                      <td>{{ employee.shift.name }}</td>
+                      <td>{{ employee.status }}</td>
+                    </tr>
+                </tbody>
+              </table>
           </div>
         </div>
       </div>
