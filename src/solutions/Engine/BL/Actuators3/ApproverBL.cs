@@ -13,5 +13,10 @@ namespace Engine.BL.Actuators3
     public class ApproverBL : BaseBL<DocsControlDAL>
     {
         public ResultInsert SetApprover(Approver approver) => Dal.SetApprover(approver, C.GLOBAL_USER);
+        public List<Approver> GetApprovers(int id) => Dal.GetApprovers(id);
+        public Approver? GetApprover(int id) => GetApprovers(id).FirstOrDefault();
+
+        public List<DocsApprover> GetDocsApprovers(int id) => Dal.GetFlowsApprover(id);
+        public DocsApprover? GetDocApprover(int id) => GetDocsApprovers(id).FirstOrDefault();
     }
 }

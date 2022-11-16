@@ -48,6 +48,11 @@ namespace Engine.Constants {
         public const string SET_DOCS_FLOW = "SET_DOCS_FLOW";
         public const string SET_DOCS_TYPE = "SET_DOCS_TYPE";
         public const string SET_DOCUMENT = "SET_DOCUMENT";
+
+        public const string GET_DOCUMENTS = "GET_DOCUMENTS";
+        public const string GET_FLOWS = "GET_FLOWS";
+        public const string GET_FLOWS_APPROVERS = "GET_FLOWS_APPROVERS";
+        public const string GET_APPROVERS = "GET_APPROVERS"; 
         #endregion
 
     }

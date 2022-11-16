@@ -13,5 +13,8 @@ namespace Engine.BL.Actuators3
     public class DocFlowBL : BaseBL<DocsControlDAL>
     {
         public ResultInsert SetDocFlow(DocFlow docFlow) => Dal.SetDocFlow(docFlow, C.GLOBAL_USER);
+
+        public List<DocFlow> GetDocFlows(int id) => Dal.GetDocFlows(id);
+        public DocFlow? GetDocFlow(int id) => GetDocFlows(id).FirstOrDefault();
     }
 }
