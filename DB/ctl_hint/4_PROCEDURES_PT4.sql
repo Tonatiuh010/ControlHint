@@ -63,7 +63,7 @@ DELIMITER ;
 --     @MSG
 -- );
 
-############################# GET_DEV_CONNECTION ############################### */
+/* ############################# GET_DEV_CONNECTION ############################### */
 DROP PROCEDURE IF EXISTS GET_DEV_CONNECTION;
 DELIMITER //
 CREATE PROCEDURE GET_DEV_CONNECTION  (

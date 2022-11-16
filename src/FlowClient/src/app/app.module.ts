@@ -41,6 +41,7 @@ import { PagesError404Component } from './pages/pages-error404/pages-error404.co
 import { PagesBlankComponent } from './pages/pages-blank/pages-blank.component';
 import { DashboardPrincipalComponent } from './pages/dashboard-principal/dashboard-principal.component';
 import { ListEmployeesComponent } from './pages/list-employees/list-employees.component';
+import { PagesDeviceComponent } from './pages/pages-device/pages-device.component';
 
 @NgModule({
   declarations: [
@@ -81,7 +82,8 @@ import { ListEmployeesComponent } from './pages/list-employees/list-employees.co
     PagesError404Component,
     PagesBlankComponent,
     DashboardPrincipalComponent,
-    ListEmployeesComponent
+    ListEmployeesComponent,
+    PagesDeviceComponent
   ],
   imports: [
     HttpClientModule,

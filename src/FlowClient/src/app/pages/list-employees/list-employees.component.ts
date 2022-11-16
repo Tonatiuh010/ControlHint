@@ -5,7 +5,6 @@ import { Employee } from 'src/interfaces/catalog/Employee';
 @Component({
   selector: 'app-list-employees',
   templateUrl: './list-employees.component.html',
-  styleUrls: ['./list-employees.component.css']
 })
 export class ListEmployeesComponent implements OnInit {
   employees: Employee[] | undefined;

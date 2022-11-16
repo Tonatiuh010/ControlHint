@@ -1,0 +1,70 @@
+<main id="main" class="main">
+  <div class="pagetitle">
+    <h1>Flujo de dipositivos </h1>
+    <nav class="bg-red-500">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
+        <li class="breadcrumb-item active">Flujo de dipositivos </li>
+      </ol>
+    </nav>
+  </div>
+  <section class="section">
+    <div class="col-12">
+      <div class="card recent-sales overflow-auto">
+
+        <!-- PLEASE FIX THIS! -->
+        <!-- <div class="filter">
+          <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+            <li class="dropdown-header text-start">
+              <h6>Filter</h6>
+            </li>
+            <li><a class="dropdown-item" href="#">Today</a></li>
+            <li><a class="dropdown-item" href="#">This Month</a></li>
+            <li><a class="dropdown-item" href="#">This Year</a></li>
+          </ul>
+        </div> -->
+        <!-- PLEASE FIX THIS! -->
+
+        <div class="card-body">
+          <!-- This causes some kind of issue with the currents angular data rendering -->
+          <!-- table-borderless datatable -->
+          <!-- This causes some kind of issue with the currents angular data rendering -->
+          <table class="table ">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Dispositivo</th>
+                <th scope="col">Model</th>
+                <th scope="col">IP</th>
+                <th scope="col">Flujo</th>
+                <th scope="col">Señal</th>
+                <th scope="col">Status</th>
+              </tr>
+            </thead>
+            <tbody  >
+              <tr *ngFor="let device of devices" >
+                <th scope="row">#{{device.id}}</th>
+                <td>{{device.name}}</td>
+                <td>{{device.model}}</td>
+                <td>{{device.ip}}</td>
+                <td>TEST</td>
+                <td>{{device.last_update}}</td>
+                <td >
+                  <ng-template [ngIf]="device.isActive" [ngIfElse]="enabledBlock">
+                    <span class="badge bg-success">Enabled</span>
+                  </ng-template>
+
+                  <ng-template #enabledBlock>
+                    <span class="badge bg-red-500">Disabled</span>
+                  </ng-template>
+
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
