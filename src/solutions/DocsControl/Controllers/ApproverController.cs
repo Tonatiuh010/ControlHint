@@ -16,7 +16,18 @@ namespace DocsControl.Controllers
     {
         private readonly ApproverBL bl = new();
 
-        
+        [HttpGet]
+        public Result GetApprovers() => RequestResponse(() => bl.GetApprovers());
+
+        [HttpGet("{id:int}")]
+        public Result GetApprover(int id) => RequestResponse(() => bl.GetApprover(id));
+
+        [HttpGet]
+        public Result GetDocsApprovers() => RequestResponse(() => bl.GetDocsApprovers());
+
+        [HttpGet("{id:int}")]
+        public Result GetDocApprover(int id) => RequestResponse(() => bl.GetDocApprover(id));
+
         [HttpPost]
         public Result SetApprover(dynamic obj) => RequestResponse(() =>
         {

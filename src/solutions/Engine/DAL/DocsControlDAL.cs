@@ -173,7 +173,7 @@ namespace Engine.DAL
             return result;
         }
 
-        public List<Document> GetDocuments(int DocumentId)
+        public List<Document> GetDocuments(int? DocumentId)
         {
             List<Document> model = new();
 
@@ -206,7 +206,7 @@ namespace Engine.DAL
             return model;
         }
 
-        public List<DocFlow> GetDocFlows(int DocFlowId)
+        public List<DocFlow> GetDocFlows(int? DocFlowId)
         {
             List<DocFlow> model = new();
 
@@ -237,12 +237,12 @@ namespace Engine.DAL
                 }
                 reader.Close();
             },
-                (ex, msg) => SetExceptionResult("DocsControl.GetDocuments", msg, ex)
+                (ex, msg) => SetExceptionResult("DocsControl.GetDocFlows", msg, ex)
             );
             return model;
         }
 
-        public List<DocsApprover> GetFlowsApprover(int DocsApprover)
+        public List<DocsApprover> GetFlowsApprover(int? DocsApprover)
         {
             List<DocsApprover> model = new();
 
@@ -308,7 +308,7 @@ namespace Engine.DAL
             return model;
         }
 
-        public List<Approver> GetApprovers(int Approver)
+        public List<Approver> GetApprovers(int? Approver)
         {
             List<Approver> model = new();
 

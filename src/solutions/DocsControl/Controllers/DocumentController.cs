@@ -14,7 +14,13 @@ namespace DocsControl.Controllers
     public class DocumentController : CustomController
     {
         private readonly DocumentBL bl = new();
-        
+
+        [HttpGet]
+        public Result GetDocuments() => RequestResponse(() => bl.GetDocuments());
+
+        [HttpGet("{id:int}")]
+        public Result GetDocument(int id) => RequestResponse(() => bl.GetDocument(id));
+
         [HttpPost]
         public Result SetDocument(dynamic obj) => RequestResponse(() =>
         {

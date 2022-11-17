@@ -10,11 +10,11 @@ using Engine.Constants;
 
 namespace Engine.BL.Actuators3
 {
-    public class DocFlowBL : BaseBL<DocsControlDAL>
+    public class FlowsBL : BaseBL<DocsControlDAL>
     {
-        public ResultInsert SetDocFlow(DocFlow docFlow) => Dal.SetDocFlow(docFlow, C.GLOBAL_USER);
+        public ResultInsert SetDocFlow(DocFlow DocFlowId) => Dal.SetDocFlow(DocFlowId, C.GLOBAL_USER);
 
-        public List<DocFlow> GetDocFlows(int id) => Dal.GetDocFlows(id);
+        public List<DocFlow> GetDocFlows(int? id = null) => Dal.GetDocFlows(id);
         public DocFlow? GetDocFlow(int id) => GetDocFlows(id).FirstOrDefault();
     }
 }
