@@ -22,9 +22,9 @@ char *pass = "CU3RV@S2022"; // "VBBPMSZNNEJV"; // "12345678";
 String deviceName = "ESP-FG-TNT";
 String model = "ESP-32";
 
-String host = "http://172.17.4.85:81/api/"; // "http://192.168.0.125:81/api/"; //
-String domain = "172.17.4.85"; // "192.168.0.125"; // 
-int port = 81;
+String host = "https://flowcontrol9a.azurewebsites.net/api/"; // "http://172.17.4.85:81/api/"; // "http://192.168.0.125:81/api/"; //
+String domain = "flowcontrol9a.azurewebsites.net"; // "172.17.4.85"; // "192.168.0.125"; // 
+int port = 80;
 
 int wifiStatus = WL_IDLE_STATUS;
 
