@@ -6,14 +6,10 @@ using System.Text.Json.Nodes;
 using Engine.BO;
 using Engine.Constants;
 using Engine.BL.Actuators2;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
 using FlowControl.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using Engine.BO.FlowControl;
 using Engine.BO.AccessControl;
-using System.Xml.Linq;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Org.BouncyCastle.Crypto.Digests;
 
 namespace FlowControl.Controllers
 {
@@ -48,9 +44,16 @@ namespace FlowControl.Controllers
                 LastUpdate = DateTime.Now
             });
 
-            if (result.Message == C.OK)
-                _hub.Clients.All.SendAsync(C.HUB_DEVICE_MONITOR, result?.InsertDetails?.CastObject<Device>());
+            if (result != null && result.Status == C.OK) 
+            {
+                var device = result?.InsertDetails?.CastObject<Device>();
 
+                if (device != null && device.Name != null)
+                {
+                    device = bl.GetDevice(device.Name);
+                    _hub.Clients.All.SendAsync(C.HUB_DEVICE_MONITOR, device);
+                }
+            }
             return result;
         });
 

@@ -49,7 +49,7 @@
                 <td>{{device.model}}</td>
                 <td>{{device.ip}}</td>
                 <td>TEST</td>
-                <td>{{device.last_update}}</td>
+                <td>{{device.last_update.toLocaleString()}}</td>
                 <td >
                   <ng-template [ngIf]="device.isActive" [ngIfElse]="enabledBlock">
                     <span class="badge bg-success">Enabled</span>

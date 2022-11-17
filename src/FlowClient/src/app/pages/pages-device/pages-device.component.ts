@@ -14,21 +14,46 @@ export class PagesDeviceComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     this.service.getDevices(devices => {
       this.devices = devices;
+      this.sortDevices();
     });
 
-    this.hubService.setSubMonitor((device : any) => {
-      console.log(device);
-    });
+    this.hubService.setSubMonitor(this.addDevice);
+
     // var s = document.createElement("script");
     // s.type = "text/javascript";
     // s.src = "../assets/js/main.js";
     // this.elementRef.nativeElement.appendChild(s);
   }
 
-  onDevice(device: Device) {
+  private addDevice(device: Device) {
+    if(this.devices) {
+      let index = this.devices.findIndex(x => x.name == device.name);
 
+      if (index != -1) {
+        this.devices[index] = device;
+      } else {
+        this.devices.push(device);
+      }
+
+      this.sortDevices();
+
+    }
+  }
+
+  private sortDevices() {
+    if(this.devices) {
+      this.devices.sort((a, b) =>  {
+        let dt1 : Date = a.last_update;
+        let dt2 : Date = b.last_update;
+
+        let diff = (dt2.getTime() - dt1.getTime());
+
+        return diff;
+      })
+    }
   }
 
 }
