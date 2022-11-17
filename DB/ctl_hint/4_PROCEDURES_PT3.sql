@@ -307,3 +307,55 @@ DELIMITER ;
 --  @MSG
 -- );
 -- SELECT @MSG RESULT;
+
+/* ############################# SET_DEV_FLOW ############################### */
+DROP PROCEDURE IF EXISTS SET_DEV_FLOW;
+DELIMITER //
+CREATE PROCEDURE SET_DEV_FLOW (
+	IN IN_DEVICE_ID INT,	
+    IN IN_FLOW_ID INT,
+    IN IN_USER VARCHAR(50),    
+    OUT OUT_MSG VARCHAR(450)
+) 
+BEGIN	
+	DECLARE CONTINUE HANDLER FOR SQLEXCEPTION 
+    BEGIN
+		GET DIAGNOSTICS CONDITION 1 @SQL_STATUS = RETURNED_SQLSTATE, @ERR_MSG = MESSAGE_TEXT;    
+		SET OUT_MSG := CONCAT('ERROR -> ON [SET_DEV_FLOW] ',  @SQL_STATUS, ' - ', @ERR_MSG);
+	END;    
+    SET OUT_MSG = 'OK';
+    
+	UPDATE DEV_FLOW SET 		        
+        FLOW_ID = IN_FLOW_ID,
+        LAST_UPDATE = NOW(),
+        STATUS = 'ENABLED',
+        UPDATED_ON = NOW(),
+        UPDATED_BY = IN_USER
+	WHERE 
+		DEVICE_ID = IN_DEVICE_ID;
+	
+    IF ROW_COUNT() = 0 THEN 
+		INSERT INTO DEV_FLOW (
+			DEVICE_ID,
+            FLOW_ID,
+            LAST_UPDATE,
+            CREATED_BY
+		) VALUES (
+			IN_DEVICE_ID,
+            IN_FLOW_ID,
+            NOW(),
+            IN_USER
+        );			
+    END IF;
+    
+END //
+DELIMITER ;
+
+-- SET @MSG = '';
+-- CALL SET_DEV_FLOW(
+-- 	2, 
+-- 	1, 
+--  'TEST_API', 
+--  @MSG
+-- );
+-- SELECT @MSG;

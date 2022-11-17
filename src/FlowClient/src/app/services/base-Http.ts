@@ -25,6 +25,22 @@ export class BaseHttp {
     }
   }
 
+  public postRequest(urlExtension: string = '', body: any, fn: (res: any) => void ) {
+    try {
+      let obs = this.http.post<any>(this.url + urlExtension, body);
+
+      this.responseBlock(
+        obs,
+        fn,
+        () => {
+          throw 'Error reading response. ';
+        }
+      );
+    } catch {
+      throw 'Exception getting data body. ';
+    }
+  }
+
   private responseBlock(response: Observable<dataBody>, onComplete: (res: dataBody) => void, onError: (err: any) => void) {
     let ref = this;
 

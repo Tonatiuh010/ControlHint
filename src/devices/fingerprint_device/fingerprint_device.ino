@@ -152,6 +152,7 @@ int getFingerImage() {
     Serial.println(fingerMsg);
     String jsonMsg = getPayloadDataMsg(fingerMsg, TYPE_FINGER_DETECTED);
     webSocket.sendTXT(jsonMsg);
+    delay(350);
   }  
 
   return p;

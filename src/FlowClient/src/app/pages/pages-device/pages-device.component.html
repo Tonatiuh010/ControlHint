@@ -1,3 +1,5 @@
+
+<device-modal (onDeviceAction)="addDevice($event)" [device]="deviceModal"></device-modal>
 <main id="main" class="main">
   <div class="pagetitle">
     <h1>Flujo de dipositivos </h1>
@@ -8,29 +10,11 @@
       </ol>
     </nav>
   </div>
-  <section class="section">
+  <section class="shadow section">
     <div class="col-12">
-      <div class="card recent-sales overflow-auto">
-
-        <!-- PLEASE FIX THIS! -->
-        <!-- <div class="filter">
-          <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-            <li class="dropdown-header text-start">
-              <h6>Filter</h6>
-            </li>
-            <li><a class="dropdown-item" href="#">Today</a></li>
-            <li><a class="dropdown-item" href="#">This Month</a></li>
-            <li><a class="dropdown-item" href="#">This Year</a></li>
-          </ul>
-        </div> -->
-        <!-- PLEASE FIX THIS! -->
-
+      <div class="card overflow-auto p-3">
         <div class="card-body">
-          <!-- This causes some kind of issue with the currents angular data rendering -->
-          <!-- table-borderless datatable -->
-          <!-- This causes some kind of issue with the currents angular data rendering -->
-          <table class="table ">
+          <table class="table table-hover">
             <thead>
               <tr>
                 <th scope="col">#</th>
@@ -40,29 +24,58 @@
                 <th scope="col">Flujo</th>
                 <th scope="col">Señal</th>
                 <th scope="col">Status</th>
+                <th scope="col"> &#9863; </th>
               </tr>
             </thead>
             <tbody  >
-              <tr *ngFor="let device of devices" >
+              <tr *ngFor="let device of devices" (click)="selectDevice(device)" >
                 <th scope="row">#{{device.id}}</th>
                 <td>{{device.name}}</td>
                 <td>{{device.model}}</td>
                 <td>{{device.ip}}</td>
-                <td>TEST</td>
-                <td>{{device.last_update.toLocaleString()}}</td>
+                <td>
+                  <ng-template [ngIf]="device.flow" [ngIfElse]="enabledBlock2">
+                    <span class="badge bg-success"> {{ device.flow.name }}</span>
+                  </ng-template>
+
+                  <ng-template #enabledBlock2>
+                    <span class="badge bg-danger">NO FLOW</span>
+                  </ng-template>
+
+                </td>
+                <td >
+                  {{ device.last_update.toLocaleString() }}
+                </td>
                 <td >
                   <ng-template [ngIf]="device.isActive" [ngIfElse]="enabledBlock">
                     <span class="badge bg-success">Enabled</span>
                   </ng-template>
 
                   <ng-template #enabledBlock>
-                    <span class="badge bg-red-500">Disabled</span>
+                    <span class="badge bg-danger">Disabled</span>
                   </ng-template>
 
+                </td>
+                <td>
+                  <button type="button" (click)="showModal(device)" class="btn btn-sm btn-outline-success">
+                    &#9998;
+                  </button>
                 </td>
               </tr>
             </tbody>
           </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section *ngIf="deviceView" class="shadow section">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body p-4">
+          <p class="col mb-2 text-muted fw-bold fs-5">Observando {{deviceView.name}}</p>
+          <div id="device-log" class="border overflow-auto border-1 p-3 bg-light fst-italic" style="height: 200px;" >
+          </div>
         </div>
       </div>
     </div>

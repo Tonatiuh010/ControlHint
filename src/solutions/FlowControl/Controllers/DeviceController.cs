@@ -106,6 +106,7 @@ namespace FlowControl.Controllers
                     if(config != null)
                     {
                         var signal = new DeviceSignal(config, status, (int)confidence);
+                        flowBl.ProcessTransaction(signal);
                         _hub.Clients.Group(deviceName).SendAsync(C.HUB_DEVICE_SIGNAL, signal);
                     }
                 }                           

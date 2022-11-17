@@ -17,6 +17,7 @@ namespace Engine.Constants {
         public const string SET_SHIFT = "SET_SHIFT";
         public const string SET_POSITION = "SET_POSITION";
         public const string SET_EMPLOYEE_HINT = "SET_EMPLOYEE_HINT";
+        public const string SET_CONTROL_CHECK = "SET_CONTROL_CHECK";
         public const string GET_ACCESS_LEVEL = "SELECT * from access_level";
         public const string GET_EMPLOYEE_DETAIL = "GET_EMPLOYEE_DETAIL";
         public const string GET_EMPLOYEE_ACCESS_LEVEL = "GET_EMPLOYEE_ACCESS_LEVEL";
@@ -39,6 +40,7 @@ namespace Engine.Constants {
         public const string SET_ENDPOINT_PARAMETER = "SET_ENDPOINT_PARAMETER";
         public const string SET_FLOW_DETAIL = "SET_FLOW_DETAIL";
         public const string SET_DEV_CONNECTION = "SET_DEV_CONNECTION";
+        public const string SET_DEV_FLOW = "SET_DEV_FLOW";
         #endregion
 
         #region CTL_DOCS

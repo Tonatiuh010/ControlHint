@@ -9,9 +9,7 @@ namespace AccessControl
 {
     public class SubscriptionAPI : ISubscriptionAPI
     {
-        public SubscriptionAPI()
-        {
-        }
+        public SubscriptionAPI() { }
 
         public API GetAPI()
         {
@@ -27,58 +25,59 @@ namespace AccessControl
         {
             return new()
             {
-                //new Endpoint()
-                //{
-                //    Id = 1,
-                //    Api = GetAPI(),
-                //    Params = new List<Parameter>()
-                //    {
-                //        new Parameter()
-                //        {
-                //            Id = 1, 
-                //            Name = "employeeId",
-                //            IsRequired = true,
-                //            ContentType = "application/json",
-                //            Description = "ID of Employee",
-                //        },
-                //        new Parameter()
-                //        {
-                //            Id = 2, 
-                //            Name = "deviceHintId",
-                //            IsRequired = true,
-                //            ContentType = "application/json",
-                //            Description = "ID Hint in Local MEMORY of Device",
-                //        },
-                //        new Parameter()
-                //        {
-                //            Id = 3,
-                //            Name = "isValid",
-                //            IsRequired = true,
-                //            ContentType = "application/json",
-                //            Description = "Is Authorized to continue",
-                //        }
-                //    }, 
-                //    RequestType = "POST",
-                //    Route = "Check"
-                //}                
+               CheckEndpoint()            
             };
         }
 
         public void SendAPI()
         {
-            FlowBL bl = new FlowBL();
+            try {  
 
-            bl.SetAPI(GetAPI());
+                FlowBL bl = new FlowBL();
 
-            foreach(var endpoint in GetEndpoints())
-            {
-                bl.SetEndpoint(endpoint);
-                foreach(var param in endpoint.Params)
+                bl.SetAPI(GetAPI());
+
+                foreach(var endpoint in GetEndpoints())
                 {
-                    bl.SetParameter(param, (int)endpoint.Id);
+                    bl.SetEndpoint(endpoint);
+                    foreach(var param in endpoint.Params)
+                    {
+                        bl.SetParameter(param, (int)endpoint.Id);
+                    }
                 }
-            }                
+
+            } catch
+            {
+
+            }
         }
+
+        private Endpoint CheckEndpoint() => new Endpoint()
+        {
+            Id = 1,
+            Api = GetAPI(),
+            RequestType = "POST",
+            Route = "Check",
+            Params = new List<Parameter>()
+            {
+                new Parameter()
+                {
+                    Id = 1,
+                    ContentType = "application/json",
+                    IsRequired = true,
+                    Name = "employeeId",
+                    Description = "Employee ID, from the check",
+                },
+                new Parameter()
+                {
+                    Id = 2,
+                    ContentType = "application/json",
+                    IsRequired = true,
+                    Name = "deviceId",
+                    Description = "Device ID, from the check",
+                }
+            }
+        };
 
     }
 }

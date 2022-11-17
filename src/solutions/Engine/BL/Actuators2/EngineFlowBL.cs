@@ -31,13 +31,22 @@ namespace Engine.BL.Actuators2
 
         }
 
-        public void ProcessTransaction(string deviceName, JsonObject data)
-        {            
-            Flow? flow = bl.GetFlowByDeviceName(deviceName);
+        public void ProcessTransaction(DeviceSignal signal)
+        {
+            Flow? flow = signal.HintConfig.Device.Flow;
+            Device? device = signal.HintConfig.Device;
+            DeviceHintConfig config = signal.HintConfig;
 
-            if (flow != null)
+            if (flow != null && device != null)
             {
-                ExecuteFlow(flow, data);
+                ExecuteFlow(flow, new JsonObject()
+                {
+                    ["deviceId"] = device.Id,
+                    ["hintKey"] = config.HintKey,
+                    ["employeeId"] = config.Employee.Id,
+                    ["statusFinger"] = signal.StatusFinger,
+                    ["confidence"] = signal.Confidence
+                });
             }
         }       
         

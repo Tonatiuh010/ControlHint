@@ -8,7 +8,7 @@ export class SignalRService {
   // private actions: IHubAction[];
   private onConnected : () => void;
 
-  id: string | null;
+  id?: string | null;
 
   constructor(
     url: string,
@@ -23,12 +23,13 @@ export class SignalRService {
     .build();
 
     this.connection.start()
-    .then(() => this.logHub('Connection started'))
+    .then(() => {
+      this.logHub('Connection started');
+      this.id = this.connection.connectionId;
+    })
     .catch(err => this.logHub('Error while starting connection. ', err));
 
     this.connection.onreconnected(this.onConnected);
-
-    this.id = this.connection.connectionId;
 
   }
 
@@ -49,6 +50,6 @@ export class SignalRService {
   }
 
   logHub(msg: string, ...args: any[]) {
-    console.log(`[${Date.now.toString()}]: ${msg}`, ...args);
+    console.log(`[${new Date(Date.now()).toLocaleTimeString()}]: ${msg}`, ...args);
   }
 }

@@ -42,9 +42,12 @@ import { PagesBlankComponent } from './pages/pages-blank/pages-blank.component';
 import { DashboardPrincipalComponent } from './pages/dashboard-principal/dashboard-principal.component';
 import { ListEmployeesComponent } from './pages/list-employees/list-employees.component';
 import { PagesDeviceComponent } from './pages/pages-device/pages-device.component';
+import { ModalDeviceComponent } from './custom-components/modals/modal-device/modal-device.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
+    ModalDeviceComponent,
     AppComponent,
     HeaderComponent,
     FooterComponent,
@@ -87,6 +90,7 @@ import { PagesDeviceComponent } from './pages/pages-device/pages-device.componen
   ],
   imports: [
     HttpClientModule,
+    ReactiveFormsModule,
     BrowserModule,
     AppRoutingModule
   ],

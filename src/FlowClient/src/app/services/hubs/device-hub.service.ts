@@ -12,19 +12,11 @@ export class DeviceHubService {
 
   private hub : SignalRService;
 
-  // private subInfo : IHubAction = InstanceAction(DeviceHubService.methods.Info);
-  // private subMonitor : IHubAction = InstanceAction(DeviceHubService.methods.Monitor);
-  // private subSignal : IHubAction = InstanceAction(DeviceHubService.methods.Signal);
-  // ,[
-  //   this.subInfo,
-  //   this.subMonitor,
-  //   this.subSignal
-  // ]
-
   constructor() {
     this.hub = new SignalRService(DeviceHubService.constants._url);
   }
 
+  // args: type: string, msg: string
   setSubInfo(fn: (...args: any[]) => any ) {
     this.hub.bindAction(DeviceHubService.methods.Info, fn);
   }
@@ -38,7 +30,7 @@ export class DeviceHubService {
   }
 
   addToGroup(groupName : string) {
-    // Add logs
+    this.hub.logHub(`${this.hub.id} - Subscribed to ${groupName}`);
     this.hub.invoke(DeviceHubService.methods.AddToGroup, groupName);
   }
 

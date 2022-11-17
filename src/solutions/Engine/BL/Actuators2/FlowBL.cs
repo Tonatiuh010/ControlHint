@@ -66,7 +66,9 @@ namespace Engine.BL.Actuators2
 
         public Parameter? GetParameter(int id) => GetParameters(id).FirstOrDefault();
 
-        public ResultInsert SetParameter(Parameter parameter, int endpointId) => Dal.SetParameter(parameter, endpointId, C.GLOBAL_USER);        
+        public ResultInsert SetParameter(Parameter parameter, int endpointId) => Dal.SetParameter(parameter, endpointId, C.GLOBAL_USER);
+
+        public Result SetDevFlow(int deviceId, int flowId) => Dal.SetDevFlow(deviceId, flowId, C.GLOBAL_USER);
 
         #region Complete
         private void CompleteFlow(Flow flow)

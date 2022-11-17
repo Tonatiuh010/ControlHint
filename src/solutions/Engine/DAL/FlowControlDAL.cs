@@ -433,6 +433,30 @@ namespace Engine.DAL
             return result;
         }
 
+        public Result SetDevFlow(int deviceId, int flowId, string txnUser)
+        {
+            Result result = new ();
+
+            string sSp = SQL.SET_DEV_FLOW;
+
+            TransactionBlock(this, () => {
+                using var cmd = CreateCommand(sSp, CommandType.StoredProcedure);
+
+                IDataParameter pResult = CreateParameterOut("OUT_MSG", MySqlDbType.String);
+                cmd.Parameters.Add(CreateParameter("IN_DEVICE_ID", deviceId, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_FLOW_ID", flowId, MySqlDbType.Int32));                
+                cmd.Parameters.Add(CreateParameter("IN_USER", txnUser, MySqlDbType.String));
+                cmd.Parameters.Add(pResult);
+
+                NonQueryBlock(cmd, () => GetResult(pResult, sSp, result));
+            },
+                (ex, msg) => SetExceptionResult("FlowControlDAL.SetDevFlow", msg, ex, result)
+            );
+
+            return result;
+
+        }
+
         #region Crazy Queries
         private static string QueryDeviceFlow(int? deviceId = null, int? flowId = null)
         {

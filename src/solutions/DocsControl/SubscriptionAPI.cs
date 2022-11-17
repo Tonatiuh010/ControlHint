@@ -18,7 +18,7 @@ namespace DocsControl
             {
                 Id = 3,
                 Url = Builder.URL,
-                Description = "Docs Control API for Docuements and Flows by Type Document"
+                Description = "Docs Control API for Documents and Flows by Type Document"
             };
         }
 

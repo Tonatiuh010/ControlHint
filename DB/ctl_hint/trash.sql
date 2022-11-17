@@ -25,4 +25,6 @@ SELECT * FROM CON_API;
 SELECT * FROM CTL_ACCESS.EMPLOYEE;
 
 
-SELECT ifnull('YA NO ES NULL', NULL)
+SELECT ifnull('YA NO ES NULL', NULL);
+
+call get_flow(null, null, null, @out_result)
