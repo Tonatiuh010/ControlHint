@@ -22,12 +22,6 @@ namespace DocsControl.Controllers
         [HttpGet("{id:int}")]
         public Result GetApprover(int id) => RequestResponse(() => bl.GetApprover(id));
 
-        [HttpGet]
-        public Result GetDocsApprovers() => RequestResponse(() => bl.GetDocsApprovers());
-
-        [HttpGet("{id:int}")]
-        public Result GetDocApprover(int id) => RequestResponse(() => bl.GetDocApprover(id));
-
         [HttpPost]
         public Result SetApprover(dynamic obj) => RequestResponse(() =>
         {

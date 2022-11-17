@@ -13,8 +13,8 @@ namespace Engine.BL.Actuators3
     public class DocumentBL : BaseBL<DocsControlDAL>
     {
         public ResultInsert SetDocument(Document document) => Dal.SetDocument(document, C.GLOBAL_USER);
-
-        public List<Document> GetDocuments(int id ) => Dal.GetDocuments(id);
+        
+        public List<Document> GetDocuments(int? id = null ) => Dal.GetDocuments(id);
         public Document? GetDocument(int id) => GetDocuments(id).FirstOrDefault();
     }
 }
