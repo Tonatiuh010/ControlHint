@@ -27,40 +27,40 @@ namespace AccessControl
         {
             return new()
             {
-                new Endpoint()
-                {
-                    Id = 1,
-                    Api = GetAPI(),
-                    Params = new List<Parameter>()
-                    {
-                        new Parameter()
-                        {
-                            Id = 1, 
-                            Name = "employeeId",
-                            IsRequired = true,
-                            ContentType = "application/json",
-                            Description = "ID of Employee",
-                        },
-                        new Parameter()
-                        {
-                            Id = 2, 
-                            Name = "deviceHintId",
-                            IsRequired = true,
-                            ContentType = "application/json",
-                            Description = "ID Hint in Local MEMORY of Device",
-                        },
-                        new Parameter()
-                        {
-                            Id = 3,
-                            Name = "isValid",
-                            IsRequired = true,
-                            ContentType = "application/json",
-                            Description = "Is Authorized to continue",
-                        }
-                    }, 
-                    RequestType = "POST",
-                    Route = "Check"
-                }                
+                //new Endpoint()
+                //{
+                //    Id = 1,
+                //    Api = GetAPI(),
+                //    Params = new List<Parameter>()
+                //    {
+                //        new Parameter()
+                //        {
+                //            Id = 1, 
+                //            Name = "employeeId",
+                //            IsRequired = true,
+                //            ContentType = "application/json",
+                //            Description = "ID of Employee",
+                //        },
+                //        new Parameter()
+                //        {
+                //            Id = 2, 
+                //            Name = "deviceHintId",
+                //            IsRequired = true,
+                //            ContentType = "application/json",
+                //            Description = "ID Hint in Local MEMORY of Device",
+                //        },
+                //        new Parameter()
+                //        {
+                //            Id = 3,
+                //            Name = "isValid",
+                //            IsRequired = true,
+                //            ContentType = "application/json",
+                //            Description = "Is Authorized to continue",
+                //        }
+                //    }, 
+                //    RequestType = "POST",
+                //    Route = "Check"
+                //}                
             };
         }
 

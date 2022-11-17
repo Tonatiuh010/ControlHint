@@ -22,32 +22,32 @@ namespace FlowControl
         {
             return new()
             {
-                new Endpoint()
-                {
-                    Id = 2,
-                    Api = GetAPI(),
-                    Params = new List<Parameter>()
-                    {
-                        new Parameter()
-                        {
-                            Id = 4,
-                            Name = "deviceName",
-                            IsRequired = true,
-                            ContentType = "application/json",
-                            Description = "Name of Device where comes the signal",
-                        },
-                        new Parameter()
-                        {
-                            Id = 5,
-                            Name = "deviceHintId",
-                            IsRequired = true,
-                            ContentType = "application/json",
-                            Description = "ID Hint in Local MEMORY of Device",
-                        },                        
-                    },
-                    RequestType = "HUB",
-                    Route = "showHint"
-                },
+                //new Endpoint()
+                //{
+                //    Id = 2,
+                //    Api = GetAPI(),
+                //    Params = new List<Parameter>()
+                //    {
+                //        new Parameter()
+                //        {
+                //            Id = 4,
+                //            Name = "deviceName",
+                //            IsRequired = true,
+                //            ContentType = "application/json",
+                //            Description = "Name of Device where comes the signal",
+                //        },
+                //        new Parameter()
+                //        {
+                //            Id = 5,
+                //            Name = "deviceHintId",
+                //            IsRequired = true,
+                //            ContentType = "application/json",
+                //            Description = "ID Hint in Local MEMORY of Device",
+                //        },                        
+                //    },
+                //    RequestType = "HUB",
+                //    Route = "showHint"
+                //},
                 //new Endpoint()
                 //{
                 //    Id = 3,
