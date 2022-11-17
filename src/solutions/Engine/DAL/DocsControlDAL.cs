@@ -172,5 +172,183 @@ namespace Engine.DAL
             );
             return result;
         }
+
+        public List<Document> GetDocuments(int? DocumentId)
+        {
+            List<Document> model = new();
+
+            TransactionBlock(this, () =>
+            {
+                using var cmd = CreateCommand(SQL.GET_DOCUMENTS, CommandType.StoredProcedure);
+
+                IDataParameter pResult = CreateParameterOut("OUT_MSG", MySqlDbType.String);
+                cmd.Parameters.Add(CreateParameter("IN_DOCUMENT_ID", DocumentId, MySqlDbType.Int32));
+                cmd.Parameters.Add(pResult);
+
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    model.Add(new Document()
+                    {
+                        Id = Validate.getDefaultIntIfDBNull(reader["DOCUMENT_ID"]),
+                        Name = Validate.getDefaultStringIfDBNull(reader["NAME"]),
+                        DocType = new()
+                        {
+                            Id = Validate.getDefaultIntIfDBNull(reader["DOC_TYPE_ID"]),
+                            TypeCode = Validate.getDefaultStringIfDBNull(reader["TYPE_CODE"])
+                        }
+                    });
+                }
+                reader.Close();
+            },
+                (ex, msg) => SetExceptionResult("DocsControl.GetDocuments", msg, ex)
+            );
+            return model;
+        }
+
+        public List<DocFlow> GetDocFlows(int? DocFlowId)
+        {
+            List<DocFlow> model = new();
+
+            TransactionBlock(this, ()=>
+            {
+                using var cmd = CreateCommand(SQL.GET_FLOWS, CommandType.StoredProcedure);
+
+                IDataParameter pResult = CreateParameterOut("OUT_MSG", MySqlDbType.String);
+                cmd.Parameters.Add(CreateParameter("IN_DOC_FLOW_ID", DocFlowId, MySqlDbType.Int32));
+                cmd.Parameters.Add(pResult);
+
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    model.Add(new DocFlow()
+                    {
+                        Id = Validate.getDefaultIntIfDBNull(reader["DOC_FLOW_ID"]),
+                        DocType = new()
+                        {
+                            Id = Validate.getDefaultIntIfDBNull(reader["DOC_TYPE_ID"]),
+                            TypeCode = Validate.getDefaultStringIfDBNull(reader["TYPE_CODE"])
+                        },
+                        Key1 = Validate.getDefaultStringIfDBNull(reader["KEY1"]),
+                        Key2 = Validate.getDefaultStringIfDBNull(reader["KEY2"]),
+                        Key3 = Validate.getDefaultStringIfDBNull(reader["KEY3"]),
+                        Key4 = Validate.getDefaultStringIfDBNull(reader["KEY4"])
+                    });
+                }
+                reader.Close();
+            },
+                (ex, msg) => SetExceptionResult("DocsControl.GetDocFlows", msg, ex)
+            );
+            return model;
+        }
+
+        public List<DocsApprover> GetFlowsApprover(int? DocsApprover)
+        {
+            List<DocsApprover> model = new();
+
+            TransactionBlock(this, () =>
+            {
+                using var cmd = CreateCommand(SQL.GET_FLOWS_APPROVERS, CommandType.StoredProcedure);
+
+                IDataParameter pResult = CreateParameterOut("OUT_MSG", MySqlDbType.String);
+                cmd.Parameters.Add(CreateParameter("IN_DOC_FLOW_ID", DocsApprover, MySqlDbType.Int32));
+                cmd.Parameters.Add(pResult);
+
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    model.Add(new DocsApprover()
+                    {
+                        Id = Validate.getDefaultIntIfDBNull(reader["DOCS_APPROVER_ID"]),
+                        DocFlow = new()
+                        {
+                            Id = Validate.getDefaultIntIfDBNull(reader["DOC_FLOW_ID"]),
+                            DocType = new()
+                            {
+                                Id = Validate.getDefaultIntIfDBNull(reader["DOC_TYPE_ID"]),
+                                TypeCode = Validate.getDefaultStringIfDBNull(reader["TYPE_CODE"])
+                            },
+                            Key1 = Validate.getDefaultStringIfDBNull(reader["KEY1"]),
+                            Key2 = Validate.getDefaultStringIfDBNull(reader["KEY2"]),
+                            Key3 = Validate.getDefaultStringIfDBNull(reader["KEY3"]),
+                            Key4 = Validate.getDefaultStringIfDBNull(reader["KEY4"])
+                        },
+                        Approver = new()
+                        {
+                            Id = Validate.getDefaultIntIfDBNull(reader["APPROVER_ID"]),
+                            FullName = Validate.getDefaultStringIfDBNull(reader["FULL_NAME"]),
+                            Position = new()
+                            {
+                                PositionId = Validate.getDefaultIntIfDBNull(reader["POSITION_ID"]),
+                                Alias = Validate.getDefaultStringIfDBNull(reader["ALIAS"]),
+                                Department = new()
+                                {
+                                    Id = Validate.getDefaultIntIfDBNull(reader["DEPARTMENT_ID"]),
+                                    Code = Validate.getDefaultStringIfDBNull(reader["DEPTO_CODE"]),
+                                    Name = Validate.getDefaultStringIfDBNull(reader["Department"])
+                                }
+                            },
+                            Depto = new()
+                            {
+                                Id = Validate.getDefaultIntIfDBNull(reader["DEPTO_ID"]),
+                                Name = Validate.getDefaultStringIfDBNull(reader["NAME"]),
+                                Code = Validate.getDefaultStringIfDBNull(reader["CODE"])
+
+                            }
+                        },
+                        Sequence = Validate.getDefaultIntIfDBNull(reader["SEQUENCE"]),
+                        Name = Validate.getDefaultStringIfDBNull(reader["NAME"]),
+                        Action = Validate.getDefaultIntIfDBNull(reader["ACTION"])
+                    }) ;
+                }
+                reader.Close();
+            },
+                (ex,msg) => SetExceptionResult("DocsControlDAL.GetFlowsApprover", msg, ex)
+            );
+            return model;
+        }
+
+        public List<Approver> GetApprovers(int? Approver)
+        {
+            List<Approver> model = new();
+
+            TransactionBlock(this, () =>
+            {
+                using var cmd = CreateCommand(SQL.GET_APPROVERS, CommandType.StoredProcedure);
+                IDataParameter pResult = CreateParameterOut("OUT_MSG", MySqlDbType.String);
+                cmd.Parameters.Add(CreateParameter("IN_APPROVER_ID", Approver, MySqlDbType.Int32));
+                cmd.Parameters.Add(pResult);
+
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    model.Add(new Approver()
+                    {
+                        Id = Validate.getDefaultIntIfDBNull(reader["APPROVER_ID"]),
+                        Position = new()
+                        {
+                            PositionId = Validate.getDefaultIntIfDBNull(reader["POSITION_ID"]),
+                            Alias = Validate.getDefaultStringIfDBNull(reader["ALIAS"]),
+                            Department = new()
+                            {
+                                Id = Validate.getDefaultIntIfDBNull(reader["DEPARTMENT_ID"]),
+                                Name = Validate.getDefaultStringIfDBNull(reader["NAME"]),
+                                Code = Validate.getDefaultStringIfDBNull(reader["CODE"])
+                            }
+                        },
+                        Depto = new()
+                        {
+                            Id = Validate.getDefaultIntIfDBNull(reader["DEPARTMENT_ID"]),
+                            Name = Validate.getDefaultStringIfDBNull(reader["NAME"]),
+                            Code = Validate.getDefaultStringIfDBNull(reader["CODE"])
+                        }
+                    });
+                }
+                reader.Close();
+            },
+                (ex, msg) => SetExceptionResult("DocsControlDAL.GetApprovers", msg, ex)
+            );
+            return model;
+        }
     }
 }

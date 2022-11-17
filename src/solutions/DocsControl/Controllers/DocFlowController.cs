@@ -1,4 +1,5 @@
 ﻿using Classes;
+using Engine.BL.Actuators2;
 using Engine.BL.Actuators3;
 using Engine.BO;
 using Engine.BO.DocsControl;
@@ -13,10 +14,16 @@ namespace DocsControl.Controllers
     [ApiController]
     public class DocFlowController : CustomController
     {
-        private readonly DocFlowBL bl = new();
-        
+        private readonly FlowsBL bl = new();
+
+        [HttpGet]
+        public Result GetDocFlows() => RequestResponse(() => bl.GetDocFlows());
+
+        [HttpGet("{id:int}")]
+        public Result GetDocFlows(int id) => RequestResponse(() => bl.GetDocFlows(id));
+
         [HttpPost]
-        public Result SetDocument(dynamic obj) => RequestResponse(() =>
+        public Result SetDocFlow(dynamic obj) => RequestResponse(() =>
         {
             JsonObject jObj = JsonObject.Parse(obj.ToString());
             return bl.SetDocFlow(new DocFlow()
