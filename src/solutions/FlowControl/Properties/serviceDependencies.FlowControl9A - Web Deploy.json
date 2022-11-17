@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "apis1": {
+      "apiEndpoint": "https://flowcontrolapi-9a.azure-api.net/",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.ApiManagement/service/FlowControlAPI-9A/apis/FlowControl9A",
+      "type": "apis.azure"
+    }
+  }
+}
