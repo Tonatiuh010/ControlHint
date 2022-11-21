@@ -34,15 +34,22 @@ public class CheckController : CustomController
     [HttpPost] // Add header token
     public Result Set(dynamic obj) => RequestResponse(() => {
         JsonObject jObj = JsonObject.Parse(obj.ToString());
-
-        int employeeId = ParseProperty<int>.GetValue("employeeId", jObj, OnMissingProperty);
+        
         Check check = new ()
         {
-            Device = ParseProperty<int>.GetValue("deviceId", jObj, OnMissingProperty)
+            Employee = new Employee()
+            {
+                Id = ParseProperty<int>.GetValue("employeeId", jObj, OnMissingProperty)
+            },
+            Device = new Engine.BO.FlowControl.Device() 
+            { 
+                Id = ParseProperty<int>.GetValue("deviceId", jObj, OnMissingProperty)
+            } 
         };
 
+        var insertResult = bl.SetCheck(check);
 
-        return bl.SetCheck(check, employeeId);
+        return bl.GetCheck((int)insertResult?.InsertDetails?.Id);
     });
 
 }

@@ -24,7 +24,7 @@ namespace DataService.Services
                     return new ByteArrayContent(bytes);
 
                 case string str: 
-                    return new StringContent(str);
+                    return new StringContent(str, Encoding.UTF8, "application/json");
 
                 case List<KeyValuePair<string, string>> @params: 
                     return new FormUrlEncodedContent(@params);

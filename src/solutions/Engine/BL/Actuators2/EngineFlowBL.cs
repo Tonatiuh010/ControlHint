@@ -12,6 +12,7 @@ using Org.BouncyCastle.Tsp;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -31,7 +32,7 @@ namespace Engine.BL.Actuators2
 
         }
 
-        public void ProcessTransaction(DeviceSignal signal)
+        public async Task<JsonObject?> ProcessTransaction(DeviceSignal signal)
         {
             Flow? flow = signal.HintConfig.Device.Flow;
             Device? device = signal.HintConfig.Device;
@@ -39,7 +40,7 @@ namespace Engine.BL.Actuators2
 
             if (flow != null && device != null)
             {
-                ExecuteFlow(flow, new JsonObject()
+                return await ExecuteFlow(flow, new JsonObject()
                 {
                     ["deviceId"] = device.Id,
                     ["hintKey"] = config.HintKey,
@@ -48,56 +49,96 @@ namespace Engine.BL.Actuators2
                     ["confidence"] = signal.Confidence
                 });
             }
+            else return null;
         }       
         
 
-        private void ExecuteFlow(Flow flow, JsonObject data)
+        private async Task<JsonObject> ExecuteFlow(Flow flow, JsonObject data)
         {
             // Add logs!!! flow.Name
             List<Step> steps = flow.Steps.OrderBy(x => x.Sequence).ToList();
+            JsonObject result = new() {
+                ["status"] = C.OK,
+                ["message"] = C.COMPLETE
+            };
 
-            foreach(Step step in steps)
+            try
             {
-                // Add logs!! step.                
-                Endpoint endpoint = step.Endpoint;
-                List<Parameter> parameters = endpoint.Params;
-                string? resourceString = GetResourceUrl(parameters, data);
-                string? queryString = GetQueryUrl(parameters, data);
-                // Add logs!! endpoint                
-
-                if(!string.IsNullOrEmpty(endpoint.RequestType) && !string.IsNullOrEmpty(endpoint.Api.Url) && !string.IsNullOrEmpty(endpoint.Route))
+                int counter = 1;
+                foreach(Step step in steps)
                 {
-                    WebRequest request = new (endpoint.Api.Url);
-                    JsonObject jObj = new();
+                    // Add logs!! step.                
+                    Endpoint endpoint = step.Endpoint;
+                    List<Parameter> parameters = endpoint.Params;
+                    string? resourceString = GetResourceUrl(parameters, data);
+                    string? queryString = GetQueryUrl(parameters, data);
+                    // Add logs!! endpoint                
 
-                    string route = endpoint.Route + 
-                        (!string.IsNullOrEmpty(resourceString)? resourceString : string.Empty) +
-                        (!string.IsNullOrEmpty(queryString)? ("?" + queryString) : string.Empty)
-                    ;
-
-                    List<Parameter> contentParams = parameters
-                        .Where(x => !IsResourceType(x) && !IsURLType(x))
-                        .ToList();
-
-                    foreach(var p in parameters)
+                    if(!string.IsNullOrEmpty(endpoint.RequestType) && !string.IsNullOrEmpty(endpoint.Api.Url) && !string.IsNullOrEmpty(endpoint.Route))
                     {
-                        if(!string.IsNullOrEmpty(p.Name))
+                        WebRequest request = new (endpoint.Api.Url);
+                        JsonObject jObj = new();
+
+                        string route = endpoint.Route + 
+                            (!string.IsNullOrEmpty(resourceString)? resourceString : string.Empty) +
+                            (!string.IsNullOrEmpty(queryString)? ("?" + queryString) : string.Empty)
+                        ;
+
+                        List<Parameter> contentParams = parameters
+                            .Where(x => !IsResourceType(x) && !IsURLType(x))
+                            .ToList();
+
+                        //foreach(var p in parameters)
+                        //{
+                        //    if(!string.IsNullOrEmpty(p.Name))
+                        //    {
+                        //        jObj.Remove(p.Name);
+                        //        jObj.Add(p.Name, data[p.Name]?.ToString());
+                        //    }
+                        //}
+
+                        RequestProperties requestProps = new ()
                         {
-                            jObj[p.Name] = data[p.Name];
-                        }
+                            Method = RequestProperties.GetMethod(endpoint.RequestType),
+                            EndPoint = route,
+                            Params = new HttpContentService(data.ToJsonString())
+                        };
+
+                        requestProps.SetContent(requestProps.Params);
+
+                        switch(endpoint.RequestType)
+                        {
+                            case "POST":
+                                result["data" + counter] = await GetContentString( await request.PostRequest(requestProps) );
+                                break;
+                            case "GET":
+                                result["data" + counter] = await GetContentString(await request.PostRequest(requestProps));
+                                break;
+                            default:
+                                result["status"] = "NO_METHOD_DEFINED " + endpoint.RequestType;
+                                result["message"] = "No method recognized!";
+                                break;
+                        }                   
                     }
 
-                    var param = jObj.Cast<object>();
-
-                    RequestProperties requestProps = new ()
-                    {
-                        Method = RequestProperties.GetMethod(endpoint.RequestType),
-                        EndPoint = route,
-                        Params = new HttpContentService(param)
-                    };
+                    counter++;
                 }
             }
+            catch (Exception ex)
+            {
+                result["status"] = C.ERROR;
+                result["message"] = ex.Message;
+            }
             // Add logs!!!
+
+            return result;
+        }
+
+        private async Task<JsonObject?> GetContentString(HttpResponseMessage response)
+        {
+
+            var str = await response.Content.ReadAsStringAsync();
+            return (JsonObject?)JsonNode.Parse(str);
         }
 
         private static bool IsURLType(Parameter x) => x.ContentType == C.URL;

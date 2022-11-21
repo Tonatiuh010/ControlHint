@@ -73,48 +73,57 @@ namespace FlowControl.Controllers
         });
 
         [HttpPost("signal")]
-        public Result EmitHint(dynamic obj) => RequestResponse(() =>
+        public async Task<Result> EmitHint(dynamic obj) 
         {
-            Result result = new ()
+            Result result = new()
             {
                 Status = C.OK,
                 Message = C.COMPLETE
             };
 
-            JsonObject jObj = JsonObject.Parse(obj.ToString());
+            try {                
 
-            string? deviceName = ParseProperty<string>.GetValue("deviceName", jObj, OnMissingProperty);
-            string? status = ParseProperty<string>.GetValue("status", jObj, OnMissingProperty);
-            int? confidence = ParseProperty<int?>.GetValue("confidence", jObj);
-            int? hintKey = ParseProperty<int?>.GetValue("hintKey", jObj);
+                JsonObject jObj = JsonObject.Parse(obj.ToString());
 
-            if (!string.IsNullOrEmpty(deviceName)) { 
+                string? deviceName = ParseProperty<string>.GetValue("deviceName", jObj, OnMissingProperty);
+                string? status = ParseProperty<string>.GetValue("status", jObj, OnMissingProperty);
+                int? confidence = ParseProperty<int?>.GetValue("confidence", jObj);
+                int? hintKey = ParseProperty<int?>.GetValue("hintKey", jObj);
 
-                if (status == C.NOT_MATCH)
-                {
-                    result = new()
+                if (!string.IsNullOrEmpty(deviceName)) { 
+
+                    if (status == C.NOT_MATCH)
                     {
-                        Status = C.NOT_MATCH,
-                        Message = "Finger print did not match!",
-                        Data = new object()
-                    };
+                        result = new()
+                        {
+                            Status = C.NOT_MATCH,
+                            Message = "Finger print did not match!",
+                            Data = new object()
+                        };
 
-                } else if (!string.IsNullOrEmpty(status) && confidence != null && hintKey != null)
-                {
-                    var config = bl.GetDeviceHintConfigByHint(deviceName, (int)hintKey);
-
-                    if(config != null)
+                    } else if (!string.IsNullOrEmpty(status) && confidence != null && hintKey != null)
                     {
-                        var signal = new DeviceSignal(config, status, (int)confidence);
-                        flowBl.ProcessTransaction(signal);
-                        _hub.Clients.Group(deviceName).SendAsync(C.HUB_DEVICE_SIGNAL, signal);
-                    }
-                }                           
+                        var config = bl.GetDeviceHintConfigByHint(deviceName, (int)hintKey);
 
-            } else throw new Exception("Device name Property is empty!");
+                        if(config != null)
+                        {
+                            var signal = new DeviceSignal(config, status, (int)confidence);
+                            result.Data = await flowBl.ProcessTransaction(signal);
+                            result.Data2 = signal;
+                            await _hub.Clients.Group(deviceName).SendAsync(C.HUB_DEVICE_SIGNAL, signal, result);
+                        }
+                    }                           
+
+                } else throw new Exception("Device name Property is empty!");
+
+            } catch (Exception ex)
+            {
+                result.Status = C.ERROR;
+                result.Data = ex;
+            }
 
             return  result;
-        });
+        }
         
     }
 }

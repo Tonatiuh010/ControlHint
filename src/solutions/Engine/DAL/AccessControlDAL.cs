@@ -40,7 +40,13 @@ namespace Engine.DAL {
                         Id = Validate.getDefaultIntIfDBNull(reader["CHECK_ID"]),                
                         CheckDt = Validate.getDefaultDateIfDBNull(reader["CHECK_DT"]),
                         CheckType = Validate.getDefaultStringIfDBNull(reader["TYPE"]),
-                        Device = Validate.getDefaultIntIfDBNull(reader["DEVICE_ID"])
+                        Device = new BO.FlowControl.Device() { 
+                            Id = Validate.getDefaultIntIfDBNull(reader["DEVICE_ID"]) 
+                        },
+                        Employee = new Employee()
+                        {
+                            Id = Validate.getDefaultIntIfDBNull(reader["EMPLOYEE_ID"])
+                        }
                     });
                 }
                 reader.Close();
@@ -558,7 +564,7 @@ namespace Engine.DAL {
             return result;
         }
 
-        public ResultInsert SetCheck(Check check, int employeeId, string txnUser)
+        public ResultInsert SetCheck(Check check, string txnUser)
         {
             ResultInsert result = new();
             string sSp = SQL.SET_CONTROL_CHECK;
@@ -567,8 +573,8 @@ namespace Engine.DAL {
                 using var cmd = CreateCommand(sSp, CommandType.StoredProcedure);
 
                 IDataParameter pResult = CreateParameterOut("OUT_RESULT", MySqlDbType.String);                
-                cmd.Parameters.Add(CreateParameter("IN_DEVICE", check.Device, MySqlDbType.Int32));
-                cmd.Parameters.Add(CreateParameter("IN_EMPLOYEE", employeeId, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_DEVICE", check?.Device?.Id, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_EMPLOYEE", check?.Employee?.Id, MySqlDbType.Int32));
                 cmd.Parameters.Add(CreateParameter("IN_USER", txnUser, MySqlDbType.String));
                 cmd.Parameters.Add(pResult);
 

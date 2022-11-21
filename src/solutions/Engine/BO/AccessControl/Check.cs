@@ -10,22 +10,17 @@ namespace Engine.BO.AccessControl
 {
     public class CheckBase : BaseBO
     {
+        public Employee? Employee { get; set; }
         public DateTime? CheckDt { get; set; }
         public string? CheckType { get; set; }
 
     }
 
     public class Check : CheckBase
-    {
-        public delegate Device? FindDevice(int? deviceId);
-        private FindDevice? GetDevice { get; set; }
-        //public CardEmployee? Card { get; set; }
-
-        [JsonIgnore]
-        public int? Device { get; set; }
+    {                
+        //public CardEmployee? Card { get; set; }        
 
         [JsonPropertyName("device")]
-        public Device? DeviceDetails => GetDevice != null ? GetDevice(Device) : null;
-        public void SetDeviceFinder(FindDevice deviceCallback) => GetDevice = deviceCallback;
+        public Device? Device { get; set; }
     }
 }

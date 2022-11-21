@@ -282,9 +282,9 @@ namespace Engine.DAL
 
                 while (reader.Read())
                 {
-                    model.Add(new(
-                        Validate.getDefaultIntIfDBNull(reader["DEVICE_ID"]),
+                    model.Add(new(                        
                         Validate.getDefaultIntIfDBNull(reader["EMPLOYEE_ID"]),
+                        Validate.getDefaultIntIfDBNull(reader["DEVICE_ID"]),
                         Validate.getDefaultIntIfDBNull(reader["HINT_KEY_ID"])
                     ));
                 }
