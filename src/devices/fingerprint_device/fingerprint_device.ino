@@ -17,8 +17,8 @@ const String TYPE_FINGER_DETECTED = "FINGER_DETECTED";
 const String TYPE_FINGER_MODEL = "FINGER_MODEL";
 //const char * TYPE_FINGER_DETECTED = "FINGER_DETECTED";
 
-char *ssid = "IZZI-99D0"; // "UTT-CUERVOS"; // "test-ard";
-char *pass = "VBBPMSZNNEJV"; // "CU3RV@S2022"; // "12345678";
+char *ssid = "UTT-CUERVOS";  // "IZZI-99D0"; //"test-ard";
+char *pass = "CU3RV@S2022"; // "VBBPMSZNNEJV"; //  "12345678";
 String deviceName = "ESP-FG-TNT";
 String model = "ESP-32";
 
