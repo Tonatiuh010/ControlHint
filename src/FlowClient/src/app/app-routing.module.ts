@@ -2,9 +2,12 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardPrincipalComponent } from './pages/dashboard-principal/dashboard-principal.component';
 import { ListEmployeesComponent } from "./pages/list-employees/list-employees.component";
-//El DASHBOARD DE PRUEBA SERA ELIMINADO AL FINALIZAR
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
-//DASHBOARD DE PRUEBA
+import { DashboardComponent } from './examples/dashboard/dashboard.component';
+import { DevicesComponent } from './pages/devices/devices.component';
+import { LoginComponent } from './pages/login/login.component';
+import { AuthGuard } from './services/auth.service';
+
+
 import { AlertsComponent } from './components/alerts/alerts.component';
 import { AccordionComponent } from './components/accordion/accordion.component';
 import { BadgesComponent } from './components/badges/badges.component';
@@ -29,24 +32,23 @@ import { TablesDataComponent } from './components/tables-data/tables-data.compon
 import { TablesGeneralComponent } from './components/tables-general/tables-general.component';
 import { TabsComponent } from './components/tabs/tabs.component';
 import { TooltipsComponent } from './components/tooltips/tooltips.component';
-import { PagesBlankComponent } from './pages/pages-blank/pages-blank.component';
-import { PagesContactComponent } from './pages/pages-contact/pages-contact.component';
-import { PagesError404Component } from './pages/pages-error404/pages-error404.component';
-import { PagesFaqComponent } from './pages/pages-faq/pages-faq.component';
-import { PagesLoginComponent } from './pages/pages-login/pages-login.component';
-import { PagesRegisterComponent } from './pages/pages-register/pages-register.component';
-import { UsersProfileComponent } from './pages/users-profile/users-profile.component';
-import { PagesDeviceComponent } from './pages/pages-device/pages-device.component';
+import { PagesBlankComponent } from './examples/pages-blank/pages-blank.component';
+import { PagesContactComponent } from './examples/pages-contact/pages-contact.component';
+import { PagesError404Component } from './examples/pages-error404/pages-error404.component';
+import { PagesFaqComponent } from './examples/pages-faq/pages-faq.component';
+import { PagesRegisterComponent } from './examples/pages-register/pages-register.component';
+import { UsersProfileComponent } from './examples/users-profile/users-profile.component';
 
 
 const routes: Routes = [
-  { path: '',   redirectTo: '/pages-login', pathMatch: 'full' },
-  { path: 'listEmployees', component: ListEmployeesComponent},
-  { path: 'pages-login', component: PagesLoginComponent },
-  { path: 'home', component: DashboardPrincipalComponent },
-  //El DASHBOARD DE PRUEBA SERA ELIMINADO AL FINALIZAR
-  { path: 'dashboard', component: DashboardComponent },
-  //DASHBOARD DE PRUEBA
+  /* OUR CRAZY PAGES */
+  { path: 'login', component: LoginComponent },
+  { path: 'employees', component: ListEmployeesComponent, canActivate: [AuthGuard] },
+  { path: 'home', component: DashboardPrincipalComponent, canActivate: [AuthGuard] },
+  { path: 'devices', component: DevicesComponent, canActivate: [AuthGuard] },
+  /* OUR CRAZY PAGES */
+
+  /* SOURCE COMPONENTS!!! */
   { path: 'alerts', component: AlertsComponent },
   { path: 'accordion', component: AccordionComponent },
   { path: 'badges', component: BadgesComponent },
@@ -77,7 +79,8 @@ const routes: Routes = [
   { path: 'pages-faq', component: PagesFaqComponent },
   { path: 'pages-register', component: PagesRegisterComponent },
   { path: 'user-profile', component: UsersProfileComponent },
-  { path: 'pages-device', component: PagesDeviceComponent}
+  { path: 'dashboard', component: DashboardComponent },
+  /* SOURCE COMPONENTS!!! */
 ];
 
 @NgModule({

@@ -4,7 +4,7 @@ import { Device } from 'src/interfaces/catalog/Device';
 import { FlowService as service } from '../../../services/requests/flow.service';
 import { DeviceService as deviceService } from '../../../services/requests/device.service';
 import { FormControl } from '@angular/forms';
-import { dataBody } from 'src/interfaces/catalog/DataBody';
+import { dataBody } from 'src/interfaces/catalog/dataBody';
 import { C } from 'src/interfaces/constants';
 
 @Component({
@@ -43,7 +43,6 @@ export class ModalDeviceComponent implements OnInit {
             this.closeModal();
           });
         }
-
 
       });
     }

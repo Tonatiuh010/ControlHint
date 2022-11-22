@@ -13,6 +13,7 @@ using System.Net.NetworkInformation;
 using Engine.BO.AccessControl;
 using System.Net;
 using Engine.BL.Actuators;
+using System.Xml.Linq;
 
 namespace Engine.DAL
 {
@@ -225,6 +226,35 @@ namespace Engine.DAL
                         Model = Validate.getDefaultStringIfDBNull(reader["DEVICE_MODEL"]),
                         IsActive = Validate.getDefaultBoolIfDBNull(reader["IS_ACTIVE"]),
                         LastUpdate = Validate.getDefaultDateIfDBNull(reader["LAST_UPDATE"])
+                    });
+                }
+                reader.Close();
+            }, (ex, msg) => SetExceptionResult("FlowControl.GetDevices", msg, ex));
+
+            return model;
+        }
+
+        public List<User> GetUsers(int? employeeId, string? userName)
+        {
+            List<User> model = new List<User>();
+
+            TransactionBlock(this, () =>
+            {
+                using var cmd = CreateCommand(SQL.GET_USR_ACCESS, CommandType.StoredProcedure);
+                IDataParameter pResult = CreateParameterOut("OUT_MSG", MySqlDbType.String);
+                cmd.Parameters.Add(CreateParameter("IN_EMPLOYEE_ID", employeeId, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_USER_NAME", userName, MySqlDbType.String));
+                cmd.Parameters.Add(pResult);
+                using var reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    model.Add(new()
+                    {
+                        Id = Validate.getDefaultIntIfDBNull(reader["EMPLOYEE_ID"]),
+                        UserName = Validate.getDefaultStringIfDBNull(reader["USER_NAME"]),
+                        Password = Validate.getDefaultStringIfDBNull(reader["USER_PASSWORD"]),
+                        UserType = Validate.getDefaultStringIfDBNull(reader["TYPE"])
                     });
                 }
                 reader.Close();
@@ -455,6 +485,31 @@ namespace Engine.DAL
 
             return result;
 
+        }       
+
+        public ResultInsert SetUser(User user, string txnUser)
+        {
+            ResultInsert result = new();
+
+            string sSp = SQL.SET_USR_ACCESS;
+
+            TransactionBlock(this, () => {
+                using var cmd = CreateCommand(sSp, CommandType.StoredProcedure);
+
+                IDataParameter pResult = CreateParameterOut("OUT_MSG", MySqlDbType.String);
+                cmd.Parameters.Add(CreateParameter("IN_EMPLOYEE_ID", user.Id, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_USER_NAME", user.UserName, MySqlDbType.String));
+                cmd.Parameters.Add(CreateParameter("IN_TYPE", user.UserType, MySqlDbType.String));
+                cmd.Parameters.Add(CreateParameter("IN_PASS", user.Password, MySqlDbType.String));
+                cmd.Parameters.Add(CreateParameter("IN_USER", txnUser, MySqlDbType.String));
+                cmd.Parameters.Add(pResult);
+
+                NonQueryBlock(cmd, () => GetResult(pResult, sSp, result));
+            },
+                (ex, msg) => SetExceptionResult("FlowControlDAL.SetDevFlow", msg, ex, result)
+            );
+
+            return result;
         }
 
         #region Crazy Queries
