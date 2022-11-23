@@ -33,6 +33,18 @@ namespace FlowControl.Controllers
         [HttpGet("step/{id:int}")]
         public Result GetStep(int id) => RequestResponse(() => bl.GetStep(id));
 
+        [HttpPost("devFlow")]
+        public Result SetDevFlow(dynamic obj) => RequestResponse(() => {
+            JsonObject jObj = JsonObject.Parse(obj.ToString());
+
+            int deviceId = ParseProperty<int>.GetValue("deviceId", jObj, OnMissingProperty);
+            int flowId = ParseProperty<int>.GetValue("flowId", jObj, OnMissingProperty);
+
+            var res = bl.SetDevFlow(deviceId, flowId);
+            return C.OK;
+
+        });
+
         [HttpPost]
         public Result SetAPI(dynamic obj)
         {

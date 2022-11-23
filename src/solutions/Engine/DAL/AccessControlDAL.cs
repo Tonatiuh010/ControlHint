@@ -17,8 +17,7 @@ namespace Engine.DAL {
     {
         public delegate void DALCallback(AccessControlDAL dal);
         private static ConnectionString? _ConnectionString => ConnectionString.InstanceByName(C.ACCESS_DB);
-
-        public static AccessControlDAL Instance => new();
+        public static AccessControlDAL Instance => new(); 
         public AccessControlDAL() : base(_ConnectionString) { }
 
         public List<Check> GetChecks(int? checkId, int? employeeId) {
@@ -41,7 +40,13 @@ namespace Engine.DAL {
                         Id = Validate.getDefaultIntIfDBNull(reader["CHECK_ID"]),                
                         CheckDt = Validate.getDefaultDateIfDBNull(reader["CHECK_DT"]),
                         CheckType = Validate.getDefaultStringIfDBNull(reader["TYPE"]),
-                        Device = Validate.getDefaultIntIfDBNull(reader["DEVICE_ID"])
+                        Device = new BO.FlowControl.Device() { 
+                            Id = Validate.getDefaultIntIfDBNull(reader["DEVICE_ID"]) 
+                        },
+                        Employee = new Employee()
+                        {
+                            Id = Validate.getDefaultIntIfDBNull(reader["EMPLOYEE_ID"])
+                        }
                     });
                 }
                 reader.Close();
@@ -327,30 +332,7 @@ namespace Engine.DAL {
             }, (ex, msg) => SetExceptionResult("ControlAccessDAL.GetAccessLevel", msg, ex));
 
             return model;
-        }
-
-        public ResultInsert SetCheck(int? device, string txnUser) {
-            ResultInsert result = new();
-            string sSp = "change for another procedure";
-
-            TransactionBlock(this, () => {
-                using var cmd = CreateCommand(sSp,  CommandType.StoredProcedure);
-
-                IDataParameter pResult = CreateParameterOut("OUT_RESULT", MySqlDbType.String);                
-                cmd.Parameters.Add(CreateParameter("IN_DEVICE", device, MySqlDbType.Int32));
-                cmd.Parameters.Add(CreateParameter("IN_USER", txnUser, MySqlDbType.String));                
-                cmd.Parameters.Add(pResult);
-
-                NonQueryBlock(cmd, () => GetResult(pResult, sSp, result));
-
-            }, 
-                (ex, msg) => SetExceptionResult("ControlAccessDAL.SetCheck", msg, ex, result),
-                () => SetResultInsert(result, new Check() {                    
-                })
-            );
-
-            return result;
-        }
+        }       
 
         public ResultInsert SetDepartment(Department Department, string txnUser) {
             ResultInsert result = new();
@@ -577,6 +559,30 @@ namespace Engine.DAL {
             }, 
                 (ex, msg) => SetExceptionResult("ControlAccessDAL.SetEmployeeHint", msg, ex, result),
                 () => SetResultInsert(result, hint)                
+            );
+
+            return result;
+        }
+
+        public ResultInsert SetCheck(Check check, string txnUser)
+        {
+            ResultInsert result = new();
+            string sSp = SQL.SET_CONTROL_CHECK;
+
+            TransactionBlock(this, () => {
+                using var cmd = CreateCommand(sSp, CommandType.StoredProcedure);
+
+                IDataParameter pResult = CreateParameterOut("OUT_RESULT", MySqlDbType.String);                
+                cmd.Parameters.Add(CreateParameter("IN_DEVICE", check?.Device?.Id, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_EMPLOYEE", check?.Employee?.Id, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_USER", txnUser, MySqlDbType.String));
+                cmd.Parameters.Add(pResult);
+
+                NonQueryBlock(cmd, () => GetResult(pResult, sSp, result));
+
+            },
+                (ex, msg) => SetExceptionResult("ControlAccessDAL.SetCheck", msg, ex, result),
+                () => SetResultInsert(result, check)
             );
 
             return result;

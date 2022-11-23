@@ -22,7 +22,7 @@ namespace BaseAPI
         public static void Build(
             WebProperties props, 
             Action<WebApplicationBuilder>? builderCallback = null, 
-            Action<WebApplication>? appCallback = null 
+            Action<WebApplication>? appCallback = null
         )
         {            
             var builder = props.Builder;

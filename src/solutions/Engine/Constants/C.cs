@@ -13,6 +13,8 @@ namespace Engine.Constants {
         public const string PENDING = "PENDING";
         public const string ROLLABACK = "ROLLBACK";
         public const string NOT_MATCH = "NOT_MATCH";
+        public const string NOT_AUTH = "NO_AUTH";
+
 
         public const string URL = "URL";
         public const string RESOURCE = "RESOURCE";
@@ -44,6 +46,7 @@ namespace Engine.Constants {
         /* Connection Strings */
         public const string ACCESS_DB = "DB_ACCESS";
         public const string HINT_DB = "DB_HINT";
+        public const string DOCS_DB = "DB_DOCS";
 
         /* Json Options */
         public static readonly JsonSerializerOptions CustomJsonOptions = new JsonSerializerOptions

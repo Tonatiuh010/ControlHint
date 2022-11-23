@@ -1,0 +1,4 @@
+"API_ID";"URL_BASE";"DESCRIPTION";"STATUS";"CREATED_ON";"CREATED_BY";"UPDATED_ON";"UPDATED_BY"
+1;"http://localhost:5186/api/";"Access Control API for Employee and System status";"ENABLED";"2022-10-31 23:19:36";"API_CTL";"2022-11-04 19:04:11";"API_CTL"
+2;"http://localhost:7132/api/";"Flow Control API Handle Configuration, Signals & Devices";"ENABLED";"2022-10-31 23:24:51";"API_CTL";"2022-11-15 20:32:56";"API_CTL"
+3;"http://localhost:5218/api/";"Docs Control API for Docuements and Flows by Type Document";"ENABLED";"2022-11-14 14:22:03";"API_CTL";"2022-11-14 14:55:52";"API_CTL"

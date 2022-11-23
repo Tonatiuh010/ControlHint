@@ -5,17 +5,17 @@ import { IHubAction } from "src/interfaces/hubAction";
 export class SignalRService {
 
   private connection: signalR.HubConnection;
-  private actions: IHubAction[];
+  // private actions: IHubAction[];
   private onConnected : () => void;
 
-  id: string | null;
+  id?: string | null;
 
   constructor(
     url: string,
-    actions: IHubAction[],
+    // actions: IHubAction[],
     onConnected : () => void = () => this.logHub('Connection started')
   ) {
-    this.actions = actions;
+    // this.actions = actions;
     this.onConnected = onConnected;
     this.connection = new signalR.HubConnectionBuilder()
     .withUrl(url)
@@ -23,12 +23,13 @@ export class SignalRService {
     .build();
 
     this.connection.start()
-    .then(() => this.logHub('Connection started'))
+    .then(() => {
+      this.logHub('Connection started');
+      this.id = this.connection.connectionId;
+    })
     .catch(err => this.logHub('Error while starting connection. ', err));
 
     this.connection.onreconnected(this.onConnected);
-
-    this.id = this.connection.connectionId;
 
   }
 
@@ -36,10 +37,12 @@ export class SignalRService {
     this.connection.invoke(actionName, ...args);
   }
 
-  bindActions(): void {
-    this.actions.forEach( a => {
-      this.connection.on(a.actionName, a.action);
-    });
+  // bindActions(): void {
+  //   this.actions.forEach( a => this.bindAction(a.actionName, a.action));
+  // }
+
+  bindAction(actionName : string, fn: (...args : any[]) => any ) : void {
+    this.connection.on(actionName, fn);
   }
 
   close() {
@@ -47,6 +50,6 @@ export class SignalRService {
   }
 
   logHub(msg: string, ...args: any[]) {
-    console.log(`[${Date.now.toString()}]: ${msg}`, ...args);
+    console.log(`[${new Date(Date.now()).toLocaleTimeString()}]: ${msg}`, ...args);
   }
 }

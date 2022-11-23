@@ -12,35 +12,25 @@ export class DeviceHubService {
 
   private hub : SignalRService;
 
-  private subInfo : IHubAction = InstanceAction(DeviceHubService.methods.Info);
-  private subMonitor : IHubAction = InstanceAction(DeviceHubService.methods.Monitor);
-  private subSignal : IHubAction = InstanceAction(DeviceHubService.methods.Signal);
-
   constructor() {
-    this.hub = new SignalRService(
-      DeviceHubService.constants._url,
-      [
-        this.subInfo,
-        this.subMonitor,
-        this.subSignal
-      ]
-    );
+    this.hub = new SignalRService(DeviceHubService.constants._url);
   }
 
+  // args: type: string, msg: string
   setSubInfo(fn: (...args: any[]) => any ) {
-    this.subInfo.action = fn;
+    this.hub.bindAction(DeviceHubService.methods.Info, fn);
   }
 
   setSubMonitor(fn: (...args: any[]) => any ) {
-    this.subMonitor.action = fn;
+    this.hub.bindAction(DeviceHubService.methods.Monitor, fn);
   }
 
   setSubSignal(fn: (...args: any[]) => any ) {
-    this.subSignal.action = fn;
+    this.hub.bindAction(DeviceHubService.methods.Signal, fn)
   }
 
   addToGroup(groupName : string) {
-    // Add logs
+    this.hub.logHub(`${this.hub.id} - Subscribed to ${groupName}`);
     this.hub.invoke(DeviceHubService.methods.AddToGroup, groupName);
   }
 

@@ -13,6 +13,7 @@ using System.Net.NetworkInformation;
 using Engine.BO.AccessControl;
 using System.Net;
 using Engine.BL.Actuators;
+using System.Xml.Linq;
 
 namespace Engine.DAL
 {
@@ -233,6 +234,35 @@ namespace Engine.DAL
             return model;
         }
 
+        public List<User> GetUsers(int? employeeId, string? userName)
+        {
+            List<User> model = new List<User>();
+
+            TransactionBlock(this, () =>
+            {
+                using var cmd = CreateCommand(SQL.GET_USR_ACCESS, CommandType.StoredProcedure);
+                IDataParameter pResult = CreateParameterOut("OUT_MSG", MySqlDbType.String);
+                cmd.Parameters.Add(CreateParameter("IN_EMPLOYEE_ID", employeeId, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_USER_NAME", userName, MySqlDbType.String));
+                cmd.Parameters.Add(pResult);
+                using var reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    model.Add(new()
+                    {
+                        Id = Validate.getDefaultIntIfDBNull(reader["EMPLOYEE_ID"]),
+                        UserName = Validate.getDefaultStringIfDBNull(reader["USER_NAME"]),
+                        Password = Validate.getDefaultStringIfDBNull(reader["USER_PASSWORD"]),
+                        UserType = Validate.getDefaultStringIfDBNull(reader["TYPE"])
+                    });
+                }
+                reader.Close();
+            }, (ex, msg) => SetExceptionResult("FlowControl.GetDevices", msg, ex));
+
+            return model;
+        }
+
         public int GetDeviceId(string deviceName)
         {
             int id = 0;
@@ -282,9 +312,9 @@ namespace Engine.DAL
 
                 while (reader.Read())
                 {
-                    model.Add(new(
-                        Validate.getDefaultIntIfDBNull(reader["DEVICE_ID"]),
+                    model.Add(new(                        
                         Validate.getDefaultIntIfDBNull(reader["EMPLOYEE_ID"]),
+                        Validate.getDefaultIntIfDBNull(reader["DEVICE_ID"]),
                         Validate.getDefaultIntIfDBNull(reader["HINT_KEY_ID"])
                     ));
                 }
@@ -428,6 +458,55 @@ namespace Engine.DAL
             },
                 (ex, msg) => SetExceptionResult("FlowControlDAL.SetParameter", msg, ex, result),
                 () => SetResultInsert(result, parameter)
+            );
+
+            return result;
+        }
+
+        public Result SetDevFlow(int deviceId, int flowId, string txnUser)
+        {
+            Result result = new ();
+
+            string sSp = SQL.SET_DEV_FLOW;
+
+            TransactionBlock(this, () => {
+                using var cmd = CreateCommand(sSp, CommandType.StoredProcedure);
+
+                IDataParameter pResult = CreateParameterOut("OUT_MSG", MySqlDbType.String);
+                cmd.Parameters.Add(CreateParameter("IN_DEVICE_ID", deviceId, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_FLOW_ID", flowId, MySqlDbType.Int32));                
+                cmd.Parameters.Add(CreateParameter("IN_USER", txnUser, MySqlDbType.String));
+                cmd.Parameters.Add(pResult);
+
+                NonQueryBlock(cmd, () => GetResult(pResult, sSp, result));
+            },
+                (ex, msg) => SetExceptionResult("FlowControlDAL.SetDevFlow", msg, ex, result)
+            );
+
+            return result;
+
+        }       
+
+        public ResultInsert SetUser(User user, string txnUser)
+        {
+            ResultInsert result = new();
+
+            string sSp = SQL.SET_USR_ACCESS;
+
+            TransactionBlock(this, () => {
+                using var cmd = CreateCommand(sSp, CommandType.StoredProcedure);
+
+                IDataParameter pResult = CreateParameterOut("OUT_MSG", MySqlDbType.String);
+                cmd.Parameters.Add(CreateParameter("IN_EMPLOYEE_ID", user.Id, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_USER_NAME", user.UserName, MySqlDbType.String));
+                cmd.Parameters.Add(CreateParameter("IN_TYPE", user.UserType, MySqlDbType.String));
+                cmd.Parameters.Add(CreateParameter("IN_PASS", user.Password, MySqlDbType.String));
+                cmd.Parameters.Add(CreateParameter("IN_USER", txnUser, MySqlDbType.String));
+                cmd.Parameters.Add(pResult);
+
+                NonQueryBlock(cmd, () => GetResult(pResult, sSp, result));
+            },
+                (ex, msg) => SetExceptionResult("FlowControlDAL.SetDevFlow", msg, ex, result)
             );
 
             return result;

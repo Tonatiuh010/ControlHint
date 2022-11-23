@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { AuthGuard } from './services/auth.service';
 
 import { HttpClientModule } from "@angular/common/http";
 import { AppRoutingModule } from './app-routing.module';
@@ -7,7 +8,7 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './layouts/header/header.component';
 import { FooterComponent } from './layouts/footer/footer.component';
 import { SidebarComponent } from './layouts/sidebar/sidebar.component';
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { DashboardComponent } from './examples/dashboard/dashboard.component';
 import { AlertsComponent } from './components/alerts/alerts.component';
 import { AccordionComponent } from './components/accordion/accordion.component';
 import { BadgesComponent } from './components/badges/badges.component';
@@ -32,16 +33,20 @@ import { ChartsApexchartsComponent } from './components/charts-apexcharts/charts
 import { IconsBootstrapComponent } from './components/icons-bootstrap/icons-bootstrap.component';
 import { IconsRemixComponent } from './components/icons-remix/icons-remix.component';
 import { IconsBoxiconsComponent } from './components/icons-boxicons/icons-boxicons.component';
-import { UsersProfileComponent } from './pages/users-profile/users-profile.component';
-import { PagesFaqComponent } from './pages/pages-faq/pages-faq.component';
-import { PagesContactComponent } from './pages/pages-contact/pages-contact.component';
-import { PagesRegisterComponent } from './pages/pages-register/pages-register.component';
-import { PagesLoginComponent } from './pages/pages-login/pages-login.component';
-import { PagesError404Component } from './pages/pages-error404/pages-error404.component';
-import { PagesBlankComponent } from './pages/pages-blank/pages-blank.component';
+import { UsersProfileComponent } from './examples/users-profile/users-profile.component';
+import { PagesFaqComponent } from './examples/pages-faq/pages-faq.component';
+import { PagesContactComponent } from './examples/pages-contact/pages-contact.component';
+import { PagesRegisterComponent } from './examples/pages-register/pages-register.component';
+import { PagesError404Component } from './examples/pages-error404/pages-error404.component';
+import { PagesBlankComponent } from './examples/pages-blank/pages-blank.component';
+
+import { LoginComponent } from './pages/login/login.component';
 import { DashboardPrincipalComponent } from './pages/dashboard-principal/dashboard-principal.component';
 import { ListEmployeesComponent } from './pages/list-employees/list-employees.component';
-import { PagesDeviceComponent } from './pages/pages-device/pages-device.component';
+import { DevicesComponent } from './pages/devices/devices.component';
+import { ModalDeviceComponent } from './custom-components/modals/modal-device/modal-device.component';
+import { ReactiveFormsModule } from '@angular/forms';
+
 
 @NgModule({
   declarations: [
@@ -78,19 +83,22 @@ import { PagesDeviceComponent } from './pages/pages-device/pages-device.componen
     PagesFaqComponent,
     PagesContactComponent,
     PagesRegisterComponent,
-    PagesLoginComponent,
+
+    ModalDeviceComponent,
+    LoginComponent,
     PagesError404Component,
     PagesBlankComponent,
     DashboardPrincipalComponent,
     ListEmployeesComponent,
-    PagesDeviceComponent
+    DevicesComponent
   ],
   imports: [
     HttpClientModule,
+    ReactiveFormsModule,
     BrowserModule,
     AppRoutingModule
   ],
-  providers: [],
+  providers: [AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

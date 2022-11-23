@@ -18,14 +18,16 @@ const String TYPE_FINGER_MODEL = "FINGER_MODEL";
 //const char * TYPE_FINGER_DETECTED = "FINGER_DETECTED";
 
 char *ssid = "IZZI-99D0"; // "UTT-CUERVOS"; // "test-ard";
-char *pass = "VBBPMSZNNEJV"; // "CU3RV@S2022"; // "12345678";
+char *pass = "VBBPMSZNNEJV";  // "CU3RV@S2022"; //  "12345678";
 String deviceName = "ESP-FG-TNT";
 String model = "ESP-32";
 
-String host = "http://192.168.0.125:81/api/"; // "http://172.17.4.132:81/api"; //
-String domain = "192.168.0.125";
+String host = "https://flowcontrol9a.azurewebsites.net/api/"; 
+String domain = "flowcontrol9a.azurewebsites.net"; 
+int port = 80;
 
-int port = 81;
+// "http://172.17.4.85:81/api/"; // "http://192.168.0.125:81/api/"; //
+// "172.17.4.85"; // "192.168.0.125"; // 
 
 int wifiStatus = WL_IDLE_STATUS;
 
@@ -150,6 +152,7 @@ int getFingerImage() {
     Serial.println(fingerMsg);
     String jsonMsg = getPayloadDataMsg(fingerMsg, TYPE_FINGER_DETECTED);
     webSocket.sendTXT(jsonMsg);
+    delay(350);
   }  
 
   return p;
