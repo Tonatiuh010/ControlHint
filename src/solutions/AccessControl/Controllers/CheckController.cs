@@ -20,13 +20,10 @@ public class CheckController : CustomController
     [HttpGet]
     public Result Get() => RequestResponse(() => bl.GetChecks());
 
-    [HttpGet("chartView")]
-    public Result GetCheckDetails() => RequestResponse(() => {
-        return CheckDetails.GetChecksByDepto(bl.GetCheckDetails(DateTime.Today.AddDays(-1), DateTime.Now), DateTime.Today.AddDays(-1));
-    });
-
-    [HttpGet("employee/{id:int}")]
-    public Result GetWeeklyChecks(int id) => RequestResponse(() => $"Getting checks of employee ({id})");
+    //[HttpGet("chartView")]
+    //public Result GetCheckDetails() => RequestResponse(() => {
+    //    return CheckDetails.GetChecksByDepto(bl.GetCheckDetails(DateTime.Today.AddDays(-1), DateTime.Now), DateTime.Today.AddDays(-1));
+    //});
 
     [HttpGet("{id:int}")]
     public Result GetCheck(int id) => RequestResponse(() => bl.GetCheck(id));
@@ -50,6 +47,15 @@ public class CheckController : CustomController
         var insertResult = bl.SetCheck(check);
 
         return bl.GetCheck((int)insertResult?.InsertDetails?.Id);
+    });
+
+    [HttpGet("employee/{id:int}")]
+    public Result GetWeeklyChecks(int id) => RequestResponse(() =>
+    {
+        var from = Utils.StartOfWeek(DateTime.Today, DayOfWeek.Sunday);
+        var to = from.AddDays(6);
+        
+        return bl.GetWeeklyChecks(from, to, id);
     });
 
 }

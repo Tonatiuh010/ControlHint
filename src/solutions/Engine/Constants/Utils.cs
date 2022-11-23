@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Engine.Constants
 {
-    public class Utils
+    public static class Utils
     {
         public static byte[] GetImage(string url)
         {
@@ -65,6 +65,11 @@ namespace Engine.Constants
                 return double.TryParse(s, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out double _);
             }
             else throw new Exception("Something going on checking value!! Utils.IsNumeric()");
+        }
+        public static DateTime StartOfWeek(DateTime dt, DayOfWeek startOfWeek)
+        {
+            int diff = (7 + (dt.DayOfWeek - startOfWeek)) % 7;
+            return dt.AddDays(-1 * diff).Date;
         }
     }
 }

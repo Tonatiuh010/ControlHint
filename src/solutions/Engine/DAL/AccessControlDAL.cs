@@ -240,9 +240,9 @@ namespace Engine.DAL {
             return model;
         }
 
-        public List<CheckDetails> GetCheckDetails(DateTime from, DateTime to)
+        public List<Check> GetCheckDetails(DateTime from, DateTime to, int? employeeId = null)
         {
-            List<CheckDetails> model = new ();
+            List<Check> model = new ();
 
             TransactionBlock(this, () => {
                 using var cmd = CreateCommand(SQL.GET_CHECK_DETAILS, CommandType.StoredProcedure);
@@ -250,6 +250,7 @@ namespace Engine.DAL {
                 IDataParameter pResult = CreateParameterOut("OUT_RESULT", MySqlDbType.String);
                 cmd.Parameters.Add(CreateParameter("IN_FROM_DT", from, MySqlDbType.DateTime));
                 cmd.Parameters.Add(CreateParameter("IN_TO_DT", to, MySqlDbType.DateTime));
+                cmd.Parameters.Add(CreateParameter("IN_EMPLOYEE_ID", employeeId, MySqlDbType.Int32));
                 cmd.Parameters.Add(pResult);
                 
                 using var reader = cmd.ExecuteReader();
@@ -257,23 +258,17 @@ namespace Engine.DAL {
                 {
                     model.Add(new()
                     {
-                        Id = Validate.getDefaultIntIfDBNull(reader["CARD_CHECK_ID"]),
+                        Id = Validate.getDefaultIntIfDBNull(reader["CHECK_ID"]),
                         CheckDt = Validate.getDefaultDateIfDBNull(reader["CHECK_DT"]),
                         CheckType = Validate.getDefaultStringIfDBNull(reader["TYPE"]),
-                        Position = new Position()
+                        Device = new BO.FlowControl.Device()
                         {
-                            PositionId = Validate.getDefaultIntIfDBNull(reader["POSITION_ID"]),
-                            Alias = Validate.getDefaultStringIfDBNull(reader["POSITION"]),
-                            Department = new Department()
-                            {
-                                Id = Validate.getDefaultIntIfDBNull(reader["Department_ID"]),
-                                Code = Validate.getDefaultStringIfDBNull(reader["Department_CODE"]),
-                                Name = Validate.getDefaultStringIfDBNull(reader["Department"])
-                            },
-                            Id = Validate.getDefaultIntIfDBNull(reader["JOB_ID"]),
-                            Name = Validate.getDefaultStringIfDBNull(reader["JOB"])
+                            Id = Validate.getDefaultIntIfDBNull(reader["DEVICE_ID"])
+                        },
+                        Employee = new Employee()
+                        {
+                            Id = Validate.getDefaultIntIfDBNull(reader["EMPLOYEE_ID"])
                         }
-
                     });
                 }
                 reader.Close();
