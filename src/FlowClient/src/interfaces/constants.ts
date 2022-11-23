@@ -1,8 +1,8 @@
 let combineUrl = (base : string, extension: string) => base + extension;
 const urls = {
-  flowControl: "http://localhost:81/",
-  accessControl: "http://localhost:81/",
-  docsControl: "http://localhost:81/",
+  flowControl: "http://localhost:82/",
+  accessControl: "http://localhost:82/",
+  docsControl: "http://localhost:82/",
 };
 
 const C = {

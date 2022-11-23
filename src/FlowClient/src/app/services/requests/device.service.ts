@@ -1,6 +1,6 @@
 import { Injectable, Type } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { BaseHttp as service } from "../base-http";
+import { BaseHttp as service } from "../base-Http";
 import { C } from "src/interfaces/constants";
 import { Device } from "src/interfaces/catalog/Device";
 

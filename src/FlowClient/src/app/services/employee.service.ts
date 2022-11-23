@@ -1,7 +1,7 @@
 import { Injectable, Type } from "@angular/core";
 import { combineLatest, Observable } from "rxjs";
 import { HttpClient } from "@angular/common/http";
-import { BaseHttp as service } from "./base-Http";
+import { BaseHttp as service  } from "./base-Http";
 import { C } from "src/interfaces/constants";
 import { Employee } from "src/interfaces/catalog/Employee";
 
@@ -23,7 +23,7 @@ export class EmployeeService {
       res => {
         let employees : Employee[] = res.data as Employee[];
         employees.map(e => {
-          e.image = this.concatUrl("image/" + e.id);
+          e.image = (C.urls.accessControl + "employee/image/" + e.id);
           return e;
         });
         fn(employees);

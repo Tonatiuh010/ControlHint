@@ -1,7 +1,7 @@
 import { Observable } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { C } from "src/interfaces/constants";
-import { dataBody } from "src/interfaces/catalog/DataBody";
+import { dataBody } from "src/interfaces/catalog/dataBody";
 
 export class BaseHttp {
   url : string;
