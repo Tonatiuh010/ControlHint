@@ -8,13 +8,13 @@ import { dataBody } from 'src/interfaces/catalog/dataBody';
 import { C } from 'src/interfaces/constants';
 
 @Component({
-  selector: 'device-modal',
-  templateUrl: './modal-device.component.html',
+  selector: 'modal-devices',
+  templateUrl: './modal-devices.component.html',
 })
-export class ModalDeviceComponent implements OnInit {
+export class ModalDevicesComponent implements OnInit {
   flows?: Flow[];
   selector: FormControl = new FormControl();
-  @Input() device? : Device;
+  @Input() device? : Device[];
   @Output() onDeviceAction = new EventEmitter<Device>();
 
   constructor( private service : service, private devService : deviceService) {
@@ -33,7 +33,7 @@ export class ModalDeviceComponent implements OnInit {
   setFlow() {
     if(this.device) {
       let flowId: number = +this.selector.value;
-      let deviceId : number = this.device.id;
+      let deviceId : number = this.device[0].id;
 
       this.service.setDevFlow(deviceId, flowId, (res : dataBody) => {
 
@@ -65,5 +65,4 @@ export class ModalDeviceComponent implements OnInit {
     }
 
   }
-
 }

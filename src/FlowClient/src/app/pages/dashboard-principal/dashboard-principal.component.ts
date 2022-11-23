@@ -12,7 +12,7 @@ import { Employee } from 'src/interfaces/catalog/Employee';
 export class DashboardPrincipalComponent implements OnInit {
 
   devices? : Device[];
-
+  deviceModal? : Device;
   employees? : Employee[];
 
   constructor(private elementRef: ElementRef, private service : DeviceService, private hubService : DeviceHubService, private services : EmployeeService) {
@@ -25,13 +25,14 @@ export class DashboardPrincipalComponent implements OnInit {
       this.sortDevices();
     });
 
-    this.hubService.setSubMonitor(this.addDevice);
+    this.hubService.setSubMonitor((device:Device) => this.addDevice(device));
+    this.hubService.addToGroup("ESP-FG-TNT2")
+    this.hubService.setSubSignal((...args: any[]) =>{
+      console.log(args)
+      
+    })
 
-    this.services.getEmployees(employees => {
-      this.employees = employees;
 
-    });
-    
     // var s = document.createElement("script");
     // s.type = "text/javascript";
     // s.src = "../assets/js/main.js";

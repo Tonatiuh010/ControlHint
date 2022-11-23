@@ -43,6 +43,7 @@ import { DashboardPrincipalComponent } from './pages/dashboard-principal/dashboa
 import { ListEmployeesComponent } from './pages/list-employees/list-employees.component';
 import { PagesDeviceComponent } from './pages/pages-device/pages-device.component';
 import { ModalDeviceComponent } from './custom-components/modals/modal-device/modal-device.component';
+import { ModalDevicesComponent } from './custom-components/modals/modal-devices/modal-devices.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
@@ -86,7 +87,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     PagesBlankComponent,
     DashboardPrincipalComponent,
     ListEmployeesComponent,
-    PagesDeviceComponent
+    PagesDeviceComponent,
+    ModalDevicesComponent
   ],
   imports: [
     HttpClientModule,
