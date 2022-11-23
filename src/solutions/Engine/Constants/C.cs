@@ -13,6 +13,8 @@ namespace Engine.Constants {
         public const string PENDING = "PENDING";
         public const string ROLLABACK = "ROLLBACK";
         public const string NOT_MATCH = "NOT_MATCH";
+        public const string NOT_AUTH = "NO_AUTH";
+
 
         public const string URL = "URL";
         public const string RESOURCE = "RESOURCE";

@@ -4,10 +4,10 @@ import { DeviceService } from 'src/app/services/requests/device.service';
 import { Device, parseDevice } from 'src/interfaces/catalog/Device';
 
 @Component({
-  selector: 'app-pages-device',
-  templateUrl: './pages-device.component.html',
+  selector: 'app-devices',
+  templateUrl: './devices.component.html',
 })
-export class PagesDeviceComponent implements OnInit {
+export class DevicesComponent implements OnInit {
   logPanel: boolean = false;
   devices? : Device[];
   deviceView? : Device;
@@ -24,10 +24,6 @@ export class PagesDeviceComponent implements OnInit {
 
     this.hubService.setSubMonitor( (device: Device) => this.addDevice(device));
 
-    // var s = document.createElement("script");
-    // s.type = "text/javascript";
-    // s.src = "../assets/js/main.js";
-    // this.elementRef.nativeElement.appendChild(s);
   }
 
   selectDevice(device: Device) {

@@ -44,7 +44,6 @@ export class ModalDeviceComponent implements OnInit {
           });
         }
 
-
       });
     }
   }
