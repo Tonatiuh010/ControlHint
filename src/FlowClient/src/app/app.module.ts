@@ -86,6 +86,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     PagesRegisterComponent,
 
     ModalDeviceComponent,
+    ModalDevicesComponent,
     LoginComponent,
     PagesError404Component,
     PagesBlankComponent,

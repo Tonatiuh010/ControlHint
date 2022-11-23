@@ -27,6 +27,7 @@ export class DeviceHubService {
 
   setSubSignal(fn: (...args: any[]) => any ) {
     this.hub.bindAction(DeviceHubService.methods.Signal, fn)
+
   }
 
   addToGroup(groupName : string) {

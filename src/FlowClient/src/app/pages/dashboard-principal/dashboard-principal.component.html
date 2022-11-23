@@ -17,9 +17,61 @@
           <div class="row">
             <p class="col mt-1">Seleccione un dispositivo de entrada</p>
             <!-- Button trigger modal -->
+            <button type="button" class="btn btn-success btn-sm col-sm-1 text-center" data-bs-toggle="modal" data-bs-target="#exampleModal">
+              <i class="bx bx-plus-medical"></i>
+            </button>
 
-            <div *ngFor="let device of devices">
-
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Dispositivos</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <table class="table ">
+                      <thead>
+                        <tr>
+                          <th scope="col">#</th>
+                          <th scope="col">Dispositivo</th>
+                          <th scope="col">Flujo</th>
+                          <th scope="col">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody  >
+                        <tr *ngFor="let device of devices" (click)="selectDevice(device)">
+                          <th scope="row">{{device.id}}</th>
+                          <td>{{device.name}}</td>
+                          <td>
+                            <ng-template [ngIf]="device.flow" [ngIfElse]="enabledBlock2">
+                              <span class="badge bg-success"> {{ device.flow.name }}</span>
+                            </ng-template>
+          
+                            <ng-template #enabledBlock2>
+                              <span class="badge bg-danger">NO FLOW</span>
+                            </ng-template>
+          
+                          </td>
+                          <td >
+                            <ng-template [ngIf]="device.isActive" [ngIfElse]="enabledBlock">
+                              <span class="badge bg-success">Enabled</span>
+                            </ng-template>
+          
+                            <ng-template #enabledBlock>
+                              <span class="badge bg-red-500">Disabled</span>
+                            </ng-template>
+          
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> 
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -53,7 +105,7 @@
           <p class="mt-3 breadcrumb-item">Datos del empleado</p>
           <div class="mt-4">
             <p class="font-weight-normal">Nombre del empleado</p>
-            <p class="font-weight-normal text-black fs-2">Avila Vargas Marcos Martin</p>
+            <p class="font-weight-normal text-black fs-2">{{employees}}</p>
           </div>
         </div>
         <div class="px-4 mb-2 row">

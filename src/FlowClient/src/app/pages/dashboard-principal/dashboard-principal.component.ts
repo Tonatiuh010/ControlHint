@@ -13,7 +13,9 @@ export class DashboardPrincipalComponent implements OnInit {
 
   devices? : Device[];
   deviceModal? : Device;
-  employees? : Employee[];
+  employees? : Employee;
+  logPanel: boolean = false;
+  deviceView? : Device;
 
   constructor(private elementRef: ElementRef, private service : DeviceService, private hubService : DeviceHubService, private services : EmployeeService) {
   }
@@ -26,12 +28,7 @@ export class DashboardPrincipalComponent implements OnInit {
     });
 
     this.hubService.setSubMonitor((device:Device) => this.addDevice(device));
-    this.hubService.addToGroup("ESP-FG-TNT2")
-    this.hubService.setSubSignal((...args: any[]) =>{
-      console.log(args)
-      
-    })
-
+    
 
     // var s = document.createElement("script");
     // s.type = "text/javascript";
@@ -54,6 +51,52 @@ export class DashboardPrincipalComponent implements OnInit {
 
     }
   }
+  selectDevice(device: Device) {
+    this.deviceView = device;
+
+    this.removeFromGroups();
+    this.hubService.addToGroup(this.deviceView.name);
+  
+    this.hubService.setSubSignal((...args: any[]) =>{
+      console.log(args[0].hintConfig.employee)
+      this.employees = args[0].hintConfig.employee;
+    })
+  }
+  private removeFromGroups() {
+
+    if (this.devices) {
+      this.devices.forEach(d => {
+        this.hubService.removeFromGroup(d.name);
+      });
+    }
+
+    this.clearComponent();
+  }
+
+  private setLog(type: string, msg: string) {
+    let element = this.getLogContainer();
+
+    if (element) {
+      let now = new Date(Date.now());
+      let p: HTMLParagraphElement = document.createElement('p');
+      p.innerHTML = `[${now.toLocaleString()}] ${msg}`;
+      element?.appendChild(p);
+    }
+
+  }
+
+  private getLogContainer() : HTMLElement | null {
+    return document.getElementById("device-log");
+  }
+
+  private clearComponent() {
+    let element = this.getLogContainer();
+
+    if (element) {
+      element.innerHTML = "";
+    }
+  }
+
 
   private sortDevices() {
     if(this.devices) {
