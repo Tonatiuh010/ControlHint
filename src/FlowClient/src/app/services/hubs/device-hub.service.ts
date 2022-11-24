@@ -8,7 +8,9 @@ import { IHubAction, InstanceAction } from 'src/interfaces/hubAction';
 })
 export class DeviceHubService {
   private static constants = C.hubs.device;
+  private static constant = C.hubs.check;
   private static methods = DeviceHubService.constants.methods
+  private static method = DeviceHubService.constant.methods
 
   private hub : SignalRService;
 
@@ -27,6 +29,11 @@ export class DeviceHubService {
 
   setSubSignal(fn: (...args: any[]) => any ) {
     this.hub.bindAction(DeviceHubService.methods.Signal, fn)
+
+  }
+
+  setBroadcast(fn: (...args: any[]) => any){
+    this.hub.bindAction(DeviceHubService.method.Broadcast, fn)
 
   }
 

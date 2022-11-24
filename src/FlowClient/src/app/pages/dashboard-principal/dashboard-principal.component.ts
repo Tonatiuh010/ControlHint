@@ -4,6 +4,7 @@ import { DeviceService } from 'src/app/services/requests/device.service';
 import { Device } from 'src/interfaces/catalog/Device';
 import { EmployeeService } from 'src/app/services/requests/employee.service';
 import { Employee } from 'src/interfaces/catalog/Employee';
+import { Check } from 'src/interfaces/catalog/Check';
 
 @Component({
   selector: 'app-dashboard-principal',
@@ -13,7 +14,11 @@ export class DashboardPrincipalComponent implements OnInit {
 
   devices? : Device[];
   deviceModal? : Device;
-  employees? : Employee;
+  Checks? : Check;
+  name? : Employee;
+  job? : Employee;
+  shift? : Employee;
+  shiftend? : Employee;
   logPanel: boolean = false;
   deviceView? : Device;
 
@@ -59,7 +64,13 @@ export class DashboardPrincipalComponent implements OnInit {
   
     this.hubService.setSubSignal((...args: any[]) =>{
       console.log(args[0].hintConfig.employee)
-      this.employees = args[0].hintConfig.employee;
+      this.name = args[0].hintConfig.employee.name;
+      this.job = args[0].hintConfig.employee.job.name;
+      this.shift = args[0].hintConfig.employee.shift.inTime;
+      this.shiftend = args[0].hintConfig.employee.shift.outTime;
+
+      this.hubService.setBroadcast((...args: any[]) =>{
+      })
     })
   }
   private removeFromGroups() {
