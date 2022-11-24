@@ -82,7 +82,7 @@ CREATE PROCEDURE SET_EMPLOYEE (
     END IF;
 END //
 DELIMITER ;
-
+-- use ctl_access
 /* TESTING PROCEDURE  
 	SET @RESULT = '';
 	CALL SET_EMPLOYEE(
@@ -96,6 +96,7 @@ DELIMITER ;
 			@RESULT
 	);
 	SELECT @RESULT;
+    select *from employee
 */	
 
 /*######################### SET DEPARTMENT ##############################*/
@@ -153,6 +154,7 @@ DELIMITER ;
 		@RESULT
 	);
 	SELECT @RESULT;
+    SELECT * FROM DEPARTMENT
 */
 
 /*######################### SET JOB ##############################*/
@@ -210,6 +212,7 @@ DELIMITER ;
 		@RESULT
 	);
 	SELECT @RESULT;
+    SELECT * FROM JOB
 */
 
 /*######################### SET CONTROL_CHECK ##############################*/

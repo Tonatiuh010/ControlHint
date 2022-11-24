@@ -189,6 +189,8 @@ DELIMITER ;
     );
     SELECT @RESULT;
 */
+-- use ctl_access;
+-- select * from position
 
 /*######################### SET_EMPLOYEE_HINT ##############################*/
 DROP PROCEDURE IF EXISTS SET_EMPLOYEE_HINT;

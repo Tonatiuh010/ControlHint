@@ -12,6 +12,6 @@ namespace Engine.BO.AccessControl
         public string? Alias { get; set; }
         public Department? Department { get; set; }
 
-        public bool IsValidPosition() => IsValid() && PositionId != null && PositionId != 0;
+        public bool IsValidPosition() => PositionId != null && PositionId != 0;
     }
 }
