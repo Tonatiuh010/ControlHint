@@ -11,6 +11,5 @@ namespace Engine.BO.DocsControl
     {
         public string? FullName { get; set; }
         public Position? Position { get; set; }
-        public Department? Depto { get; set; }
     }
 }

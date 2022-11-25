@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using System.Diagnostics.SymbolStore;
+using Engine.BO.AccessControl;
 
 namespace Engine.DAL
 {
@@ -32,8 +33,8 @@ namespace Engine.DAL
 
                 cmd.Parameters.Add(CreateParameter("IN_APPROVER", Approver.Id, MySqlDbType.Int32));
                 cmd.Parameters.Add(CreateParameter("IN_FULLNAME", Approver.FullName, MySqlDbType.String));
-                cmd.Parameters.Add(CreateParameter("IN_POSITION", Approver.Position.PositionId, MySqlDbType.Int32));
-                cmd.Parameters.Add(CreateParameter("IN_DEPTO", Approver.Depto.Id, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_POSITION", Approver.Position?.PositionId, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_DEPTO", Approver.Position?.Department?.Id, MySqlDbType.Int32));
                 cmd.Parameters.Add(CreateParameter("IN_USER", txnUser, MySqlDbType.String));
                 cmd.Parameters.Add(pResult);
 
@@ -45,6 +46,7 @@ namespace Engine.DAL
             return result;
         }
 
+        /*ESTA MADRE BL*/
         public ResultInsert SetDocApprover(DocsApprover DocsApprover, string txnUser)
         {
             ResultInsert result = new();
@@ -125,6 +127,7 @@ namespace Engine.DAL
             return result;
         }
 
+        /*ESTA MADRE A BL*/
         public ResultInsert SetDocType(DocType DocType, string txnUser)
         {
             ResultInsert result = new ();
@@ -161,7 +164,7 @@ namespace Engine.DAL
 
                 cmd.Parameters.Add(CreateParameter("IN_DOCUMENT_ID", Document.Id, MySqlDbType.Int32));
                 cmd.Parameters.Add(CreateParameter("IN_NAME", Document.Name, MySqlDbType.String));
-                cmd.Parameters.Add(CreateParameter("IN_TYPE_ID", Document.DocType.Id, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_TYPE_ID", Document.DocType?.Id, MySqlDbType.Int32));
                 cmd.Parameters.Add(CreateParameter("IN_USER", txnUser, MySqlDbType.String));
                 cmd.Parameters.Add(pResult);
 
@@ -194,7 +197,7 @@ namespace Engine.DAL
                         Name = Validate.getDefaultStringIfDBNull(reader["NAME"]),
                         DocType = new()
                         {
-                            Id = Validate.getDefaultIntIfDBNull(reader["DOC_TYPE_ID"]),
+                            Id = Validate.getDefaultIntIfDBNull(reader["TYPE_ID"]),
                             TypeCode = Validate.getDefaultStringIfDBNull(reader["TYPE_CODE"])
                         }
                     });
@@ -226,7 +229,7 @@ namespace Engine.DAL
                         Id = Validate.getDefaultIntIfDBNull(reader["DOC_FLOW_ID"]),
                         DocType = new()
                         {
-                            Id = Validate.getDefaultIntIfDBNull(reader["DOC_TYPE_ID"]),
+                            Id = Validate.getDefaultIntIfDBNull(reader["TYPE_ID"]),
                             TypeCode = Validate.getDefaultStringIfDBNull(reader["TYPE_CODE"])
                         },
                         Key1 = Validate.getDefaultStringIfDBNull(reader["KEY1"]),
@@ -259,14 +262,14 @@ namespace Engine.DAL
                 {
                     model.Add(new DocsApprover()
                     {
-                        Id = Validate.getDefaultIntIfDBNull(reader["DOCS_APPROVER_ID"]),
+                        Id = Validate.getDefaultIntIfDBNull(reader["DOC_APPROVER_ID"]),
                         DocFlow = new()
                         {
                             Id = Validate.getDefaultIntIfDBNull(reader["DOC_FLOW_ID"]),
                             DocType = new()
                             {
-                                Id = Validate.getDefaultIntIfDBNull(reader["DOC_TYPE_ID"]),
-                                TypeCode = Validate.getDefaultStringIfDBNull(reader["TYPE_CODE"])
+                                Id = Validate.getDefaultIntIfDBNull(reader["TYPE_ID"]),
+                                
                             },
                             Key1 = Validate.getDefaultStringIfDBNull(reader["KEY1"]),
                             Key2 = Validate.getDefaultStringIfDBNull(reader["KEY2"]),
@@ -276,25 +279,6 @@ namespace Engine.DAL
                         Approver = new()
                         {
                             Id = Validate.getDefaultIntIfDBNull(reader["APPROVER_ID"]),
-                            FullName = Validate.getDefaultStringIfDBNull(reader["FULL_NAME"]),
-                            Position = new()
-                            {
-                                PositionId = Validate.getDefaultIntIfDBNull(reader["POSITION_ID"]),
-                                Alias = Validate.getDefaultStringIfDBNull(reader["ALIAS"]),
-                                Department = new()
-                                {
-                                    Id = Validate.getDefaultIntIfDBNull(reader["DEPARTMENT_ID"]),
-                                    Code = Validate.getDefaultStringIfDBNull(reader["DEPTO_CODE"]),
-                                    Name = Validate.getDefaultStringIfDBNull(reader["Department"])
-                                }
-                            },
-                            Depto = new()
-                            {
-                                Id = Validate.getDefaultIntIfDBNull(reader["DEPTO_ID"]),
-                                Name = Validate.getDefaultStringIfDBNull(reader["NAME"]),
-                                Code = Validate.getDefaultStringIfDBNull(reader["CODE"])
-
-                            }
                         },
                         Sequence = Validate.getDefaultIntIfDBNull(reader["SEQUENCE"]),
                         Name = Validate.getDefaultStringIfDBNull(reader["NAME"]),
@@ -307,10 +291,9 @@ namespace Engine.DAL
             );
             return model;
         }
-
         public List<Approver> GetApprovers(int? Approver)
         {
-            List<Approver> model = new();
+            List<Approver> model = new List<Approver> ();
 
             TransactionBlock(this, () =>
             {
@@ -325,22 +308,14 @@ namespace Engine.DAL
                     model.Add(new Approver()
                     {
                         Id = Validate.getDefaultIntIfDBNull(reader["APPROVER_ID"]),
-                        Position = new()
+                        FullName = Validate.getDefaultStringIfDBNull(reader["FULL_NAME"]),
+                        Position = new Position()
                         {
                             PositionId = Validate.getDefaultIntIfDBNull(reader["POSITION_ID"]),
-                            Alias = Validate.getDefaultStringIfDBNull(reader["ALIAS"]),
-                            Department = new()
+                            Department = new Department()
                             {
-                                Id = Validate.getDefaultIntIfDBNull(reader["DEPARTMENT_ID"]),
-                                Name = Validate.getDefaultStringIfDBNull(reader["NAME"]),
-                                Code = Validate.getDefaultStringIfDBNull(reader["CODE"])
+                                Id = Validate.getDefaultIntIfDBNull(reader["DEPTO_ID"]),
                             }
-                        },
-                        Depto = new()
-                        {
-                            Id = Validate.getDefaultIntIfDBNull(reader["DEPARTMENT_ID"]),
-                            Name = Validate.getDefaultStringIfDBNull(reader["NAME"]),
-                            Code = Validate.getDefaultStringIfDBNull(reader["CODE"])
                         }
                     });
                 }

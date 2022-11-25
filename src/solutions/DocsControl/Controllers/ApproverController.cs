@@ -20,7 +20,7 @@ namespace DocsControl.Controllers
         public Result GetApprovers() => RequestResponse(() => bl.GetApprovers());
 
         [HttpGet("{id:int}")]
-        public Result GetApprover(int id) => RequestResponse(() => bl.GetApprover(id));
+        public Result GetApprover(int approver) => RequestResponse(() => bl.GetApprover(approver));
 
         [HttpGet("docsApprover")]
         public Result GetDocsApprovers() => RequestResponse(() => bl.GetDocsApprovers());
@@ -36,9 +36,10 @@ namespace DocsControl.Controllers
             {
                 Id = ParseProperty<int>.GetValue("id", jObj),
                 FullName = ParseProperty<string>.GetValue("fullName", jObj, OnMissingProperty),
-                Position = new Position() { PositionId = ParseProperty<int>.GetValue("positionId", jObj, OnMissingProperty) },
-                Depto = new Department() { Id = ParseProperty<int>.GetValue("deptoId", jObj, OnMissingProperty) }
-            });
+                Position = new Position() { PositionId = ParseProperty<int>.GetValue("positionId", jObj, OnMissingProperty),
+                Department = new Department() { Id = ParseProperty<int>.GetValue("deptoId", jObj, OnMissingProperty) }
+                }, 
+            }, C.GLOBAL_USER);
         });
     }
 }
