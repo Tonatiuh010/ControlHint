@@ -107,7 +107,7 @@ namespace DocsControl.Controllers
             });
         }
 
-        [HttpGet("view/{int:id}")]
+        [HttpGet("view/{id:int}")]
         public IActionResult ViewPdf(int id)
         {
             return PreparePdf(() =>
