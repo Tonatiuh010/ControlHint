@@ -37,42 +37,17 @@ namespace DocsControl.Ocr.FlowDocs
 
         public static void ParseDocument(OcrScan ocr, QuotationParameters @params)
         {
-            ParseField(ocr, NAME, @params.Name);
-            ParseField(ocr, NUM, @params.Id);
-            ParseField(ocr, DUO_DATE, @params.DuoDate.ToString("d"));
-            ParseField(ocr, DATE, @params.Date.ToString("d"));
-            ParseField(ocr, CLIENT, @params.Client);
-            ParseField(ocr, CONTACT, @params.Contact);
+            OcrScan.ParseField(ocr, NAME, @params.Name);
+            OcrScan.ParseField(ocr, NUM, @params.Id);
+            OcrScan.ParseField(ocr, DUO_DATE, @params.DuoDate.ToString("d"));
+            OcrScan.ParseField(ocr, DATE, @params.Date.ToString("d"));
+            OcrScan.ParseField(ocr, CLIENT, @params.Client);
+            OcrScan.ParseField(ocr, CONTACT, @params.Contact);
             ParseItems(ocr, @params.Items);
-            ParseField(ocr, TOTAL, $"{@params.Total}");
-            ParseField(ocr, NOTES, @params.Notes);
-
-            /*Do something for the items*/
-        }
-
-        public static void ParseField(OcrScan ocr, string pattern, object? value)
-        {
-            PdfContentEditor editor = new PdfContentEditor(ocr.Document);
-            var fragmentCollection = ocr.FindText(pattern);
-            var fragment = fragmentCollection.FirstOrDefault();            
-
-            if (fragment != null) 
-            {
-                var x = editor.ReplaceText(pattern, value?.ToString(), fragment.TextState);
-
-                //Console.WriteLine("Text : {0} ", fragment.Text);
-                //Console.WriteLine("Position : {0} ", fragment.Position);
-                //Console.WriteLine("XIndent : {0} ", fragment.Position.XIndent);
-                //Console.WriteLine("YIndent : {0} ", fragment.Position.YIndent);
-                //Console.WriteLine("Font - Name : {0}", fragment.TextState.Font.FontName);
-                //Console.WriteLine("Font - IsAccessible : {0} ", fragment.TextState.Font.IsAccessible);
-                //Console.WriteLine("Font - IsEmbedded : {0} ", fragment.TextState.Font.IsEmbedded);
-                //Console.WriteLine("Font - IsSubset : {0} ", fragment.TextState.Font.IsSubset);
-                //Console.WriteLine("Font Size : {0} ", fragment.TextState.FontSize);
-                //Console.WriteLine("Foreground Color : {0} ", fragment.TextState.ForegroundColor);
-            }
-
-        }
+            OcrScan.ParseField(ocr, TOTAL, $"{@params.Total}");
+            OcrScan.ParseField(ocr, NOTES, @params.Notes);
+            
+        }       
 
         public static void ParseItems(OcrScan ocr, List<QuotationItem> items)
         {
@@ -92,7 +67,7 @@ namespace DocsControl.Ocr.FlowDocs
 
                 //foreach (var row in table.RowList)
                 //{
-                    
+                //  ADD EXTRA ROWS IF POSSIBLE!
                 //}
             }
         }
@@ -120,19 +95,6 @@ namespace DocsControl.Ocr.FlowDocs
                 tf6.Text = item.Value.ToString();
                 tf7.Text = item.Total.ToString();
             }
-        }
-
-        public static TextState FormatText()
-        {
-            return new TextState()
-            {
-                FontSize = 10,
-                ForegroundColor = Color.Black,
-                RenderingMode = TextRenderingMode.FillText,
-                Font = FontRepository.FindFont("Arial"),
-                CharacterSpacing = 10,
-                WordSpacing = 10,
-            };
         }
 
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using Aspose.Pdf;
+using Aspose.Pdf.Facades;
 using Aspose.Pdf.Text;
 
 namespace DocsControl.Ocr
@@ -42,6 +43,18 @@ namespace DocsControl.Ocr
             } catch (Exception ex)
             {
                 Console.WriteLine(ex);
+            }
+        }
+
+        public static void ParseField(OcrScan ocr, string pattern, object? value)
+        {
+            PdfContentEditor editor = new PdfContentEditor(ocr.Document);
+            var fragmentCollection = ocr.FindText(pattern);
+            var fragment = fragmentCollection.FirstOrDefault();
+
+            if (fragment != null)
+            {
+                editor.ReplaceText(pattern, value?.ToString(), fragment.TextState);
             }
         }
     }

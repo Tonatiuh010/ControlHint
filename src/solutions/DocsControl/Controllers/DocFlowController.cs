@@ -29,9 +29,7 @@ namespace DocsControl.Controllers
             return bl.SetDocFlow(new DocFlow()
             {
                 Id = ParseProperty<int>.GetValue("id", jObj),
-                DocType = new DocType() { 
-                    Id = ParseProperty<int>.GetValue("typeId", jObj, OnMissingProperty), 
-                },
+                DocType = new DocType() { Id = ParseProperty<int>.GetValue("typeId", jObj, OnMissingProperty),},
                 Key1 = ParseProperty<string>.GetValue("key1", jObj, OnMissingProperty),
                 Key2 = ParseProperty<string>.GetValue("key2", jObj),
                 Key3 = ParseProperty<string>.GetValue("key3", jObj),
