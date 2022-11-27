@@ -7,9 +7,9 @@ export interface Employee {
   name: string;
   lastName: string;
   image?: string;
-  position: Position;
-  accessLevels: Level[];
-  shift: Shift;
-  status: string;
-  id: number;
+  position?: Position;
+  accessLevels?: Level[];
+  shift?: Shift;
+  status?: string;
+  id?: number;
 }

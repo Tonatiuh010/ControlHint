@@ -1,0 +1,84 @@
+<button id="btn-show-modal" class="d-none" type="button" data-bs-toggle="modal" data-bs-target="#modal-device">
+</button>
+<div id="modal-device" class="modal fade" tabindex="-1">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Editar/Agregar Empleado</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="card"> <!--MODAL-BODY-->
+        <div class="card-body" *ngIf="employee">
+          <h5 class="card-title">Empleado</h5>
+          <div class="row">
+            <div class="col">
+              <div class="row mb-3">
+                <label for="inputText" class="col-form-label">Nombre</label>
+                <div class="col-sm-10"> <input type="text" class="form-control" value="{{employee.name}}" [formControl]="inputName"></div>
+              </div>
+              <div class="row mb-3">
+                <label for="inputText" class="col-form-label">Apellidos</label>
+                <div class="col-sm-10"> <input type="text" class="form-control" value="{{employee.lastName}}" [formControl]="inputLastName"></div>
+              </div>
+              <!-- <div class="row mb-3">
+                <label class="col-form-label">Position</label>
+                <div class="col-sm-10">
+                   <select class="form-select" aria-label="Default select example">
+                      <option selected>Sepa</option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                   </select>
+                </div>
+              </div> -->
+              <div class="row mb-3">
+                <label class="col-form-label">Turno</label>
+                <div class="col-sm-10">
+                   <select class="form-select" aria-label="Default select example" [formControl]="selectorShift">
+                      <option *ngFor="let shift of shifts" selected value="{{shift.id}}">{{shift.name}}</option>
+                   </select>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-form-label">Posicion</label>
+                <div class="col-sm-10">
+                   <select class="form-select" aria-label="Default select example" [formControl]="selectorPosition">
+                      <option *ngFor="let position of positions" selected value="{{position.positionId}}">{{position.alias}}</option>
+                   </select>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="row mb-3">
+                <label for="inputNumber" class="col-form-label">Subir Imagen</label>
+                <div class="col-sm-10"><input [formControl]="inputImage" class="form-control" type="file" id="formFile" (change)="onFileChange($event)"></div>
+             </div>
+             <div class="row ">
+              <picture class="p-3">
+                <img src="{{ employee.image }}" class="img-fluid rounded d-block mx-auto" alt="">
+              </picture>
+             </div>
+            </div>
+          </div>
+
+          <!-- <div *ngIf="device" class="col-6 my-auto">
+            <label class="text-muted fs-6">
+              <span class="fw-bold"> Dispositivo: </span> {{ device.name }}
+            </label>
+          </div>
+          <div class="col-5 offset-1">
+            <label class="text-muted fs-6 fw-bold"> Flujos </label>
+            <select class="form-select" [formControl]="selector">
+              <option *ngFor="let flow of flows" value="{{flow.id}}" > {{ flow.name }} </option>
+            </select>
+          </div> -->
+
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-close-modal" type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="closeModal()">Close</button>
+        <button type="button" class="btn btn-primary" (click)="setEmployee()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
