@@ -8,3 +8,12 @@ export interface Check {
   checkType: string;
   id: number;
 }
+
+export interface Checks {
+  dt: Date;
+  day: string;
+  in?: number;
+  out?: string;
+  couter: number;
+
+}

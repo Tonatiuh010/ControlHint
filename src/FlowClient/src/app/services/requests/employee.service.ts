@@ -4,6 +4,7 @@ import { HttpClient } from "@angular/common/http";
 import { BaseHttp as service } from "../base-http";
 import { C } from "src/interfaces/constants";
 import { Employee } from "src/interfaces/catalog/Employee";
+import { Check, Checks } from "src/interfaces/catalog/Check";
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +30,13 @@ export class EmployeeService {
       this.concatUrl(id.toString()),
       res => fn(res.data as Employee)
     );
+  }
+
+  public getEmployeeChecks(id: number, fn: (res: any) =>void){
+    this.service.getRequest(
+      "check/employee/" + id.toString() ,
+      res => fn(res.data)
+    )
   }
 
   //SE PODRIA AGREGAR UN FILTRADO DE LOS EMPLEADOS POR DEPARTAMENTOS

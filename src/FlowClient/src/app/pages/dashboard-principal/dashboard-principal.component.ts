@@ -1,10 +1,11 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, OnInit, ElementRef, NgModule } from '@angular/core';
 import { DeviceHubService } from 'src/app/services/hubs/device-hub.service';
 import { DeviceService } from 'src/app/services/requests/device.service';
 import { Device } from 'src/interfaces/catalog/Device';
 import { EmployeeService } from 'src/app/services/requests/employee.service';
 import { Employee } from 'src/interfaces/catalog/Employee';
-import { Check } from 'src/interfaces/catalog/Check';
+import { Checks } from 'src/interfaces/catalog/Check'; 
+
 
 @Component({
   selector: 'app-dashboard-principal',
@@ -14,11 +15,27 @@ export class DashboardPrincipalComponent implements OnInit {
 
   devices? : Device[];
   deviceModal? : Device;
-  Checks? : Check;
-  name? : Employee;
-  job? : Employee;
-  shift? : Employee;
-  shiftend? : Employee;
+  Checks? : null;
+  lunesin? : any;
+  martesin? : any;
+  miercolesin? : any;
+  juevesin? : any;
+  viernesin? : any;
+  sabadoin? : any;
+  domingoin? : any;
+  lunesout? : any;
+  martesout? : any;
+  miercolesout? : any;
+  juevesout? : any;
+  viernesout? : any;
+  sabadoout? : any;
+  domingoout? : any;
+
+  name? : Checks;
+  lastname? : Checks;
+  job? : Checks;
+  shiftin? : Checks;
+  shiftout? : Employee;
   logPanel: boolean = false;
   deviceView? : Device;
 
@@ -63,13 +80,33 @@ export class DashboardPrincipalComponent implements OnInit {
     this.hubService.addToGroup(this.deviceView.name);
   
     this.hubService.setSubSignal((...args: any[]) =>{
-      console.log(args[0].hintConfig.employee)
-      this.name = args[0].hintConfig.employee.name;
-      this.job = args[0].hintConfig.employee.job.name;
-      this.shift = args[0].hintConfig.employee.shift.inTime;
-      this.shiftend = args[0].hintConfig.employee.shift.outTime;
 
-      this.hubService.setBroadcast((...args: any[]) =>{
+      this.services.getEmployeeChecks(args[0].hintConfig.employee.id as number, checks => {
+        
+        this.Checks = checks
+        this.name = checks.employee.name
+        this.lastname = checks.employee.lastName
+        this.job = checks.employee.job.name
+        this.shiftin = checks.employee.shift.inTime
+        this.shiftout = checks.employee.shift.outTime
+        this.domingoin= checks.checks[0].in
+        this.lunesin = checks.checks[1].in
+        this.martesin= checks.checks[2].in
+        this.miercolesin= checks.checks[3].in
+        this.juevesin= checks.checks[4].in
+        this.viernesin= checks.checks[5].in
+        this.sabadoin= checks.checks[6].in
+        this.domingoout= checks.checks[0].out
+        this.lunesout = checks.checks[1].out
+        this.martesout= checks.checks[2].out
+        this.miercolesout= checks.checks[3].out
+        this.juevesout= checks.checks[4].out
+        this.viernesout= checks.checks[5].out
+        this.sabadoout= checks.checks[6].out
+
+        console.log(this.Checks)
+        console.log(this.lunesin)
+      
       })
     })
   }

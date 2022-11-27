@@ -32,11 +32,6 @@ export class DeviceHubService {
 
   }
 
-  setBroadcast(fn: (...args: any[]) => any){
-    this.hub.bindAction(DeviceHubService.method.Broadcast, fn)
-
-  }
-
   addToGroup(groupName : string) {
     this.hub.logHub(`${this.hub.id} - Subscribed to ${groupName}`);
     this.hub.invoke(DeviceHubService.methods.AddToGroup, groupName);
