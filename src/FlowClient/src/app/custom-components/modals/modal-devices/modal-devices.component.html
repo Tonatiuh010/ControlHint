@@ -1,0 +1,67 @@
+<button id="btn-show-modal" class="d-none" type="button" data-bs-toggle="modal" data-bs-target="#modal-device">
+</button>
+<div id="modal-device" class="modal fade" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Ajustar Flujo</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <section class="shadow section">
+            <div class="col-12">
+              <div class="card overflow-auto p-3">
+                <div class="card-body">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Dispositivo</th>
+                        <th scope="col">Flujo</th>
+                        <th scope="col">Status</th>
+                        <th scope="col"> &#9863; </th>
+                      </tr>
+                    </thead>
+                    <tbody  >
+                      <tr *ngFor="let device of devices" (click)="selectDevice(device)" >
+                        <th scope="row">#{{device.id}}</th>
+                        <td>{{device.name}}</td>
+                        <td>
+                          <ng-template [ngIf]="device.flow" [ngIfElse]="enabledBlock2">
+                            <span class="badge bg-success"> {{ device.flow.name }}</span>
+                          </ng-template>
+        
+                          <ng-template #enabledBlock2>
+                            <span class="badge bg-danger">NO FLOW</span>
+                          </ng-template>
+        
+                        </td>
+                        <td >
+                          {{ device.last_update.toLocaleString() }}
+                        </td>
+                        <td >
+                          <ng-template [ngIf]="device.isActive" [ngIfElse]="enabledBlock">
+                            <span class="badge bg-success">Enabled</span>
+                          </ng-template>
+        
+                          <ng-template #enabledBlock>
+                            <span class="badge bg-danger">Disabled</span>
+                          </ng-template>
+        
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-close-modal" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
