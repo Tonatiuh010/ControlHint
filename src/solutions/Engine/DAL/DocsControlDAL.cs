@@ -47,7 +47,7 @@ namespace Engine.DAL
         }
 
         /*ESTA MADRE BL*/
-        public ResultInsert SetDocApprover(DocsApprover DocsApprover, string txnUser)
+        public ResultInsert SetDocApprover(DocApprover DocsApprover, string txnUser)
         {
             ResultInsert result = new();
             string sSp = SQL.SET_DOCS_APPROVER;
@@ -62,7 +62,7 @@ namespace Engine.DAL
                 cmd.Parameters.Add(CreateParameter("IN_APPROVER", DocsApprover.Approver.Id, MySqlDbType.Int32));
                 cmd.Parameters.Add(CreateParameter("IN_SEQUENCE", DocsApprover.Sequence, MySqlDbType.Int32));
                 cmd.Parameters.Add(CreateParameter("IN_NAME", DocsApprover.Name, MySqlDbType.String));
-                cmd.Parameters.Add(CreateParameter("IN_ACTION", DocsApprover.Action, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_ACTION", DocsApprover.Action, MySqlDbType.String));
                 cmd.Parameters.Add(CreateParameter("IN_USER", txnUser, MySqlDbType.String));
                 cmd.Parameters.Add(pResult);
 
@@ -75,7 +75,7 @@ namespace Engine.DAL
             return result;
         }
 
-        public ResultInsert SetDocFile(DocFile DocFile, string txnUser)
+        public ResultInsert SetDocFile(DocFileExt DocFile, string txnUser)
         {
             ResultInsert result = new();
             string sSp = SQL.SET_DOCS_FILE;
@@ -87,7 +87,8 @@ namespace Engine.DAL
 
                 cmd.Parameters.Add(CreateParameter("IN_FILE_ID", DocFile.Id, MySqlDbType.Int32));
                 cmd.Parameters.Add(CreateParameter("IN_DOCUMENT_ID", DocFile.Document.Id, MySqlDbType.Int32));
-                cmd.Parameters.Add(CreateParameter("IN_DOC_IMG", DocFile.DocImg, MySqlDbType.String));
+                cmd.Parameters.Add(CreateParameter("IN_DOC_IMG", DocFile.HexImg, MySqlDbType.String));
+                cmd.Parameters.Add(CreateParameter("IN_DOC_OBJ", DocFile.Params, MySqlDbType.String));
                 cmd.Parameters.Add(CreateParameter("IN_USER", txnUser, MySqlDbType.String));
                 cmd.Parameters.Add(pResult);
 
@@ -111,11 +112,11 @@ namespace Engine.DAL
                 IDataParameter pResult = CreateParameterOut("OUT_MSG", MySqlDbType.String);
 
                 cmd.Parameters.Add(CreateParameter("IN_DOC_FLOW_ID", DocFlow.Id, MySqlDbType.Int32));
-                cmd.Parameters.Add(CreateParameter("IN_TYPE_ID", DocFlow.DocType.Id, MySqlDbType.Int32));
-                cmd.Parameters.Add(CreateParameter("IN_KEY1", DocFlow.Key1, MySqlDbType.String));
-                cmd.Parameters.Add(CreateParameter("IN_KEY2", DocFlow.Key2, MySqlDbType.String));
-                cmd.Parameters.Add(CreateParameter("IN_KEY3", DocFlow.Key3, MySqlDbType.String));
-                cmd.Parameters.Add(CreateParameter("IN_KEY4", DocFlow.Key4, MySqlDbType.String));
+                cmd.Parameters.Add(CreateParameter("IN_TYPE_ID", DocFlow?.DocType?.Id, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_KEY1", DocFlow?.Key1, MySqlDbType.String));
+                cmd.Parameters.Add(CreateParameter("IN_KEY2", DocFlow?.Key2, MySqlDbType.String));
+                cmd.Parameters.Add(CreateParameter("IN_KEY3", DocFlow?.Key3, MySqlDbType.String));
+                cmd.Parameters.Add(CreateParameter("IN_KEY4", DocFlow?.Key4, MySqlDbType.String));
                 cmd.Parameters.Add(CreateParameter("IN_USER", txnUser, MySqlDbType.String));
                 cmd.Parameters.Add(pResult);
 
@@ -126,8 +127,7 @@ namespace Engine.DAL
             );
             return result;
         }
-
-        /*ESTA MADRE A BL*/
+        
         public ResultInsert SetDocType(DocType DocType, string txnUser)
         {
             ResultInsert result = new ();
@@ -199,7 +199,14 @@ namespace Engine.DAL
                         {
                             Id = Validate.getDefaultIntIfDBNull(reader["TYPE_ID"]),
                             TypeCode = Validate.getDefaultStringIfDBNull(reader["TYPE_CODE"])
+                        },
+                        File = new ()
+                        {
+                            Id = Validate.getDefaultIntIfDBNull(reader["FILE_ID"]),
+                            DocImg = Validate.getDefaultBytesIfDBNull(reader["DOC_IMG"]),
+                            Params = Validate.getDefaultStringIfDBNull(reader["DOCUMENT_OBJ"])
                         }
+
                     });
                 }
                 reader.Close();
@@ -245,9 +252,9 @@ namespace Engine.DAL
             return model;
         }
 
-        public List<DocsApprover> GetFlowsApprover(int? DocsApprover)
+        public List<DocApprover> GetFlowsApprover(int? DocsApprover)
         {
-            List<DocsApprover> model = new();
+            List<DocApprover> model = new();
 
             TransactionBlock(this, () =>
             {
@@ -260,7 +267,7 @@ namespace Engine.DAL
                 using var reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    model.Add(new DocsApprover()
+                    model.Add(new DocApprover()
                     {
                         Id = Validate.getDefaultIntIfDBNull(reader["DOC_APPROVER_ID"]),
                         DocFlow = new()
@@ -282,7 +289,7 @@ namespace Engine.DAL
                         },
                         Sequence = Validate.getDefaultIntIfDBNull(reader["SEQUENCE"]),
                         Name = Validate.getDefaultStringIfDBNull(reader["NAME"]),
-                        Action = Validate.getDefaultIntIfDBNull(reader["ACTION"])
+                        Action = Validate.getDefaultStringIfDBNull(reader["ACTION"])
                     }) ;
                 }
                 reader.Close();
@@ -325,5 +332,133 @@ namespace Engine.DAL
             );
             return model;
         }
+
+        public DocumentTransaction GetDocTransanctions(int documentId, int? approverId)
+        {
+            DocumentTransaction model = new DocumentTransaction()
+            {
+                Document = null,
+                Approvers = new List<ApproverStep>()
+            };            
+
+            TransactionBlock(this, () =>
+            {
+                using var cmd = CreateCommand(SQL.GET_DOC_TXN, CommandType.StoredProcedure);
+                IDataParameter pResult = CreateParameterOut("OUT_MSG", MySqlDbType.String);
+                cmd.Parameters.Add(CreateParameter("IN_DOCUMENT_ID", documentId, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_APPROVER_ID", approverId, MySqlDbType.Int32));
+                cmd.Parameters.Add(pResult);
+
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    model.Document ??= new Document()
+                    {
+                        Id = Validate.getDefaultIntIfDBNull(reader["DOCUMENT_ID"]),
+                        DocType = new DocType()
+                        {
+                            Id = Validate.getDefaultIntIfDBNull(reader["TYPE_ID"]),
+                            TypeCode = Validate.getDefaultStringIfDBNull(reader["TYPE_CODE"])
+                        }
+                    };
+
+                    model.Approvers.Add(new ApproverStep()
+                    {
+                        DocumentDetail = new DocApprover()
+                        {
+                            Id = Validate.getDefaultIntIfDBNull(reader["DOC_APPROVER_ID"]),                            
+                            Approver = new()
+                            {
+                                Id = Validate.getDefaultIntIfDBNull(reader["APPROVER_ID"]),
+                                FullName = Validate.getDefaultStringIfDBNull(reader["FULL_NAME"]),                                
+                            },
+                            Sequence = Validate.getDefaultIntIfDBNull(reader["SEQUENCE"]),
+                            Name = Validate.getDefaultStringIfDBNull(reader["NAME"]),                           
+                        },
+                        Comments = Validate.getDefaultStringIfDBNull(reader["COMMENTS"]),
+                        Depto = Validate.getDefaultStringIfDBNull(reader["DEPTO"]),
+                        Status = Validate.getDefaultStringIfDBNull(reader["STATUS_TXN"])
+                    });
+                }
+                reader.Close();
+            },
+                (ex, msg) => SetExceptionResult("DocsControlDAL.GetDocTransanctions", msg, ex)
+            );
+            return model;
+        }        
+
+        public int GetTypeId(string code)
+        {
+            int id = 0;
+            TransactionBlock(this, () =>
+            {
+                using var cmd = CreateCommand(QueryGetDocTypeId(code), CommandType.Text);
+
+                id = int.Parse(cmd.ExecuteScalar().ToString());
+                
+            },
+                (ex, msg) => SetExceptionResult("DocsControlDAL.GetTypeId", msg, ex)
+            );
+
+
+            return id;
+        }
+
+        public Result CreateTransactionDocument(int documentId, string key, string txnUser)
+        {
+            Result result = new();
+            string sSp = SQL.SET_DOCUMENT_TXN;
+
+            TransactionBlock(this, () =>
+            {
+                using var cmd = CreateCommand(sSp, CommandType.StoredProcedure);
+
+                IDataParameter pResult = CreateParameterOut("OUT_MSG", MySqlDbType.String);
+
+                cmd.Parameters.Add(CreateParameter("IN_DOCUMENT_ID", documentId, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_KEY", key, MySqlDbType.String));
+                cmd.Parameters.Add(CreateParameter("IN_USER", txnUser, MySqlDbType.String));
+                cmd.Parameters.Add(pResult);
+
+                NonQueryBlock(cmd, () => GetResult(pResult, sSp, result));
+            },
+                (ex, msg) => SetExceptionResult("DocsControlDAL.CreateTransactionDocument", msg, ex, result)
+            );
+            return result;
+        }
+
+        public Result SetApproverTransaction(ApproverStep transaction, int documentId, string txnUser)
+        {
+            Result result = new();
+            string sSp = SQL.SET_DOCUMENT_TXN;
+
+            TransactionBlock(this, () =>
+            {
+                using var cmd = CreateCommand(sSp, CommandType.StoredProcedure);
+                IDataParameter pResult = CreateParameterOut("OUT_MSG", MySqlDbType.String);
+
+                cmd.Parameters.Add(CreateParameter("IN_DOCUMENT_ID", documentId, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_APPROVER_ID", transaction?.DocumentDetail?.Approver?.Id, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_DOC_APP_ID", transaction?.DocumentDetail?.Id, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_STATUS", transaction?.Status, MySqlDbType.String));
+                cmd.Parameters.Add(CreateParameter("IN_COMMENTS", transaction?.Comments, MySqlDbType.Int32));                
+                cmd.Parameters.Add(CreateParameter("IN_USER", txnUser, MySqlDbType.String));
+                cmd.Parameters.Add(pResult);
+
+                NonQueryBlock(cmd, () => GetResult(pResult, sSp, result));
+            },
+                (ex, msg) => SetExceptionResult("DocsControlDAL.SetApproverTransaction", msg, ex, result)
+            );
+            return result;
+        }
+
+        #region Crazy Queries
+
+        private static string QueryGetDocTypeId(string code)
+        {
+            return $"SELECT TYPE_ID FROM DOC_TYPE WHERE TYPE_CODE = '{code}'";
+        }
+
+        #endregion
     }
 }

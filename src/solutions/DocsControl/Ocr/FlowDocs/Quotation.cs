@@ -32,8 +32,14 @@ namespace DocsControl.Ocr.FlowDocs
             Ocr = new OcrScan(Path);
             ParseDocument(Ocr, @params);
         }
+        private Quotation(QuotationParameters @params, byte[] bytes)
+        {
+            Ocr = new OcrScan(bytes);
+            EditDocument(Ocr, @params);
+        }
 
         public static Quotation CreateQuotation(QuotationParameters @params) => new Quotation(@params);
+        public static Quotation EditQuotation(QuotationParameters @params, byte[] bytes) => new Quotation(@params, bytes);
 
         public static void ParseDocument(OcrScan ocr, QuotationParameters @params)
         {
@@ -47,7 +53,12 @@ namespace DocsControl.Ocr.FlowDocs
             OcrScan.ParseField(ocr, TOTAL, $"{@params.Total}");
             OcrScan.ParseField(ocr, NOTES, @params.Notes);
             
-        }       
+        }
+
+        public static void EditDocument(OcrScan oct, QuotationParameters @params)
+        {
+
+        }
 
         public static void ParseItems(OcrScan ocr, List<QuotationItem> items)
         {

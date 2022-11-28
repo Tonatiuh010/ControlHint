@@ -40,7 +40,14 @@ namespace DocsControl.Ocr.FlowDocs
             ParseDocument(Ocr, @params);
         }
 
+        public Sale(SaleParameters @params, byte[] bytes)
+        {
+            Ocr = new OcrScan(bytes);
+            ParseDocument(Ocr, @params);
+        }
+
         public static Sale CreateSale(SaleParameters @params) => new (@params);
+        public static Sale EditSale(SaleParameters @params, byte[] bytes) => new(@params, bytes);
 
         public static void ParseDocument(OcrScan ocr, SaleParameters @params)
         {
@@ -62,6 +69,11 @@ namespace DocsControl.Ocr.FlowDocs
             OcrScan.ParseField(ocr, LAW_NAME, @params.Law);
 
             OcrScan.ParseField(ocr, TOTAL, @params.Total);
+
+        }
+
+        public static void EditDocument(OcrScan ocr, SaleParameters @params)
+        {
 
         }
         

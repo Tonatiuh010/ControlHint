@@ -14,6 +14,11 @@ namespace DocsControl.Ocr
             Document = GetDocument(path);
         }
 
+        public OcrScan(byte[] bytes)
+        {
+            Document =  GetDocument(bytes);
+        }
+
         public TextFragmentCollection FindText(string pattern)
         {
             TextFragmentAbsorber patternText = new (pattern);
@@ -31,6 +36,11 @@ namespace DocsControl.Ocr
         public static Document GetDocument(string path)
         {
             return new(path);
+        }
+
+        public static Document GetDocument(byte[] bytes)
+        {
+            return new(new MemoryStream(bytes));
         }
 
         public static void SetLicense()

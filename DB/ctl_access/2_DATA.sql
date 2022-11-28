@@ -6,3 +6,50 @@ INSERT INTO SHIFT (NAME, CLOCK_IN, CLOCK_OUT, DAY_COUNT, LUNCH_TIME) VALUES
     
 /*INSERT INTO DEVICE (NAME,  CREATED_BY, ACCESS_LEVEL_ID) VALUES 
 ('Office', 'API_CTL', 2), ('Entrance A', 'API_CTL', 4), ('Entrance B', 'API_CTL', 3), ('Warehouse', 'API_CTL', 1);*/
+
+
+INSERT INTO EMPLOYEE (
+	EMPLOYEE_ID,
+    FIRST_NAME,
+    LAST_NAME,
+    POSITION_ID,
+    SHIFT,
+    IMAGE,
+    CREATED_BY
+) VALUES (
+	1001,
+    'TONATIUH',
+    'LOPEZ',
+    1,
+    1,
+    UNHEX(''),
+    'TEST_API'
+),
+(
+	1002,
+    'NAYELI',
+    'LEAL',
+    1,
+    1,
+    UNHEX(''),
+    'TEST_API'
+),
+(
+	1003,
+    'MARCOS',
+    'AVILA',
+    1,
+    1,
+    UNHEX(''),
+    'TEST_API'
+),
+(
+	1004,
+    'JESUS',
+    'HERNANDEZ',
+    1,
+    1,
+    UNHEX(''),
+    'TEST_API'
+);
+
