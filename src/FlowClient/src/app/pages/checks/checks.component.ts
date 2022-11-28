@@ -4,14 +4,14 @@ import { DeviceService } from 'src/app/services/requests/device.service';
 import { Device } from 'src/interfaces/catalog/Device';
 import { EmployeeService } from 'src/app/services/requests/employee.service';
 import { Employee } from 'src/interfaces/catalog/Employee';
-import { Checks } from 'src/interfaces/catalog/Check'; 
-
+import { Checks } from 'src/interfaces/catalog/Check';
+import { C } from 'src/interfaces/constants';
 
 @Component({
-  selector: 'app-dashboard-principal',
-  templateUrl: './dashboard-principal.component.html',
+  selector: 'app-checks',
+  templateUrl: './checks.component.html',
 })
-export class DashboardPrincipalComponent implements OnInit {
+export class ChecksComponent implements OnInit {
 
   devices? : Device[];
   deviceModal? : Device;
@@ -50,15 +50,14 @@ export class DashboardPrincipalComponent implements OnInit {
     });
 
     this.hubService.setSubMonitor((device:Device) => this.addDevice(device));
-    
-
-    // var s = document.createElement("script");
-    // s.type = "text/javascript";
-    // s.src = "../assets/js/main.js";
-    // this.elementRef.nativeElement.appendChild(s);
   }
 
-  
+  ngOnChange() {
+    if (this.devices && this.devices.length > 0 ) {
+      this.selectDevice(this.devices[0]);
+    }
+  }
+
   private addDevice(device: Device) {
     if(this.devices) {
       let index = this.devices.findIndex(x => x.name == device.name);
@@ -73,20 +72,21 @@ export class DashboardPrincipalComponent implements OnInit {
 
     }
   }
+
   selectDevice(device: Device) {
     this.deviceView = device;
 
     this.removeFromGroups();
     this.hubService.addToGroup(this.deviceView.name);
-  
+
     this.hubService.setSubSignal((...args: any[]) =>{
 
       this.services.getEmployeeChecks(args[0].hintConfig.employee.id as number, checks => {
-        
+
         this.Checks = checks
         this.name = checks.employee.name
         this.lastname = checks.employee.lastName
-        this.job = checks.employee.job.name
+        this.job = checks.employee.job.alias
         this.shiftin = checks.employee.shift.inTime
         this.shiftout = checks.employee.shift.outTime
         this.domingoin= checks.checks[0].in
@@ -103,8 +103,7 @@ export class DashboardPrincipalComponent implements OnInit {
         this.juevesout= checks.checks[4].out
         this.viernesout= checks.checks[5].out
         this.sabadoout= checks.checks[6].out
-        this.image = "https://accesscontrol9a.azurewebsites.net/api/employee/image/"+ args[0].hintConfig.employee.id.toString()
-        console.log(this.image)
+        this.image =  C.urls.accessControl + "employee/image/"+ args[0].hintConfig.employee.id.toString();
 
       })
     })
@@ -117,33 +116,7 @@ export class DashboardPrincipalComponent implements OnInit {
       });
     }
 
-    this.clearComponent();
   }
-
-  private setLog(type: string, msg: string) {
-    let element = this.getLogContainer();
-
-    if (element) {
-      let now = new Date(Date.now());
-      let p: HTMLParagraphElement = document.createElement('p');
-      p.innerHTML = `[${now.toLocaleString()}] ${msg}`;
-      element?.appendChild(p);
-    }
-
-  }
-
-  private getLogContainer() : HTMLElement | null {
-    return document.getElementById("device-log");
-  }
-
-  private clearComponent() {
-    let element = this.getLogContainer();
-
-    if (element) {
-      element.innerHTML = "";
-    }
-  }
-
 
   private sortDevices() {
     if(this.devices) {

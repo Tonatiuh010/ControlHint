@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { DashboardPrincipalComponent } from './pages/dashboard-principal/dashboard-principal.component';
+import { ChecksComponent } from './pages/checks/checks.component';
 import { ListEmployeesComponent } from "./pages/list-employees/list-employees.component";
 import { DashboardComponent } from './examples/dashboard/dashboard.component';
 import { DevicesComponent } from './pages/devices/devices.component';
@@ -42,10 +42,17 @@ import { UsersProfileComponent } from './examples/users-profile/users-profile.co
 
 const routes: Routes = [
   /* OUR CRAZY PAGES */
+
   { path: 'login', component: LoginComponent },
+  { path: 'checks', component: ChecksComponent},
   { path: 'employees', component: ListEmployeesComponent, canActivate: [AuthGuard] },
-  { path: 'home', component: DashboardPrincipalComponent, canActivate: [AuthGuard] },
   { path: 'devices', component: DevicesComponent, canActivate: [AuthGuard] },
+
+
+
+  { path: 'pages-error404', component: PagesError404Component },
+  { path: '**', redirectTo: '/pages-error404' },
+
   /* OUR CRAZY PAGES */
 
   /* SOURCE COMPONENTS!!! */
@@ -75,7 +82,6 @@ const routes: Routes = [
   { path: 'tooltips', component: TooltipsComponent },
   { path: 'pages-blank', component: PagesBlankComponent },
   { path: 'pages-contact', component: PagesContactComponent },
-  { path: 'pages-error404', component: PagesError404Component },
   { path: 'pages-faq', component: PagesFaqComponent },
   { path: 'pages-register', component: PagesRegisterComponent },
   { path: 'user-profile', component: UsersProfileComponent },

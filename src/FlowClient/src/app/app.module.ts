@@ -41,7 +41,7 @@ import { PagesError404Component } from './examples/pages-error404/pages-error404
 import { PagesBlankComponent } from './examples/pages-blank/pages-blank.component';
 
 import { LoginComponent } from './pages/login/login.component';
-import { DashboardPrincipalComponent } from './pages/dashboard-principal/dashboard-principal.component';
+import { ChecksComponent } from './pages/checks/checks.component';
 import { ListEmployeesComponent } from './pages/list-employees/list-employees.component';
 import { DevicesComponent } from './pages/devices/devices.component';
 import { ModalDeviceComponent } from './custom-components/modals/modal-device/modal-device.component';
@@ -90,7 +90,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     LoginComponent,
     PagesError404Component,
     PagesBlankComponent,
-    DashboardPrincipalComponent,
+    ChecksComponent,
     ListEmployeesComponent,
     DevicesComponent
   ],
