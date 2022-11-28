@@ -6,7 +6,7 @@ import { Shift } from "./Shift";
 export interface Employee {
   name: string;
   lastName: string;
-  /* image: Image; */
+  image: string;
   job: Job;
   accessLevels: Level[];
   shift: Shift;

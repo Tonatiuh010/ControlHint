@@ -30,7 +30,7 @@ export class DashboardPrincipalComponent implements OnInit {
   viernesout? : any;
   sabadoout? : any;
   domingoout? : any;
-
+  image? : any;
   name? : Checks;
   lastname? : Checks;
   job? : Checks;
@@ -103,10 +103,9 @@ export class DashboardPrincipalComponent implements OnInit {
         this.juevesout= checks.checks[4].out
         this.viernesout= checks.checks[5].out
         this.sabadoout= checks.checks[6].out
+        this.image = "https://accesscontrol9a.azurewebsites.net/api/employee/image/"+ args[0].hintConfig.employee.id.toString()
+        console.log(this.image)
 
-        console.log(this.Checks)
-        console.log(this.lunesin)
-      
       })
     })
   }

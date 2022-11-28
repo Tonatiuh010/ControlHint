@@ -39,6 +39,13 @@ export class EmployeeService {
     )
   }
 
+  public getEmployeeImage(id: number, fn: (res: any) => void){
+    this.service.getRequest(
+      this.concatUrl(id.toString()),
+      res => fn(res.data)
+    )
+  }
+
   //SE PODRIA AGREGAR UN FILTRADO DE LOS EMPLEADOS POR DEPARTAMENTOS
   //CONSEGUIR EL PUESTO DEL TRABAJADOR
 
