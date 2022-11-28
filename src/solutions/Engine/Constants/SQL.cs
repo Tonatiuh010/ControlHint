@@ -56,7 +56,10 @@ namespace Engine.Constants {
         public const string GET_DOCUMENTS = "GET_DOCUMENTS";
         public const string GET_FLOWS = "GET_FLOWS";
         public const string GET_FLOWS_APPROVERS = "GET_FLOWS_APPROVERS";
-        public const string GET_APPROVERS = "GET_APPROVERS"; 
+        public const string GET_APPROVERS = "GET_APPROVERS";
+        public const string GET_DOC_TXN = "GET_DOC_TXN";
+        public const string SET_DOCUMENT_TXN = "SET_DOCUMENT_TXN";
+        public const string SET_APPROVER_TXN = "SET_APPROVER_TXN";
         #endregion
 
     }

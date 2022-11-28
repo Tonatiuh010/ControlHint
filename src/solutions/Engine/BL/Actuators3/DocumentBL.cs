@@ -16,5 +16,24 @@ namespace Engine.BL.Actuators3
 
         public List<Document> GetDocuments(int? id = null) => Dal.GetDocuments(id);
         public Document? GetDocument(int id) => GetDocuments(id).FirstOrDefault();
+        public ResultInsert SetFile(DocFileExt file) => Dal.SetDocFile(file, C.GLOBAL_USER);
+
+        public ResultInsert SetExistingFile(DocFileExt file )
+        {
+
+            int docId = (int)file.Document.Id;
+            var doc = GetDocument(docId);
+
+            if (doc != null)
+            {
+                file.Id = doc?.File?.Id;
+            }
+
+
+            return SetFile(file);
+        }
+
+        public int GetDocTypeId(string code) => Dal.GetTypeId(code);
+
     }
 }

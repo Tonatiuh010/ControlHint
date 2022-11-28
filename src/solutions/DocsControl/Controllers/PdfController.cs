@@ -1,5 +1,4 @@
-﻿using Aspose.Finance.Ofx.Profile;
-using Classes;
+﻿using Classes;
 using DocsControl.Ocr;
 using DocsControl.Ocr.FlowDocs;
 using Engine.BL.Actuators3;
@@ -9,6 +8,7 @@ using Engine.BO.DocsControl;
 using Engine.Constants;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using _Aspose = Aspose.Pdf;
 
@@ -21,19 +21,36 @@ namespace DocsControl.Controllers
 
         private readonly DocumentBL bl = new();
 
-        [HttpGet("quotation")]
-        public IActionResult SetQuotationDoc(dynamic obj)
+        [HttpPost("quotation")]
+        public Result SetQuotationDoc(dynamic obj)
         {
-            return PreparePdf(() =>
+            return RequestResponse(() =>
             {
+                byte[]? bytesDoc = null;
+                Quotation? quotationDoc = null;
+
                 JsonObject jObj = JsonObject.Parse(obj.ToString());
                 List<QuotationItem> items = new List<QuotationItem>();
+                int typeDocId = bl.GetDocTypeId(C.QUO);
+                int docId = ParseProperty<int>.GetValue("id", jObj);
                 var jItems = jObj["items"];
-
+                string name = ParseProperty<string>.GetValue("docName", jObj, OnMissingProperty);
                 string dateStr = ParseProperty<string>.GetValue("date", jObj, OnMissingProperty);
                 string duoDtStr = ParseProperty<string>.GetValue("duoDate", jObj, OnMissingProperty);
 
-                if(jItems != null)
+                var parameters = new QuotationParameters()
+                {
+                    Id = ParseProperty<int>.GetValue("id", jObj),
+                    Name = ParseProperty<string>.GetValue("name", jObj, OnMissingProperty),
+                    Client = ParseProperty<string>.GetValue("client", jObj, OnMissingProperty),
+                    Contact = ParseProperty<string>.GetValue("contact", jObj, OnMissingProperty),
+                    Date = DateTime.Parse(dateStr),
+                    DuoDate = DateTime.Parse(duoDtStr),
+                    Items = items,
+                    Notes = ParseProperty<string>.GetValue("notes", jObj, OnMissingProperty),
+                };
+
+                if (jItems != null)
                 {
                     var jArr = jItems.AsArray();
 
@@ -54,33 +71,60 @@ namespace DocsControl.Controllers
                     }
                 }
 
-                var quotationDoc = Quotation.CreateQuotation(new QuotationParameters()
+                var baseDoc = bl.GetDocument(docId);
+
+                var _tmpDoc = bl.SetDocument(new Document()
                 {
-                    Id = ParseProperty<int>.GetValue("id", jObj),
-                    Name = ParseProperty<string>.GetValue("name", jObj, OnMissingProperty),
-                    Client = ParseProperty<string>.GetValue("client", jObj, OnMissingProperty),
-                    Contact = ParseProperty<string>.GetValue("contact", jObj, OnMissingProperty),
-                    Date = DateTime.Parse(dateStr),
-                    DuoDate = DateTime.Parse(duoDtStr),                    
-                    Items = items,
-                    Notes = ParseProperty<string>.GetValue("notes", jObj, OnMissingProperty),
+                    DocType = new DocType()
+                    {
+                        Id = typeDocId,
+                    },
+                    Name = name
                 });
 
-                return quotationDoc.Document;
+                docId = (int)_tmpDoc.InsertDetails.Id;
+                parameters.Id = docId;
+                quotationDoc = Quotation.CreateQuotation(parameters);
+
+                if (quotationDoc != null)
+                {
+                    bytesDoc = GetDocBytes(quotationDoc.Document);
+
+                    var _tmpFile = bl.SetExistingFile(new DocFileExt()
+                    {
+                        Document = new Document()
+                        {
+                            Id = docId
+                        },
+                        DocImg = bytesDoc,
+                        Params = JsonSerializer.Serialize(parameters, options: C.CustomJsonOptions)
+                    });
+
+                    baseDoc = bl.GetDocument(docId);
+                }
+
+                return baseDoc;
             });            
         }
 
-        [HttpGet("sale")]
-        public IActionResult SetSaleDoc(dynamic obj)
+        [HttpPost("sale")]
+        public Result SetSaleDoc(dynamic obj)
         {
-            return PreparePdf(() =>
+            return RequestResponse(() =>
             {
+                byte[]? bytesDoc = null;
+                Sale? saleDoc = null;
                 JsonObject jObj = JsonObject.Parse(obj.ToString());
+                SaleParameters? parameters = null;
+
+                int typeDocId = bl.GetDocTypeId(C.SALE);
+                int docId = ParseProperty<int>.GetValue("id", jObj);
+                string name = ParseProperty<string>.GetValue("docName", jObj, OnMissingProperty);
                 string dtStr = ParseProperty<string>.GetValue("date", jObj, OnMissingProperty);
 
-                var saleDoc = Sale.CreateSale(new()
+                parameters = new SaleParameters()
                 {
-                    Id = ParseProperty<int>.GetValue("id", jObj),
+                    Id = docId,
                     Place = ParseProperty<string>.GetValue("place", jObj, OnMissingProperty),
                     Item = ParseProperty<string>.GetValue("item", jObj, OnMissingProperty),
                     Dt = DateTime.Parse(dtStr),
@@ -100,35 +144,57 @@ namespace DocsControl.Controllers
                     Law = ParseProperty<string>.GetValue("law", jObj, OnMissingProperty),
 
                     Total = ParseProperty<decimal>.GetValue("total", jObj, OnMissingProperty)
+                };
 
+                var baseDoc = bl.GetDocument(docId);
+
+                var _tmpDoc = bl.SetDocument(new Document()
+                {
+                    DocType = new DocType()
+                    {
+                        Id = typeDocId,
+                    },
+                    Name = name,
+                    Id = docId,
                 });
 
-                return saleDoc.Document;
+                docId = (int)_tmpDoc.InsertDetails.Id;
+                parameters.Id = docId;
+                saleDoc = Sale.CreateSale(parameters);
+
+
+                if ( saleDoc != null)
+                {
+                    bytesDoc = GetDocBytes(saleDoc.Document);
+
+                    var _tmpFile = bl.SetExistingFile(new DocFileExt()
+                    {
+                        Document = new Document()
+                        {
+                            Id = docId
+                        },
+                        DocImg = bytesDoc,
+                        Params = JsonSerializer.Serialize(parameters, options: C.CustomJsonOptions)
+                    });
+
+                    baseDoc = bl.GetDocument(docId);
+                }                
+
+                return baseDoc;
             });
         }
 
         [HttpGet("view/{id:int}")]
         public IActionResult ViewPdf(int id)
         {
-            return PreparePdf(() =>
-            {
-                var doc = bl.GetDocument(id);
-                return null;
-            });
-        }
-
-        private static IActionResult PreparePdf(Func<_Aspose.Document> getDoc)
-        {
             try
             {
-                MemoryStream output = new();
-                var doc = getDoc();
-                doc.Save(output);
-                return new FileStreamResult(output, "application/pdf");
+                var doc = bl.GetDocument(id);
+                return ReadBytes(doc.File.DocImg);
             }
             catch (Exception e)
             {
-                Result result = new Result()
+                Result result = new()
                 {
                     Status = C.ERROR,
                     Message = C.ERROR,
@@ -138,5 +204,65 @@ namespace DocsControl.Controllers
                 return new JsonResult(result);
             }
         }
+
+        private static IActionResult ReadBytes(byte[] bytes)
+        {
+            try
+            {
+                MemoryStream output = new(bytes);                               
+                return new FileStreamResult(output, "application/pdf");
+            }
+            catch (Exception e)
+            {
+                Result result = new()
+                {
+                    Status = C.ERROR,
+                    Message = C.ERROR,
+                    Data = e
+                };
+
+                return new JsonResult(result);
+            }
+        }
+
+        private static byte[] GetDocBytes(_Aspose.Document doc)
+        {
+            byte[] bytes; 
+
+            try
+            {
+                MemoryStream output = new();                
+                doc.Save(output);
+                bytes = output.ToArray();
+            } catch  
+            {
+                bytes = Array.Empty<byte>();
+            }
+
+            return bytes;
+        }
+
+        //private static IActionResult PreparePdf(Func<_Aspose.Document> getDoc)
+        //{
+        //    try
+        //    {
+        //        MemoryStream output = new();
+        //        var doc = getDoc();
+        //        doc.Save(output);                
+        //        return new FileStreamResult(output, "application/pdf");
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Result result = new()
+        //        {
+        //            Status = C.ERROR,
+        //            Message = C.ERROR,
+        //            Data = e
+        //        };
+
+        //        return new JsonResult(result);
+        //    }
+        //}
+
     }
 }

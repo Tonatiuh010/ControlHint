@@ -21,6 +21,23 @@ namespace DocsControl.Controllers
         [HttpGet("{id:int}")]
         public Result GetDocument(int id) => RequestResponse(() => bl.GetDocument(id));
 
+        [HttpPost("file")]
+        public Result SetFile(dynamic obj) => RequestResponse(() =>
+        {
+            JsonObject jObj = JsonObject.Parse(obj.ToString());
+            string? b64 = ParseProperty<string>.GetValue("b64", jObj, OnMissingProperty);
+
+            return bl.SetFile(new()
+            {
+                Id = ParseProperty<int>.GetValue("id", jObj),
+                Document = new()
+                {
+                    Id = ParseProperty<int>.GetValue("documentId", jObj, OnMissingProperty),
+                },                
+                DocImg = string.IsNullOrEmpty(b64) ? null : Convert.FromBase64String( DocFile.RemoveHeaderB64(b64) )
+            });
+        });
+
         [HttpPost]
         public Result SetDocument(dynamic obj) => RequestResponse(() =>
         {

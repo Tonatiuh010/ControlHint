@@ -63,18 +63,6 @@ public class EmployeeController : CustomController
         {
             int? employeeId = resultInsert.InsertDetails.Id;
 
-            //if (employee.Card != null && employee.Card.IsValid())
-            //{
-
-            //    var employeeCard = bl.GetCards(assigned: true).Find(x => x.Employee == employeeId);
-
-            //    if (employeeCard != null && employeeCard.IsValid())
-            //        bl.SetDownCard((int)employeeCard.Id, C.GLOBAL_USER);
-
-            //    var chResult = bl.SetCard(new CardEmployee(employee.Card, employeeId), C.GLOBAL_USER);
-                
-            //}
-
             if (levels != null)
             {                
                 var employeeLevels = bl.GetEmployeeAccessLevels(employeeId);
@@ -100,26 +88,7 @@ public class EmployeeController : CustomController
         }        
 
         return resultInsert;
-    });
-
-    //[HttpPost("showHint")]
-    //public IActionResult ShowHint(dynamic obj)
-    //{
-    //    try
-    //    {
-    //        JsonObject jObj = JsonObject.Parse(obj.ToString());
-
-    //        ImageData img = new (ParseProperty<string>.GetValue("base64", jObj, OnMissingProperty));
-    //        string? deviceName = ParseProperty<string>.GetValue("device", jObj, OnMissingProperty);
-
-
-
-    //        return Ok();
-    //    } catch
-    //    {
-    //        return Ok();
-    //    }
-    //}
+    });    
 
     [HttpPost("hint")]
     public Result SetEmployeeHint(dynamic obj)
@@ -186,4 +155,21 @@ public class EmployeeController : CustomController
             C.GLOBAL_USER
         );
     });
+
+    //[HttpPost("showHint")]
+    //public IActionResult ShowHint(dynamic obj)
+    //{
+    //    try
+    //    {
+    //        JsonObject jObj = JsonObject.Parse(obj.ToString());
+
+    //        ImageData img = new (ParseProperty<string>.GetValue("base64", jObj, OnMissingProperty));
+    //        string? deviceName = ParseProperty<string>.GetValue("device", jObj, OnMissingProperty);
+    //        return Ok();
+    //    } catch
+    //    {
+    //        return Ok();
+    //    }
+    //}
+
 }

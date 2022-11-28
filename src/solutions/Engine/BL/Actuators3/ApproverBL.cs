@@ -15,20 +15,33 @@ namespace Engine.BL.Actuators3
     public class ApproverBL : BaseBL<DocsControlDAL>
     {
         private PositionBL BL = new PositionBL();
+        private FlowsBL flowBl = new FlowsBL();
         
         public ResultInsert SetApprover(Approver approver, string txnUser) => Dal.SetApprover(approver, txnUser);
 
         public List<Approver> GetApprovers(int? approverid = null) {
             var Approvers = Dal.GetApprovers(approverid);
-            foreach (var approver in Approvers) { 
-                CompleteApprover (approver);
-            }
-            return Approvers;
-                }
-        public Approver? GetApprover(int approver) => GetApprovers(approver).FirstOrDefault();
 
-        public List<DocsApprover> GetDocsApprovers(int? id = null) => Dal.GetFlowsApprover(id);
-        public DocsApprover? GetDocApprover(int id) => GetDocsApprovers(id).FirstOrDefault();
+            foreach (var approver in Approvers)
+                CompleteApprover (approver);
+
+            return Approvers;
+        }
+
+        public Approver? GetApprover(int approver) => GetApprovers(approver).FirstOrDefault();        
+
+        public List<DocApprover> GetDocsApprovers(int? id = null)
+        {
+            var docApprovers = Dal.GetFlowsApprover(id);
+
+            foreach (var docApprover in docApprovers)
+                CompleteDocApprover(docApprover);
+
+            return docApprovers;
+        }
+
+        public DocApprover? GetDocApprover(int id) => GetDocsApprovers(id).FirstOrDefault();
+
         private void CompleteApprover (Approver approver)
         {
             if(approver.Position != null && approver.Position.IsValidPosition())
@@ -36,5 +49,20 @@ namespace Engine.BL.Actuators3
                 approver.Position = BL.GetPosition((int)approver.Position.PositionId);
             }
         }
+
+        private void CompleteDocApprover(DocApprover docApprover)
+        {
+            if(docApprover.DocFlow != null && docApprover.DocFlow.IsValid())
+            {
+                docApprover.DocFlow = flowBl.GetDocFlow((int)docApprover.DocFlow.Id);
+            }
+
+            if(docApprover.Approver != null && docApprover.Approver.IsValid())
+            {
+                docApprover.Approver = GetApprover((int)docApprover.Approver.Id);
+            }
+
+        }
+
     }
 }

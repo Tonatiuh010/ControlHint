@@ -1,3 +1,5 @@
+using Google.Protobuf;
+using Org.BouncyCastle.Crypto.Tls;
 using System;
 using System.Text.Json;
 
@@ -47,6 +49,10 @@ namespace Engine.Constants {
         public const string ACCESS_DB = "DB_ACCESS";
         public const string HINT_DB = "DB_HINT";
         public const string DOCS_DB = "DB_DOCS";
+
+        /* Doc Types */
+        public const string QUO = "QUO";
+        public const string SALE = "SALE";
 
         /* Json Options */
         public static readonly JsonSerializerOptions CustomJsonOptions = new JsonSerializerOptions

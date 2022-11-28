@@ -10,5 +10,7 @@ namespace Engine.BO.DocsControl
     {
         public string? Name { get; set; }
         public DocType? DocType { get; set; }
+        public DocFile? File { get; set; }
+
     }
 }
