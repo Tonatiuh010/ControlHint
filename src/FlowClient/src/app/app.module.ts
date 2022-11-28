@@ -46,6 +46,7 @@ import { ListEmployeesComponent } from './pages/list-employees/list-employees.co
 import { DevicesComponent } from './pages/devices/devices.component';
 import { ModalDeviceComponent } from './custom-components/modals/modal-device/modal-device.component';
 import { ModalDevicesComponent } from './custom-components/modals/modal-devices/modal-devices.component';
+import { HomeComponent } from './pages/home/devices.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
 
@@ -92,7 +93,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     PagesBlankComponent,
     ChecksComponent,
     ListEmployeesComponent,
-    DevicesComponent
+    DevicesComponent,
+    HomeComponent
   ],
   imports: [
     HttpClientModule,

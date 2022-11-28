@@ -5,6 +5,7 @@ import { ListEmployeesComponent } from "./pages/list-employees/list-employees.co
 import { DashboardComponent } from './examples/dashboard/dashboard.component';
 import { DevicesComponent } from './pages/devices/devices.component';
 import { LoginComponent } from './pages/login/login.component';
+import { HomeComponent } from './pages/home/devices.component';
 import { AuthGuard } from './services/auth.service';
 
 
@@ -40,15 +41,17 @@ import { PagesRegisterComponent } from './examples/pages-register/pages-register
 import { UsersProfileComponent } from './examples/users-profile/users-profile.component';
 
 
+
 const routes: Routes = [
   /* OUR CRAZY PAGES */
-
   { path: 'login', component: LoginComponent },
   { path: 'checks', component: ChecksComponent},
+
+  { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'employees', component: ListEmployeesComponent, canActivate: [AuthGuard] },
   { path: 'devices', component: DevicesComponent, canActivate: [AuthGuard] },
 
-
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
 
   { path: 'pages-error404', component: PagesError404Component },
   { path: '**', redirectTo: '/pages-error404' },
