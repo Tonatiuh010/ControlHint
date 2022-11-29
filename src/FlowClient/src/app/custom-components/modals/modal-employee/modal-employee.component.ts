@@ -11,6 +11,7 @@ import { Department } from "src/interfaces/catalog/Department";
 import { CatalogService } from "../../../services/requests/catalog.service";
 import { Shift } from "src/interfaces/catalog/Shift";
 import { Position } from "src/interfaces/catalog/Position";
+import { User } from "src/interfaces/catalog/User";
 //IMPORTAR CATALOGOS
 
 @Component({
@@ -19,6 +20,7 @@ import { Position } from "src/interfaces/catalog/Position";
 })
 export class ModalEmployeeComponent implements OnInit {
   shifts?: Shift[];
+  user?: User;
   positions?: Position[];
   selectorShift: FormControl = new FormControl();
   selectorPosition: FormControl = new FormControl();

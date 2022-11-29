@@ -12,7 +12,7 @@
   <div> <!--AGREGAR UN RESPONSIVE A LA TABLA-->
     <div *ngIf="employees" class="container-fluid !direction !spacing ">
       <div class="row">
-        <div class="col-8">
+        <div class="col-10">
           <div class="card text-left">
             <div class="card-body">
               <h5 class="card-title">Empleados
@@ -22,7 +22,7 @@
                   </button>
                 </div>
               </h5>
-              <div class=" table-responsive"  style="height: 44rem;">
+              <div class="table-responsive"  style="height: 38rem;">
                 <table class="table table-hover" >
                   <thead>
                       <tr>
@@ -50,7 +50,7 @@
           </div>
         </div>
 
-        <div class="col-3" *ngIf="selectedEmployee as employee">
+        <div class="col-2" *ngIf="selectedEmployee as employee">
           <div class="card">
             <picture class="m-auto p-3">
               <img src="{{ employee.image }}" class="img-fluid rounded d-block" alt="">
@@ -66,8 +66,8 @@
                     {{ employee.lastName }}
                   </span>
                 </p>
-                <p class="fw-bold mt-2">Posicion:</p>
-                <p class="card-text" *ngIf="employee.position">{{ employee.position.alias }}</p>
+                <p class="fw-bold mt-2">Estatus:</p>
+                <p class="card-text">{{ employee.status }}</p>
               </div>
               <div class="col">
                 <p class="fw-bold mt-2">Turno:</p>

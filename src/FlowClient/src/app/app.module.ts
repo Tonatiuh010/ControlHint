@@ -47,6 +47,7 @@ import { DevicesComponent } from './pages/devices/devices.component';
 import { ModalDeviceComponent } from './custom-components/modals/modal-device/modal-device.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ModalEmployeeComponent } from 'src/app/custom-components/modals/modal-employee/modal-employee.component';
+import { DocFlowComponent } from './pages/doc-flow/doc-flow.component';
 
 
 @NgModule({
@@ -92,7 +93,8 @@ import { ModalEmployeeComponent } from 'src/app/custom-components/modals/modal-e
     DashboardPrincipalComponent,
     ListEmployeesComponent,
     DevicesComponent,
-    ModalEmployeeComponent
+    ModalEmployeeComponent,
+    DocFlowComponent
   ],
   imports: [
     HttpClientModule,

@@ -10,7 +10,7 @@
       <div class="card"> <!--MODAL-BODY-->
         <div class="card-body" *ngIf="employee">
           <h5 class="card-title">Empleado</h5>
-          <div class="row">
+          <div class="row mb-3">
             <div class="col">
               <div class="row mb-3">
                 <label for="inputText" class="col-form-label">Nombre</label>
@@ -60,19 +60,26 @@
              </div>
             </div>
           </div>
-
-          <!-- <div *ngIf="device" class="col-6 my-auto">
-            <label class="text-muted fs-6">
-              <span class="fw-bold"> Dispositivo: </span> {{ device.name }}
-            </label>
+          <div class="p-3 mb-5 rounded border" style="background-color: #f9f9f9;">
+            <div class="d-flex justify-content-around">
+              <div class="row mb-3">
+                <label for="inputText" class="col-form-label">Email</label>
+                <div class="col-sm-10"> <input type="text" class="form-control" value="{{employee.name}}" [formControl]="inputName"></div>
+              </div>
+              <div class="row mb-3">
+                <label for="inputPassword3" class="col-form-label">Password</label>
+                <div class="col-sm-10"> <input type="password" class="form-control" id="inputPassword"></div>
+             </div>
+              <div class="row mb-3">
+                <label class="col-form-label">Login type</label>
+                <div class="col-sm-10">
+                   <select class="form-select" aria-label="Default select example">
+                      <option selected value="">Administrador</option>
+                   </select>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="col-5 offset-1">
-            <label class="text-muted fs-6 fw-bold"> Flujos </label>
-            <select class="form-select" [formControl]="selector">
-              <option *ngFor="let flow of flows" value="{{flow.id}}" > {{ flow.name }} </option>
-            </select>
-          </div> -->
-
         </div>
       </div>
       <div class="modal-footer">
