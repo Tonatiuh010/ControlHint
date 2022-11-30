@@ -1,4 +1,4 @@
-<app-modal-appruved [isNew]="showModalApproved" (onCloseModal)="closeApproved()"></app-modal-appruved>
+<app-modal-approved [isNew]="showModalApproved" (onCloseModal)="closeApproved()"></app-modal-approved>
 <app-modal-new-flow [isNew]="showModalFlow" (onCloseModal)="closeFlow()"></app-modal-new-flow>
 <main id="main" class="main text-break">
   <div class="pagetitle">
@@ -19,8 +19,8 @@
         <div class="row">
           <div class="col-2 mx-2">
             <label class="text-muted fs-6 fw-bold"> Departamento </label>
-            <select class="form-select">
-              <option *ngFor="let department of departments" selected value="{{department.code}}" [formControl]="selectorDepartment">{{department.name}}</option>
+            <select class="form-select" [formControl]="selectorDepartment">
+              <option *ngFor="let department of departments" selected value="{{department.code}}" >{{department.name}}</option>
             </select>
           </div>
           <div class="col-2">
@@ -31,7 +31,7 @@
             </select>
           </div>
           <div class="col d-flex justify-content-end">
-            <button type="button" class="btn col-sm-1 text-center p-2 m-2 fs-5" style="background-color: #117c34;">
+            <button (click)="searchFlow()" type="button" class="btn col-sm-1 text-center p-2 m-2 fs-5" style="background-color: #117c34;">
               <i class="bi bi-search text-white"></i>
             </button>
             <button type="button" (click)="showFlow()" class="btn col-sm-1 text-center p-2 m-2 fs-5" style="background-color: #117c34;">
@@ -52,65 +52,17 @@
               <div class="text-white fs-5 mx-3">Aprobadores</div>
             </div>
             <div class="table-responsive" style="height: 28rem;">
-              <div class="border rounded p-2 m-4 d-flex justify-content-around fs-5">
-                <div class="p-2 bd-highlight">APP1 - APROBATORIO</div>
-                <div class="p-2 bd-highlight">1</div>
-                <div class="d-flex flex-row-reverse bd-highlight">
-                  <div class="bd-highlight mx-auto">
-                    <button type="button" class="btn text-danger">
-                      <i class="bi bi-x-square fs-4"></i>
-                    </button>
-                  </div>
+              <div class="border rounded p-2 m-4 row fs-5" *ngFor="let approverDocument of approverDocuments">
+                <div class="p-2 bd-highlight col-4">
+                  {{ approverDocument.approver.fullName }}
                 </div>
-              </div>
-              <div class="border rounded p-2 m-4 d-flex justify-content-around fs-5">
-                <div class="p-2 bd-highlight">APP1 - APROBATORIO</div>
-                <div class="p-2 bd-highlight">1</div>
-                <div class="d-flex flex-row-reverse bd-highlight">
-                  <div class="bd-highlight mx-auto">
-                    <button type="button" class="btn text-danger">
-                      <i class="bi bi-x-square fs-4"></i>
-                    </button>
-                  </div>
+                <div class="p-2 bd-highlight col-2">
+                  {{ approverDocument.approver.id}}
                 </div>
-              </div>
-              <div class="border rounded p-2 m-4 d-flex justify-content-around fs-5">
-                <div class="p-2 bd-highlight">APP1 - APROBATORIO</div>
-                <div class="p-2 bd-highlight">1</div>
-                <div class="d-flex flex-row-reverse bd-highlight">
-                  <div class="bd-highlight mx-auto">
-                    <button type="button" class="btn text-danger">
-                      <i class="bi bi-x-square fs-4"></i>
-                    </button>
-                  </div>
+                <div class="p-2 bd-highlight col-4">
+                  {{ approverDocument.name}}
                 </div>
-              </div>
-              <div class="border rounded p-2 m-4 d-flex justify-content-around fs-5">
-                <div class="p-2 bd-highlight">APP1 - APROBATORIO</div>
-                <div class="p-2 bd-highlight">1</div>
-                <div class="d-flex flex-row-reverse bd-highlight">
-                  <div class="bd-highlight mx-auto">
-                    <button type="button" class="btn text-danger">
-                      <i class="bi bi-x-square fs-4"></i>
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div class="border rounded p-2 m-4 d-flex justify-content-around fs-5">
-                <div class="p-2 bd-highlight">APP1 - APROBATORIO</div>
-                <div class="p-2 bd-highlight">1</div>
-                <div class="d-flex flex-row-reverse bd-highlight">
-                  <div class="bd-highlight mx-auto">
-                    <button type="button" class="btn text-danger">
-                      <i class="bi bi-x-square fs-4"></i>
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div class="border rounded p-2 m-4 d-flex justify-content-around fs-5">
-                <div class="p-2 bd-highlight">APP1 - APROBATORIO</div>
-                <div class="p-2 bd-highlight">1</div>
-                <div class="d-flex flex-row-reverse bd-highlight">
+                <div class="d-flex flex-row-reverse bd-highlight col-2">
                   <div class="bd-highlight mx-auto">
                     <button type="button" class="btn text-danger">
                       <i class="bi bi-x-square fs-4"></i>
@@ -135,19 +87,19 @@
             <div class="p-2 rounded-top" style="background-color: #1853bf;">
               <div class="text-white fs-5 mx-3">Flujo</div>
             </div>
-            <div class="table-responsive" style="height: 28rem;">
-              <div class="col m-4 d-flex justify-content-around fs-5">
-                <select class="form-select">
-                  <option>depto input (Key1)</option>
-                  <option>depto input (Key2)</option>
-                  <option>depto input (Key3)</option>
-                </select>
-              </div>
+            <div class="row mx-4 my-2">
+              <label class="text-muted fw-bold">Departamento</label>
+              <select class="form-select" [formControl]="selectorDepartment">
+                <option *ngFor="let department of departments" selected value="{{department.code}}" >{{department.name}}</option>
+              </select>
+            </div>
+            <div class="table-responsive" style="height: 23rem;">
+
               <div class="border rounded p-2 m-4 d-flex justify-content-around fs-5">
                 <input class="p-2 bd-highlight form-control" placeholder="Key2">
               </div>
               <div class="border rounded p-2 m-4 d-flex justify-content-around fs-5">
-                <input class="p-2 bd-highlight form-control" placeholder="Key2">
+                <input class="p-2 bd-highlight form-control" placeholder="Key3">
               </div>
             </div>
             <div class="d-flex flex-row-reverse bd-highlight">

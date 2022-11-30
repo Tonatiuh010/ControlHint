@@ -2,7 +2,7 @@ let combineUrl = (base : string, extension: string) => base + extension;
 const urls = {
   flowControl: "https://flowcontrol-9a.azurewebsites.net/",
   accessControl: "https://accesscontrol-9a.azurewebsites.net/",
-  docsControl: "https://docscontrol-9a.azurewebsites.net/",
+  docsControl: "https://docscontrol9a.azurewebsites.net/",
 };
 
 const C = {

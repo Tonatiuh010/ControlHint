@@ -11,19 +11,21 @@ import { ApproverDocument } from "src/interfaces/document/Approver";
   providedIn: 'root'
 })
 
-export class ApproverServices {
+export class ApproverService {
   private service: service;
-  private urlExtension : string = "approver";
+  private urlExtension : string = "Approver";
 
   constructor(private http : HttpClient) {
-    this.service = new service(C.urls.accessControl, http);
+    this.service = new service(C.urls.docsControl, http);
   }
 
   //SECCION DE APPROVER
-  public getApprovers(fn: (res: Approver[]) => void) {
+  public getApprovers(fn: (res: any) => void) {
     this.service.getRequest(
       this.urlExtension,
-      res => fn(res.data as Approver[])
+      res => {
+        fn(res.data as Approver[])
+      }
     );
   }
 
@@ -37,15 +39,24 @@ export class ApproverServices {
   //SECCION DE APPROVER DOCUMENT
   public getApproverDocuments(fn: (res: ApproverDocument[]) => void) {
     this.service.getRequest(
-      this.concatUrl("appproverDocument"),
+      this.concatUrl("docsApprover"),
       res => fn(res.data as ApproverDocument[])
     );
   }
 
   public getApproverDocument(id: number, fn: (res: ApproverDocument) => void) {
     this.service.getRequest(
-      this.concatUrl("appproverDocument/" + id.toString()),
+      this.concatUrl("docsApprover/" + id.toString()),
       res => fn(res.data as ApproverDocument)
+    );
+  }
+
+  public getApproverDocumentsByType(department: string, type: string, fn: (res: ApproverDocument[]) => void) {
+    this.getApproverDocuments(
+      res => {
+        let docs = res.filter(x => x.docFlow.docType.typeCode == type && x.docFlow.key1 == department);
+        fn(docs);
+      }
     );
   }
 
@@ -61,7 +72,7 @@ export class ApproverServices {
 
   public setApproverDocument(id: number, fn: (res: any) => void) {
     this.service.postRequest(
-      this.concatUrl("appproverDocument"),
+      this.concatUrl("docsApprover"),
       { id },
       res => fn(res)
     );

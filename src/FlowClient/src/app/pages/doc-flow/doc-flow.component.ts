@@ -5,6 +5,9 @@ import { FormControl } from '@angular/forms';
 import { DocumentService } from "src/app/services/requests/document.service";
 import { Document } from "src/interfaces/document/Document";
 import { C } from 'src/interfaces/constants';
+import { ApproverService } from 'src/app/services/requests/approver.service';
+import { ApproverDocument } from 'src/interfaces/document/Approver';
+
 
 
 @Component({
@@ -20,10 +23,12 @@ export class DocFlowComponent implements OnInit {
 
   departments?: Department[];
   documents?: Document[];
+  approverDocuments?: ApproverDocument[];
+
 
   constructor(
     private DepartmentService : DepartmentService,
-    private DocumentService : DocumentService,
+    private ApproverService : ApproverService,
   ) { }
 
   ngOnInit(): void {
@@ -31,11 +36,25 @@ export class DocFlowComponent implements OnInit {
 
     this.DepartmentService.getDepartments((department)  => {
       this.departments = department;
+      if(this.departments){
+        this.selectorDepartment.setValue(this.departments[0].code);
+        this.searchFlow();
+      }
     });
-    this.DocumentService.getDocuments((document) => {
-      this.documents = document;
+  }
+
+  searchFlow(){
+    this.ApproverService.getApproverDocumentsByType(this.selectorDepartment.value, this.selectorType.value, res => {
+      if(res){
+        if(res.length > 0) {
+          this.approverDocuments = res;
+        }
+      }
     })
   }
+
+
+
 
   selectType() {
     let value = this.selectorType.value;

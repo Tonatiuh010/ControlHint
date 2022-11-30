@@ -50,7 +50,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ModalEmployeeComponent } from 'src/app/custom-components/modals/modal-employee/modal-employee.component';
 import { DocFlowComponent } from './pages/doc-flow/doc-flow.component';
-import { ModalAppruvedComponent } from './custom-components/modals/modal-appruved/modal-appruved.component';
+import { ModalApprovedComponent } from './custom-components/modals/modal-approved/modal-approved.component';
 import { ModalNewFlowComponent } from './custom-components/modals/modal-new-flow/modal-new-flow.component';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { DocumentComponent } from './pages/document/document.component';
@@ -103,7 +103,7 @@ import { ItemComponent } from './custom-components/badgets/badget-item/item.comp
     DevicesComponent,
     ModalEmployeeComponent,
     DocFlowComponent,
-    ModalAppruvedComponent,
+    ModalApprovedComponent,
     ModalNewFlowComponent,
     HomeComponent,
     DocumentComponent,
