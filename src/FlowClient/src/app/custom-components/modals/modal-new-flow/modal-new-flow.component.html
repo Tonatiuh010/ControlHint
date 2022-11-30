@@ -11,14 +11,15 @@
         <div class="d-flex justify-content-evenly">
           <div class="col-5">
             <label class="text-muted fs-6 fw-bold">Departamento</label>
-            <select class="form-select">
-              <option value="">--Departamento--</option>
+            <select class="form-select" [formControl]="selectorDepartment">
+              <option *ngFor="let department of departments" selected value="{{department.code}}" >{{department.name}}</option>
             </select>
           </div>
           <div class="col-5">
             <label class="text-muted fs-6 fw-bold">Tipo de documento</label>
-            <select class="form-select">
-              <option value="">--Documento--</option>
+            <select class="form-select" [formControl]="selectorType" (change)="selectType()" >
+              <option selected value="QUO">Cotizacion</option>
+              <option value="SALE">Formato de Venta</option>
             </select>
           </div>
         </div>

@@ -17,6 +17,7 @@ export interface ApproverStep {
   comments: string;
 }
 
+//TU USAS DE AQUI PARA ABAJO PAPA
 export interface ApproverDocument {
   docFlow: DocFlow;
   approver: Approver;
@@ -27,7 +28,9 @@ export interface ApproverDocument {
 }
 
 export interface Approver {
-  fullName: string;
-  position: Position;
-  id: number;
+  fullName?: string;
+  position?: Position;
+  name?: string;
+  description?: string;
+  id?: number;
 }

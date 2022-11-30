@@ -10,16 +10,16 @@
       <div class="modal-body">
         <div class="">
           <div class="">
-            <label class="text-muted fs-6 fw-bold">Lista de aprobadores</label>
-            <select class="form-select">
-              <option value="">--Lista--</option>
+            <label class="text-muted fs-6 fw-bold" >Lista de aprobadores</label>
+            <select class="form-select" [formControl]="selectorApprover">
+              <option *ngFor="let approver of approvers" selected value="{{approver.id}}">{{ approver.fullName }}</option>
             </select>
           </div>
         </div>
       </div>
       <div class="modal-footer">
         <button id="btn-close-modal" type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="closeModal()" >Close</button>
-        <button type="button" class="btn btn-primary">Agregar</button>
+        <button type="button" class="btn btn-primary" >Agregar</button>
       </div>
     </div>
   </div>
