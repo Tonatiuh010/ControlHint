@@ -66,8 +66,9 @@ public class CheckController : CustomController
                 Id = ParseProperty<int>.GetValue("deviceId", jObj)
             }
             
-        }, C.GLOBAL_USER);
+        });
     });
+
     [HttpGet("employee/{id:int}")]
     public Result GetWeeklyChecks(int id) => RequestResponse(() =>
     {

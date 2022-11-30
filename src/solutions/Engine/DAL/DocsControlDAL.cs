@@ -385,10 +385,7 @@ namespace Engine.DAL
                 (ex, msg) => SetExceptionResult("DocsControlDAL.GetDocTransanctions", msg, ex)
             );
             return model;
-        }
-
-        
-        }        
+        }                       
 
         public int GetTypeId(string code)
         {
