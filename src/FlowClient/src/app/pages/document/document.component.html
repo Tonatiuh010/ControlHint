@@ -64,7 +64,7 @@
                 Aprobadores
               </h5>
               <ul *ngIf="transactionDocument?.approvers" class="list-group list-group-flush">
-                <li *ngFor="let approver of transactionDocument?.approvers" class="list-group-item text fs-6 text-center d-flex d-flex justify-content-around">
+                <li *ngFor="let approver of transactionDocument?.approvers" class="list-group-item text fs-6 text-center d-flex d-flex d-flex justify-content-between">
                   <label> {{approver?.documentDetail?.approver?.fullName}} </label>
                   <label class="fw-bold"> {{approver?.documentDetail?.name}} </label>
                   <span class="badge bg-success mt-1">

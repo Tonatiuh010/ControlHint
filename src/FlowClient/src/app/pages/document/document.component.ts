@@ -116,6 +116,7 @@ export class DocumentComponent implements OnInit {
   }
 
   preparePdf() {
+    this.pdfSrc = undefined;
     this.pdfSrc = C.urls.docsControl + 'pdf/view/' + this.docId;
   }
 
