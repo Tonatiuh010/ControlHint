@@ -1,0 +1,124 @@
+
+<main id="main" class="main">
+  <div class="pagetitle">
+    <h1> Documento </h1>
+    <nav class="bg-red-500">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
+        <li class="breadcrumb-item active"> Documento</li>
+      </ol>
+    </nav>
+  </div>
+
+  <div class="row" >
+
+    <div id="pdf-view" class="col-7">
+      <div class="border shadow card p-1">
+        <h5 class="card-title text-center py-1">
+          Vista
+        </h5>
+
+        <ng-template [ngIf]="docId" [ngIfElse]="enabledBlock">
+          <pdf-viewer
+            *ngIf="pdfSrc"
+            [src]="pdfSrc"
+            [render-text]="true"
+            [original-size]="false"
+            [ngStyle]="{ 'width': width +'px', 'height': '900px' }"
+          >
+          </pdf-viewer>
+        </ng-template>
+
+        <ng-template #enabledBlock>
+          <span class="badge bg-info mx-auto w-50">
+            No imagen añadida, favor de crear un nuevo documento
+          </span>
+          <img src="{{noImg}}" class="img-fluid m-4">
+        </ng-template>
+
+      </div>
+    </div>
+
+    <!--
+      [show-all]="true"
+      [autoresize]="true"
+      [fit-to-page]="false"
+    -->
+
+    <ng-template [ngIf]="docId" [ngIfElse]="enabledBlock2">
+      <div class="col-5">
+        <div class="row mb-2">
+          <div class="col-12">
+            <div class="border shadow card">
+              <h5 class="card-title text-center py-1">
+                Estado
+              </h5>
+              <h2 class="text-center mb-0 mx-auto w-100">
+                <span class="badge bg-success w-100">Aprobado</span>
+              </h2>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="border shadow  card p-1">
+              <h5 class="card-title text-center py-1">
+                Aprobadores
+              </h5>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item text fs-6 text-center d-flex d-flex justify-content-around">
+                  <label> Tonatiuh Lopez </label>
+                  <label class="fw-bold">Manager 1 </label>
+                  <span class="badge bg-success mt-1">
+                    Aprobado
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="row my-2">
+          <document-detail [type]="docType">
+          </document-detail>
+        </div>
+        <div class="row my-2 p-3">
+          <div class="col-12">
+            <button class="btn w-100 btn-primary">
+              Aprobar
+            </button>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+
+    <ng-template #enabledBlock2>
+      <div class="col-5">
+        <div class="row mb-2">
+          <div class="col-12">
+            <div class="border shadow card">
+              <h5 class="card-title text-center">
+                Crear Documento
+              </h5>
+              <div class="col-10 mx-auto mb-3">
+                <select class="form-select" [formControl]="selectorType" (change)="selectType()" >
+                  <option selected value="QUO">Cotizacion</option>
+                  <option value="SALE">Formato de Venta</option>
+                </select>
+              </div>
+              <div class="col-10 mx-auto mb-3">
+                <label class="form-label text center"> Departamento </label>
+                <select class="form-select" [formControl]="selectorDepto" >
+                  <option *ngFor="let depto of departaments" value="{{depto.code}}" > {{depto.name}} </option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <document-detail [type]="docType">
+        </document-detail>
+
+      </div>
+    </ng-template>
+
+
+  </div>
+</main>

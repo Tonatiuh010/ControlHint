@@ -1,7 +1,7 @@
 import { Observable } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { C } from "src/interfaces/constants";
-import { dataBody } from "src/interfaces/catalog/dataBody";
+import { DataBody } from "src/interfaces/catalog/DataBody";
 
 export class BaseHttp {
   url : string;
@@ -9,9 +9,9 @@ export class BaseHttp {
     this.url = url;
   }
 
-  public getRequest(urlExtension: string = '', fn: (res: dataBody) => void){
+  public getRequest(urlExtension: string = '', fn: (res: DataBody) => void){
     try {
-      let obs = this.http.get<dataBody>(this.url + urlExtension);
+      let obs = this.http.get<DataBody>(this.url + urlExtension);
 
       this.responseBlock(
         obs,
@@ -41,11 +41,11 @@ export class BaseHttp {
     }
   }
 
-  private responseBlock(response: Observable<dataBody>, onComplete: (res: dataBody) => void, onError: (err: any) => void) {
+  private responseBlock(response: Observable<DataBody>, onComplete: (res: DataBody) => void, onError: (err: any) => void) {
     let ref = this;
 
     response.subscribe({
-      next(res: dataBody){
+      next(res: DataBody){
         if(ref.isValidResponse(res))
           onComplete(res);
         else

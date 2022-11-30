@@ -125,9 +125,12 @@ namespace DocsControl.Controllers
                 parameters = new SaleParameters()
                 {
                     Id = docId,
+
+                    Name = name,
+
                     Place = ParseProperty<string>.GetValue("place", jObj, OnMissingProperty),
                     Item = ParseProperty<string>.GetValue("item", jObj, OnMissingProperty),
-                    Dt = DateTime.Parse(dtStr),
+                    Date = DateTime.Parse(dtStr),
 
                     SalesAddress = ParseProperty<string>.GetValue("salesAddress", jObj, OnMissingProperty),
                     SalesNum = ParseProperty<int>.GetValue("salesNum", jObj, OnMissingProperty),

@@ -1,0 +1,152 @@
+<div class="col-12">
+  <div class="border shadow card p-1">
+    <div class="card-body p-2">
+      <h5 class="card-title text-center py-1">
+        Detalles
+      </h5>
+      <div class="row border border-rounded m-1 p-2">
+        <div class="mb-1">
+          <label class="form-label text-muted"> Nombre Documento </label>
+          <input class="form-control" [formControl]="documentName" />
+        </div>
+        <div class="mb-1">
+          <label class="form-label text-muted"> Fecha Inic. </label>
+          <input type="date" class="form-control" [formControl]="date" />
+        </div>
+
+        <ng-template  [ngIf]="isQuotation()" [ngIfElse]="enabledBlock">
+          <div class="mb-1">
+            <label class="form-label text-muted"> Fecha Vencida </label>
+            <input type="date" class="form-control" [formControl]="duoDate" />
+          </div>
+          <div class="mb-1">
+            <label class="form-label text-muted"> Nombre de Cotización </label>
+            <input class="form-control" [formControl]="quoName" />
+          </div>
+
+          <div class="mt-3 border-bottom my-3 py-1">
+            <label class="text-center fw-bold my-1 w-100">
+              Concepto
+              <button class="mr-3 btn btn-primary btn-sm" [ngClass]="{'d-none' : !isEditable}" (click)="addItem()" >
+                Añadir <i class="bi bi-plus"></i>
+              </button>
+            </label>
+          </div>
+
+          <div *ngIf="quoParams">
+            <div *ngFor="let item of quoParams?.items" class="mb-3 py-1">
+              <app-item (onDeleteItem)="removeItem($event)" (onItem)="setItem($event)" [isEditable]="isEditable" [item]="item"></app-item>
+            </div>
+          </div>
+
+          <div class="mt-3 border-bottom my-3 py-1">
+            <label class="text-center fw-bold my-1 w-100">
+              Información de Cotización
+            </label>
+          </div>
+
+          <div class="mb-1">
+            <label class="form-label text-muted"> Cliente </label>
+            <input class="form-control" [formControl]="client" />
+          </div>
+          <div class="mb-1">
+            <label class="form-label text-muted"> Contacto </label>
+            <input class="form-control" [formControl]="contact" />
+          </div>
+          <div class="mb-1">
+            <label class="form-label text-muted"> Notas </label>
+            <textarea class="form-control" [formControl]="notes" >
+            </textarea>
+          </div>
+        </ng-template>
+
+        <ng-template #enabledBlock>
+          <!-- *ngIf="saleParams" -->
+          <div >
+            <div class="mt-3 border-bottom my-3 py-1">
+              <label class="text-center fw-bold my-1 w-100">
+                Informacion del Vendedor
+              </label>
+            </div>
+
+            <div class="mb-1">
+              <label class="form-label text-muted"> Ubicacion </label>
+              <input class="form-control" [formControl]="place" />
+            </div>
+            <div class="mb-1">
+              <label class="form-label text-muted"> Objeto en Venta </label>
+              <input class="form-control" [formControl]="item" />
+            </div>
+
+            <div class="mb-1">
+              <label class="form-label text-muted"> No. Vendedor </label>
+              <input type="number" class="form-control" [formControl]="salesNum" />
+            </div>
+            <div class="mb-1">
+              <label class="form-label text-muted">  Vendedor </label>
+              <input class="form-control" [formControl]="salesPlace" />
+            </div>
+            <div class="mb-1">
+              <label class="form-label text-muted"> Dirección Vta. </label>
+              <input class="form-control" [formControl]="salesAddress" />
+            </div>
+            <div class="mb-1">
+              <label class="form-label text-muted"> Firma Vendedor </label>
+              <input class="form-control" [formControl]="salesSign" />
+            </div>
+
+            <div class="mt-3 border-bottom my-3 py-1">
+              <label class="text-center fw-bold my-1 w-100">
+                Informacion del Cliente
+              </label>
+            </div>
+
+            <div class="mb-1">
+              <label class="form-label text-muted"> No. Cliente </label>
+              <input type="number" class="form-control" [formControl]="customerNum" />
+            </div>
+            <div class="mb-1">
+              <label class="form-label text-muted">  Cliente </label>
+              <input class="form-control" [formControl]="customerPlace" />
+            </div>
+            <div class="mb-1">
+              <label class="form-label text-muted"> Dirección Cliente </label>
+              <input class="form-control" [formControl]="customerAddress" />
+            </div>
+            <div class="mb-1">
+              <label class="form-label text-muted"> Sales Sign </label>
+              <input class="form-control" [formControl]="customerSign" />
+            </div>
+
+            <div class="mt-3 border-bottom my-3 py-1">
+              <label class="text-center fw-bold my-1 w-100">
+                Fiscal
+              </label>
+            </div>
+
+            <div class="mb-1">
+              <label class="form-label text-muted"> Ley Aplica </label>
+              <select class="form-select" [formControl]="law">
+                <option value="Ley #100 Venta Justa"> Ley #100 Venta Justa </option>
+                <option value="Ley #101 Venta Injusta"> Ley #101 Venta Injusta </option>
+              </select>
+            </div>
+
+            <div class="mb-1">
+              <label class="form-label text-muted"> Total Vta. </label>
+              <input type="number" class="form-control" [formControl]="total" />
+            </div>
+          </div>
+        </ng-template>
+
+        <div *ngIf="showFeedback" class="invalid-feedback text-center d-block my-2">Favor de llenar todos los campos!</div>
+
+        <div class="my-2" [ngClass]="{'d-none' : !isEditable}">
+          <button class="btn btn-primary" (click)="save()">
+            Guardar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

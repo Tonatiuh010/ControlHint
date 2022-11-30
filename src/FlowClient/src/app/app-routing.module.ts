@@ -5,7 +5,7 @@ import { ListEmployeesComponent } from "./pages/list-employees/list-employees.co
 import { DashboardComponent } from './examples/dashboard/dashboard.component';
 import { DevicesComponent } from './pages/devices/devices.component';
 import { LoginComponent } from './pages/login/login.component';
-import { HomeComponent } from './pages/home/devices.component';
+import { HomeComponent } from './pages/home/home.component';
 import { AuthGuard } from './services/auth.service';
 
 
@@ -39,6 +39,7 @@ import { PagesError404Component } from './examples/pages-error404/pages-error404
 import { PagesFaqComponent } from './examples/pages-faq/pages-faq.component';
 import { PagesRegisterComponent } from './examples/pages-register/pages-register.component';
 import { UsersProfileComponent } from './examples/users-profile/users-profile.component';
+import { DocumentComponent } from './pages/document/document.component';
 
 
 
@@ -50,6 +51,8 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'employees', component: ListEmployeesComponent, canActivate: [AuthGuard] },
   { path: 'devices', component: DevicesComponent, canActivate: [AuthGuard] },
+  { path: 'view', component: DocumentComponent, canActivate: [AuthGuard] },
+
 
   { path: '', redirectTo: '/home', pathMatch: 'full' },
 

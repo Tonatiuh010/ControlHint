@@ -46,9 +46,12 @@ import { ListEmployeesComponent } from './pages/list-employees/list-employees.co
 import { DevicesComponent } from './pages/devices/devices.component';
 import { ModalDeviceComponent } from './custom-components/modals/modal-device/modal-device.component';
 import { ModalDevicesComponent } from './custom-components/modals/modal-devices/modal-devices.component';
-import { HomeComponent } from './pages/home/devices.component';
+import { HomeComponent } from './pages/home/home.component';
 import { ReactiveFormsModule } from '@angular/forms';
-
+import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { DocumentComponent } from './pages/document/document.component';
+import { DocumentDetailComponent } from './custom-components/forms/document-detail.component';
+import { ItemComponent } from './custom-components/badgets/badget-item/item.component';
 
 @NgModule({
   declarations: [
@@ -94,13 +97,17 @@ import { ReactiveFormsModule } from '@angular/forms';
     ChecksComponent,
     ListEmployeesComponent,
     DevicesComponent,
-    HomeComponent
+    HomeComponent,
+    DocumentComponent,
+    DocumentDetailComponent,
+    ItemComponent
   ],
   imports: [
     HttpClientModule,
     ReactiveFormsModule,
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    PdfViewerModule
   ],
   providers: [AuthGuard],
   bootstrap: [AppComponent]

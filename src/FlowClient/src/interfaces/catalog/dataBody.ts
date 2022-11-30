@@ -1,4 +1,4 @@
-export interface dataBody {
+export interface DataBody {
     status:	string;
     message: string;
     data?: any;
