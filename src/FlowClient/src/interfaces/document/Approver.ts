@@ -17,6 +17,7 @@ export interface ApproverStep {
   comments: string;
 }
 
+//TU USAS DE AQUI PARA ABAJO PAPA
 export interface ApproverDocument {
   docFlow: DocFlow;
   approver: Approver;
