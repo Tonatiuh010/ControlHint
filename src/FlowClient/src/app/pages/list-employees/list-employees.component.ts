@@ -6,6 +6,7 @@ import { C } from "src/interfaces/constants";
 import { ControlContainer } from '@angular/forms';
 import { Shift } from 'src/interfaces/catalog/Shift';
 import { Position } from 'src/interfaces/catalog/Position';
+import { User } from 'src/interfaces/catalog/User';
 
 @Component({
   selector: 'app-list-employees',
@@ -52,7 +53,7 @@ export class ListEmployeesComponent implements OnInit {
         position: undefined,
         shift: undefined,
         image: '',
-        status: undefined
+        status: undefined,
       }
     }else{
       this.modalEmployee = this.selectedEmployee;

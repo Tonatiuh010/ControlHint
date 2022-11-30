@@ -11,6 +11,7 @@ import { Department } from "src/interfaces/catalog/Department";
 import { CatalogService } from "../../../services/requests/catalog.service";
 import { Shift } from "src/interfaces/catalog/Shift";
 import { Position } from "src/interfaces/catalog/Position";
+import { UserService } from "../../../services/requests/user.service";
 import { User } from "src/interfaces/catalog/User";
 //IMPORTAR CATALOGOS
 
@@ -20,7 +21,6 @@ import { User } from "src/interfaces/catalog/User";
 })
 export class ModalEmployeeComponent implements OnInit {
   shifts?: Shift[];
-  user?: User;
   positions?: Position[];
   selectorShift: FormControl = new FormControl();
   selectorPosition: FormControl = new FormControl();
@@ -28,6 +28,10 @@ export class ModalEmployeeComponent implements OnInit {
   inputLastName: FormControl = new FormControl();
   inputImage: FormControl = new FormControl();
   fileImage: any;
+  inputUserName: FormControl = new FormControl();
+  inputPassword: FormControl = new FormControl();
+  selectorType: FormControl = new FormControl();
+  user?: User;
   @Input() employee? : Employee;
   @Output() onCloseModal = new EventEmitter();
   @Output() onEmployeeAction = new EventEmitter<Employee>();
@@ -35,7 +39,8 @@ export class ModalEmployeeComponent implements OnInit {
   constructor(
     private service : service,
     private EmployeeService : EmployeeService,
-    private CatalogService : CatalogService
+    private CatalogService : CatalogService,
+    private UserServer : UserService
   ) { }
 
   ngOnInit(): void {
@@ -43,7 +48,20 @@ export class ModalEmployeeComponent implements OnInit {
         this.positions = position;
         this.shifts = shift;
       }
-    )
+    );
+    if(this.employee){
+      this.UserServer.getUserId(this.employee?.id as number, user => {
+        if(user) {
+          this.inputUserName.setValue(user.userName);
+          this.inputPassword.setValue(user.password);
+          this.selectorType.setValue(user.userType);
+        }else{
+          this.selectorType.setValue('USER');
+        }
+      });
+    }else{
+      this.selectorType.setValue('USER');
+    }
   }
 
   ngOnChanges() {
@@ -65,6 +83,12 @@ export class ModalEmployeeComponent implements OnInit {
         this.fileImage = b64;
       })
     }
+  }
+
+  cleanUserForm(){
+    this.inputUserName.setValue('');
+    this.inputPassword.setValue('');
+    this.selectorType.setValue('USER');
   }
 
   setEmployee() {
@@ -97,6 +121,25 @@ export class ModalEmployeeComponent implements OnInit {
         }
       })
     }
+
+  }
+
+  setUser() {
+      let userName: string = this.inputUserName.value;
+      let password: string = this.inputPassword.value;
+      let type: string = this.selectorType.value;
+      let employeeId: number = this.employee?.id as number;
+
+      this.UserServer.setUser({
+        userName: userName,
+        password: password,
+        userType: type,
+        id: employeeId
+      },
+      res => {
+        console.log(res);
+      }
+      )
   }
 
   showModal() {
@@ -106,7 +149,10 @@ export class ModalEmployeeComponent implements OnInit {
   closeModal() {
     this.triggerBtn("btn-close-modal");
     this.onCloseModal.emit();
+    this.cleanUserForm();
   }
+
+
 
   private triggerBtn(btnId : string) {
     let btn = document.getElementById(btnId);

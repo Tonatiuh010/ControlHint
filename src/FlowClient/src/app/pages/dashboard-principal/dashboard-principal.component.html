@@ -3,7 +3,7 @@
     <h1>Dashboard princial</h1>
     <nav class="bg-red-500">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
+        <li class="breadcrumb-item"><a routerLink="/home">Home</a></li>
         <li class="breadcrumb-item active">Dashboard Principal</li>
       </ol>
     </nav>
@@ -54,11 +54,11 @@
                             <ng-template [ngIf]="device.isActive" [ngIfElse]="enabledBlock">
                               <span class="badge bg-success">Enabled</span>
                             </ng-template>
-          
+
                             <ng-template #enabledBlock>
                               <span class="badge bg-red-500">Disabled</span>
                             </ng-template>
-          
+
                           </td>
                         </tr>
                       </tbody>

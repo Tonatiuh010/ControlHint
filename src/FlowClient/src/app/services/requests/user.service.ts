@@ -24,6 +24,13 @@ export class UserService {
     );
   }
 
+  public getUserId(id: number, fn: (res: User | undefined) => void) {
+    this.getUser(users => {
+      let user = users.find(x => x.id == id);
+      fn(user);
+    })
+  }
+
   public authUser(userName: string, password: string, fn: (res: dataBody) => void) {
     this.service.postRequest(
       this.urlExtension,
