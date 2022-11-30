@@ -79,7 +79,8 @@ namespace DocsControl.Controllers
                     {
                         Id = typeDocId,
                     },
-                    Name = name
+                    Name = name,
+                    Id = docId,
                 });
 
                 docId = (int)_tmpDoc.InsertDetails.Id;

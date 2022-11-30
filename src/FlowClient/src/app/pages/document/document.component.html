@@ -63,10 +63,10 @@
               <h5 class="card-title text-center py-1">
                 Aprobadores
               </h5>
-              <ul class="list-group list-group-flush">
-                <li class="list-group-item text fs-6 text-center d-flex d-flex justify-content-around">
-                  <label> Tonatiuh Lopez </label>
-                  <label class="fw-bold">Manager 1 </label>
+              <ul *ngIf="transactionDocument?.approvers" class="list-group list-group-flush">
+                <li *ngFor="let approver of transactionDocument?.approvers" class="list-group-item text fs-6 text-center d-flex d-flex justify-content-around">
+                  <label> {{approver?.documentDetail?.approver?.fullName}} </label>
+                  <label class="fw-bold"> {{approver?.documentDetail?.name}} </label>
                   <span class="badge bg-success mt-1">
                     Aprobado
                   </span>

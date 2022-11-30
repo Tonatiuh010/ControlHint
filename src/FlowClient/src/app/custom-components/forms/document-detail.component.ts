@@ -136,19 +136,26 @@ export class DocumentDetailComponent implements OnInit,  OnChanges {
   }
 
   private setQuotationForm(parameters: QuotationParameters) {
+    var dt = new Date(parameters.date);
+    var duoDt = new Date(parameters.duoDate);
+
+    this.type = C.DocumentType.Quotation;
     this.client.setValue(parameters.client);
     this.contact.setValue(parameters.contact);
-    this.date.setValue(parameters.date);
-    this.duoDate.setValue(parameters.duoDate);
-    this.documentName.setValue(parameters.docName);
+    this.date.setValue(dt.toISOString().split('T')[0]);
+    this.duoDate.setValue(duoDt.toISOString().split('T')[0]);
+    this.documentName.setValue(parameters.name);
     this.notes.setValue(parameters.notes);
-    this.documentName.setValue(parameters.docName);
+    this.documentName.setValue(parameters.name);
+    this.quoName.setValue(parameters.name);
     // Items???
   }
 
   private setSaleForm(parameters: SaleParameters) {
+    var dt = new Date(parameters.date);
+    this.type = C.DocumentType.Sale;
     this.documentName.setValue(parameters.docName);
-    this.date.setValue(parameters.date);
+    this.date.setValue(dt.toISOString().split('T')[0]);
     this.item.setValue(parameters.item);
     this.law.setValue(parameters.law);
     this.customerAddress.setValue(parameters.customerAddress);
@@ -164,22 +171,22 @@ export class DocumentDetailComponent implements OnInit,  OnChanges {
   }
 
   private readQuotationForm() {
-    let parameters : QuotationParameters = {
+    this.quoParams = {
       client: this.client.value,
       contact: this.contact.value,
       date: this.date.value,
       duoDate: this.duoDate.value,
-      items: [],
+      items: this.quoParams?.items as QuotationParameters[],
       name: this.documentName.value,
       notes: this.notes.value,
       docName: this.documentName.value,
     }
 
-    return parameters;
+    return this.quoParams;
   }
 
   private readSaleForm() {
-    let parameters : SaleParameters = {
+    this.saleParams = {
       docName: this.documentName.value,
       date: this.date.value,
       item: this.item.value,
@@ -200,13 +207,14 @@ export class DocumentDetailComponent implements OnInit,  OnChanges {
 
     }
 
-    return parameters;
+    return this.saleParams;
   }
 
   private validateQuotationForm() {
+    let ref = this;
     let validateItems = () : boolean => {
-      if(this.quoParams) {
-        let items = this.quoParams.items;
+      if(ref.quoParams) {
+        let items = ref.quoParams.items;
         if(items) {
           let isValid = false;
           items.forEach(x => {

@@ -11,6 +11,7 @@ import { FormControl } from '@angular/forms';
 import { parseDocument } from 'src/interfaces/document/Document';
 import { Department } from 'src/interfaces/catalog/Department';
 import { DepartmentService } from 'src/app/services/requests/departments.service';
+import { DataBody } from 'src/interfaces/catalog/DataBody';
 
 @Component({
   selector: 'app-document',
@@ -73,7 +74,9 @@ export class DocumentComponent implements OnInit {
     if(this.docId) {
       this.service.getTransaction(
         this.docId,
-        txn => this.setTransaction(txn)
+        txn => {
+          this.setTransaction(txn);
+        }
       )
     }
   }
@@ -87,7 +90,16 @@ export class DocumentComponent implements OnInit {
       this.transactionDocument.document = parseDocument(this.transactionDocument.document as _Doc);
       this.preparePdf();
       this.setType(document.docType.typeCode);
-      this.setParameters(document.file.parameters);
+      this.parameters = txn.document?.file.parameters;
+    }
+
+    if(this.transactionDocument) {
+      let approvers = this.transactionDocument.approvers;
+      if( approvers) {
+        if(approvers.length == 0) {
+          this.sendTxn(this.docId as number);
+        }
+      }
     }
 
   }
@@ -123,36 +135,34 @@ export class DocumentComponent implements OnInit {
           parameters.id = this.docId;
         }
       }
-    } else {
     }
 
     if("place" in this.parameters) {
       this.service.setSaleDocument(this.parameters, res => {
-        console.log(res);
+        let data = res as DataBody;
+        if (data.status == C.keyword.OK) {
+          this.docId = data.data.id;
+          this.getTransaction();
+        }
       });
     } else if("duoDate" in this.parameters) {
       this.service.setQuotationDocument(this.parameters, res => {
-        console.log(res);
-      });
-    }
-
-    if(this.transactionDocument) {
-      let approvers = this.transactionDocument.approvers;
-      if( approvers) {
-        if(approvers.length == 0) {
-
+        let data = res as DataBody;
+        if (data.status == C.keyword.OK) {
+          this.docId = data.data.id;
+          this.getTransaction();
         }
-      }
+      });
     }
 
   }
 
-  private sendTxn(txn: Txn) {
+  private sendTxn(documentId: number) {
     let key = this.selectorDepto.value;
 
     if (key) {
       this.service.setTransaction(
-        txn.document?.id as number,
+        documentId,
         key,
         res => {
           console.log(res);

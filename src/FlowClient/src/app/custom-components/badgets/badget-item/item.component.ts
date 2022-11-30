@@ -57,7 +57,15 @@ export class ItemComponent implements OnInit, OnChanges {
 
   save() {
     if(this.validateForm()) {
-      this.onItem.emit(this.item);
+      if(this.item) {
+        this.item.id = +this.id.value;
+        this.item.name = this.name.value;
+        this.item.code = this.code.value;
+        this.item.description = this.description.value;
+        this.item.value = this.value.value;;
+        this.item.qty = this.qty.value;
+        this.onItem.emit(this.item);
+      }
     }
   }
 
