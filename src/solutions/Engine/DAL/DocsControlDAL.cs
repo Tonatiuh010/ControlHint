@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using System.Diagnostics.SymbolStore;
+using Engine.BO.AccessControl;
 
 namespace Engine.DAL
 {
@@ -161,7 +162,7 @@ namespace Engine.DAL
 
                 cmd.Parameters.Add(CreateParameter("IN_DOCUMENT_ID", Document.Id, MySqlDbType.Int32));
                 cmd.Parameters.Add(CreateParameter("IN_NAME", Document.Name, MySqlDbType.String));
-                cmd.Parameters.Add(CreateParameter("IN_TYPE_ID", Document.DocType.Id, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_TYPE_ID", Document?.DocType?.Id, MySqlDbType.Int32));
                 cmd.Parameters.Add(CreateParameter("IN_USER", txnUser, MySqlDbType.String));
                 cmd.Parameters.Add(pResult);
 
@@ -350,5 +351,7 @@ namespace Engine.DAL
             );
             return model;
         }
+
+        
     }
 }
