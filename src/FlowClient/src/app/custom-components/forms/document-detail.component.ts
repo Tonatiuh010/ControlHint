@@ -87,10 +87,12 @@ export class DocumentDetailComponent implements OnInit,  OnChanges {
   save() {
     if(this.isQuotation() && this.validateQuotationForm()) {
       let params = this.readQuotationForm();
-      this.clearForms();
+      this.onTransaction.emit(params);
+      // this.clearForms();
     } else if(this.isSale() && this.validateSaleForm()) {
       let params = this.readSaleForm();
-      this.clearForms();
+      this.onTransaction.emit(params);
+      // this.clearForms();
     }
   }
 
