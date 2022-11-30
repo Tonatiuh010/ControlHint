@@ -32,7 +32,7 @@ namespace Engine.BL.Actuators3
 
         public List<DocApprover> GetDocsApprovers(int? id = null)
         {
-            var docApprovers = Dal.GetFlowsApprover(id);
+            var docApprovers = Dal.GetFlowsApprover(null);            
 
             foreach (var docApprover in docApprovers)
                 CompleteDocApprover(docApprover);
@@ -40,7 +40,7 @@ namespace Engine.BL.Actuators3
             return docApprovers;
         }
 
-        public DocApprover? GetDocApprover(int id) => GetDocsApprovers(id).FirstOrDefault();
+        public DocApprover? GetDocApprover(int id) => GetDocsApprovers().Find(x => x.Id == id);
 
         private void CompleteApprover (Approver approver)
         {

@@ -4,7 +4,7 @@ import { BaseHttp as service } from "../base-http";
 import { C } from "src/interfaces/constants";
 import { Device, parseDevice, parseDevices } from "src/interfaces/catalog/Device";
 import { User } from "src/interfaces/catalog/User";
-import { dataBody } from "src/interfaces/catalog/dataBody";
+import { DataBody } from "src/interfaces/catalog/DataBody";
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +31,7 @@ export class UserService {
     })
   }
 
-  public authUser(userName: string, password: string, fn: (res: dataBody) => void) {
+  public authUser(userName: string, password: string, fn: (res: DataBody) => void) {
     this.service.postRequest(
       this.urlExtension,
       { userName, password },
@@ -39,7 +39,7 @@ export class UserService {
     );
   }
 
-  public setUser(user: User, fn: (res: dataBody) => void) {
+  public setUser(user: User, fn: (res: DataBody) => void) {
     this.service.postRequest(
       this.concatUrl("new"),
       {

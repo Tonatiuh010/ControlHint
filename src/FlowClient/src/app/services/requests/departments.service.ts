@@ -1,7 +1,7 @@
 import { Injectable, Type } from "@angular/core";
 import { combineLatest, Observable } from "rxjs";
 import { HttpClient } from "@angular/common/http";
-import { BaseHttp as service } from "./base-http";
+import { BaseHttp as service } from './../base-http' ;
 import { C } from "src/interfaces/constants";
 import { Department } from "src/interfaces/catalog/Department";
 
@@ -10,7 +10,7 @@ import { Department } from "src/interfaces/catalog/Department";
 })
 export class DepartmentService{
     private service : service;
-    private urlExtension : string = "department";
+    private urlExtension : string = "departament";
 
     constructor(private http : HttpClient) {
         this.service = new service(C.urls.accessControl, http);
@@ -34,6 +34,6 @@ export class DepartmentService{
         return this.urlExtension + "/" + ext;
     }
 
-    
+
 
 }

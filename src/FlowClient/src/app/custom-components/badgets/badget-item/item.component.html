@@ -1,0 +1,72 @@
+<li class="list-group-item text fs-6 text-center">
+  <div class="row">
+    <div class="col-12 text-center">
+      <div class="row my-2">
+        <div class="col-12">
+          <ng-template [ngIf]="item && item.name" [ngIfElse]="enabledBlock">
+            <span class="badge bg-primary fs-6 mb-0"> {{item.name}} </span>
+          </ng-template>
+          <ng-template #enabledBlock>
+            <span class="badge bg-info mb-0"> Favor de asignar la información correspondiente del concepto de venta </span>
+          </ng-template>
+        </div>
+      </div>
+      <div class="row my-2 text-end">
+        <a class="link-primary fs-6" (click)="showItem()" style="cursor: pointer; font-size: 10pt !important;">
+          Ocultar/Mostrar
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="collapse" [ngClass]="{'show' : !displayItem, 'hide': displayItem}" >
+    <div class="row my-3">
+      <div class="col-4">
+        <label class="form-label text-muted"> ID </label>
+        <input type="number" class=" form-control" [formControl]="id" />
+      </div>
+      <div class="col-4">
+        <label class="form-label text-muted"> Nombre </label>
+        <input class=" form-control" [formControl]="name" (input)="onName()"/>
+      </div>
+      <div class="col-4">
+        <label class="form-label text-muted"> Codigo </label>
+        <input class=" form-control" [formControl]="code"/>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-12">
+        <label class="form-label text-muted"> Descripción </label>
+        <textarea class="form-control" [formControl]="description">
+        </textarea>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-4">
+        <label class="form-label text-muted"> Valor </label>
+        <input type="number" class="form-control " [formControl]="value" (input)="onChangePrice()" />
+      </div>
+      <div class="col-4">
+        <label class="form-label text-muted"> Cantidad </label>
+        <input type="number" class=" form-control" [formControl]="qty" (input)="onChangePrice()"/>
+      </div>
+      <div class="col-4">
+        <label class="form-label text-muted"> Total </label>
+        <input type="number" class=" form-control" [formControl]="total" />
+      </div>
+    </div>
+
+    <div *ngIf="showFeedback" class="invalid-feedback text-center d-block my-2">Favor de llenar todos los campos!</div>
+
+    <div class="row justify-content-evenly" [ngClass]="{'d-none' : !isEditable}">
+      <button class="col-2 btn btn-danger" (click)="deleteItem()">
+        Eliminar
+      </button>
+      <button class="col-2 btn btn-primary" (click)="save()">
+        Guardar
+      </button>
+    </div>
+  </div>
+</li>

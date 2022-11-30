@@ -5,6 +5,7 @@ import { ListEmployeesComponent } from "./pages/list-employees/list-employees.co
 import { DashboardComponent } from './examples/dashboard/dashboard.component';
 import { DevicesComponent } from './pages/devices/devices.component';
 import { LoginComponent } from './pages/login/login.component';
+import { HomeComponent } from './pages/home/home.component';
 import { AuthGuard } from './services/auth.service';
 import { DocFlowComponent } from "./pages/doc-flow/doc-flow.component";
 
@@ -38,17 +39,21 @@ import { PagesError404Component } from './examples/pages-error404/pages-error404
 import { PagesFaqComponent } from './examples/pages-faq/pages-faq.component';
 import { PagesRegisterComponent } from './examples/pages-register/pages-register.component';
 import { UsersProfileComponent } from './examples/users-profile/users-profile.component';
+import { DocumentComponent } from './pages/document/document.component';
+
 
 
 const routes: Routes = [
   /* OUR CRAZY PAGES */
-
   { path: 'login', component: LoginComponent },
-  { path: 'home', component: ChecksComponent, canActivate: [AuthGuard]},
-  { path: 'checks', component: ChecksComponent, canActivate: [AuthGuard]},
+  { path: 'checks', component: ChecksComponent},
+  { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'employees', component: ListEmployeesComponent, canActivate: [AuthGuard] },
   { path: 'devices', component: DevicesComponent, canActivate: [AuthGuard] },
-  { path: 'documents', component: DocFlowComponent, canActivate: [AuthGuard]},
+  { path: 'view', component: DocumentComponent, canActivate: [AuthGuard] },
+  { path: 'flow', component: DocFlowComponent, canActivate: [AuthGuard]},
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
+
   { path: 'pages-error404', component: PagesError404Component },
   /* OUR CRAZY PAGES */
 

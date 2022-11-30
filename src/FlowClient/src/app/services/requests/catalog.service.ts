@@ -3,7 +3,7 @@ import { combineLatest, Observable } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { BaseHttp as service } from "../base-http";
 import { C } from "src/interfaces/constants";
-import { dataBody } from "src/interfaces/catalog/dataBody";
+import { DataBody } from "src/interfaces/catalog/DataBody";
 import { Shift } from "src/interfaces/catalog/Shift";
 import { Position } from "src/interfaces/catalog/Position";
 

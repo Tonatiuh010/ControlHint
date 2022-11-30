@@ -52,7 +52,7 @@ namespace DocsControl.Ocr.FlowDocs
         public static void ParseDocument(OcrScan ocr, SaleParameters @params)
         {
             OcrScan.ParseField(ocr, PLACE, @params.Place);
-            OcrScan.ParseField(ocr, DATE, @params.Dt.ToString("d"));
+            OcrScan.ParseField(ocr, DATE, @params.Date.ToString("d"));
             OcrScan.ParseField(ocr, STUFF_SALE, @params.Item);
 
             OcrScan.ParseField(ocr, SALES_PLACE, @params.SalesPlace);
@@ -82,8 +82,10 @@ namespace DocsControl.Ocr.FlowDocs
     public class SaleParameters : BaseBO
     {
         public string Place { get; set; }
-        public DateTime Dt { get; set; }
+        public DateTime Date { get; set; }
         public string Item { get; set; }
+
+        public string Name { get; set; }
 
         public string SalesPlace { get; set; }
         public int SalesNum { get; set; }
@@ -97,7 +99,7 @@ namespace DocsControl.Ocr.FlowDocs
 
         public string CustomerName { get; set; }
         
-        public string Law { get; set; }
+        public string Law { get; set; }        
 
         public decimal Total { get; set; }
 

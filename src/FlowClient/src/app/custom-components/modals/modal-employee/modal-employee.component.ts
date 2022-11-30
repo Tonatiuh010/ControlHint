@@ -4,7 +4,7 @@ import { Device } from 'src/interfaces/catalog/Device';
 import { UserService as service } from '../../../services/requests/user.service';
 import { EmployeeService } from '../../../services/requests/employee.service';
 import { Form, FormControl } from '@angular/forms';
-import { dataBody } from 'src/interfaces/catalog/dataBody';
+import { DataBody } from 'src/interfaces/catalog/DataBody';
 import { C } from 'src/interfaces/constants';
 import { Employee } from 'src/interfaces/catalog/Employee';
 import { Department } from "src/interfaces/catalog/Department";
@@ -111,7 +111,7 @@ export class ModalEmployeeComponent implements OnInit {
         }
       }
       this.EmployeeService.setEmployee(temporalEmployee, image, data => {
-        let result: dataBody = data as dataBody;
+        let result: DataBody = data as DataBody;
 
         if(result.status == C.keyword.OK){
           // this.employee?.id = temporalEmployee.id;

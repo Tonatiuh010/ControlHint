@@ -46,12 +46,16 @@ import { ListEmployeesComponent } from './pages/list-employees/list-employees.co
 import { DevicesComponent } from './pages/devices/devices.component';
 import { ModalDeviceComponent } from './custom-components/modals/modal-device/modal-device.component';
 import { ModalDevicesComponent } from './custom-components/modals/modal-devices/modal-devices.component';
+import { HomeComponent } from './pages/home/home.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ModalEmployeeComponent } from 'src/app/custom-components/modals/modal-employee/modal-employee.component';
 import { DocFlowComponent } from './pages/doc-flow/doc-flow.component';
 import { ModalAppruvedComponent } from './custom-components/modals/modal-appruved/modal-appruved.component';
 import { ModalNewFlowComponent } from './custom-components/modals/modal-new-flow/modal-new-flow.component';
-
+import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { DocumentComponent } from './pages/document/document.component';
+import { DocumentDetailComponent } from './custom-components/forms/document-detail.component';
+import { ItemComponent } from './custom-components/badgets/badget-item/item.component';
 
 @NgModule({
   declarations: [
@@ -100,13 +104,18 @@ import { ModalNewFlowComponent } from './custom-components/modals/modal-new-flow
     ModalEmployeeComponent,
     DocFlowComponent,
     ModalAppruvedComponent,
-    ModalNewFlowComponent
+    ModalNewFlowComponent,
+    HomeComponent,
+    DocumentComponent,
+    DocumentDetailComponent,
+    ItemComponent
   ],
   imports: [
     HttpClientModule,
     ReactiveFormsModule,
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    PdfViewerModule
   ],
   providers: [AuthGuard],
   bootstrap: [AppComponent]
