@@ -7,8 +7,9 @@ import { ControlContainer } from '@angular/forms';
 import { Shift } from 'src/interfaces/catalog/Shift';
 import { Position } from 'src/interfaces/catalog/Position';
 import { User } from 'src/interfaces/catalog/User';
-import { Flow } from "src/interfaces/api/Api"
-
+import { DeviceHubService } from 'src/app/services/hubs/device-hub.service';
+import { DeviceService } from 'src/app/services/requests/device.service';
+import { Device } from 'src/interfaces/catalog/Device';
 
 @Component({
   selector: 'app-list-employees',
@@ -20,11 +21,16 @@ export class ListEmployeesComponent implements OnInit {
   employees: Employee[] | undefined;
   selectedEmployee: Employee | undefined;
   modalEmployee?: Employee;
-  flows?: Flow[];
+  devices? : Device[];
+  deviceModal? : Device;
+  deviceView? : Device;
+
 
   constructor(
     private service : EmployeeService,
-    private _Activatedroute: ActivatedRoute
+    private _Activatedroute: ActivatedRoute,
+    private services : DeviceService,
+    private hubService : DeviceHubService,
     ) {
   }
 
@@ -32,6 +38,13 @@ export class ListEmployeesComponent implements OnInit {
     this.service.getEmployees(employees => {
       this.employees = employees;
     })
+    
+    this.services.getDevices(devices => {
+      this.devices = devices;
+      this.sortDevices();
+    });
+
+    this.hubService.setSubMonitor((device:Device) => this.addDevice(device));
 
     // this._Activatedroute.paramMap.subscribe(params => {
     //   let id = +(params.get('id') as string);
@@ -42,10 +55,55 @@ export class ListEmployeesComponent implements OnInit {
     // })
   }
 
+  selectDevice(device: Device) {
+    this.deviceView = device;
+
+    this.removeFromGroups();
+    this.hubService.addToGroup(this.deviceView.name);
+
+  
+  }
+  private removeFromGroups() {
+
+    if (this.devices) {
+      this.devices.forEach(d => {
+        this.hubService.removeFromGroup(d.name);
+      });
+    }
+
+  }
+
   selectEmployee(employee: Employee): void {
     this.selectedEmployee = employee;
   }
 
+  private addDevice(device: Device) {
+    if(this.devices) {
+      let index = this.devices.findIndex(x => x.name == device.name);
+
+      if (index != -1) {
+        this.devices[index] = device;
+      } else {
+        this.devices.push(device);
+      }
+
+      this.sortDevices();
+
+    }
+  }
+
+  private sortDevices() {
+    if(this.devices) {
+      this.devices.sort((a, b) =>  {
+        let dt1 : Date = a.last_update;
+        let dt2 : Date = b.last_update;
+
+        let diff = (dt2.getTime() - dt1.getTime());
+
+        return diff;
+      })
+    }
+  }
   showModal(isNew: boolean = false): void{
     if(isNew){
       this.modalEmployee = {

@@ -88,7 +88,7 @@
                 <img src="/assets/img/Una-huella-digital-puede-mostrar-si-alguien-ha-tomado-cocaína.jpg" class="img-fluid rounded d-block" alt="">
               </picture>
               <div  class="d-grid gap-2">
-                <button type="button" (click)="showModal()" class="btn btn-success mt-3">
+                <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-success mt-3">
                   &#9998;
                 </button>
               </div>
@@ -120,12 +120,22 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let flow of flows">
-              <th scope="row"><input class="form-check-input" type="checkbox" value=""
+            <tr *ngFor="let device of devices">
+              <th scope="row"><input class="form-check-input" (click)="selectDevice(device)" type="checkbox" value=""
                   id="flexCheckDefault"></th>
-              <td>{{flow.name}}</td>
+              <td>{{device.name}}</td>
               <td>
-                <ng-template [ngIf]="flow.status" [ngIfElse]="enabledBlock">
+                <ng-template [ngIf]="device.flow" [ngIfElse]="enabledBlock2">
+                  <span class="badge bg-success"> {{ device.flow.name }}</span>
+                </ng-template>
+
+                <ng-template #enabledBlock2>
+                  <span class="badge bg-danger">NO FLOW</span>
+                </ng-template>
+
+              </td>
+              <td>
+                <ng-template [ngIf]="device.isActive" [ngIfElse]="enabledBlock">
                   <span class="badge bg-success">Enabled</span>
                 </ng-template>
 
@@ -139,7 +149,7 @@
         </table>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-success" data-bs-dismiss="modal">Save</button>
       </div>
     </div>
   </div>
