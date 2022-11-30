@@ -30,6 +30,7 @@ export class DocumentComponent implements OnInit {
   selectorType: FormControl = new FormControl();
   selectorDepto: FormControl = new FormControl();
 
+  isEditable: boolean = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -112,6 +113,51 @@ export class DocumentComponent implements OnInit {
 
   setParameters(parameters: SaleParameters | QuotationParameters) {
     this.parameters = parameters;
+
+    if(this.docId && this.transactionDocument) {
+      let document = this.transactionDocument?.document;
+      if(document) {
+        let file = document.file;
+        if(file) {
+          file.parameters = parameters;
+          parameters.id = this.docId;
+        }
+      }
+    } else {
+    }
+
+    if("place" in this.parameters) {
+      this.service.setSaleDocument(this.parameters, res => {
+        console.log(res);
+      });
+    } else if("duoDate" in this.parameters) {
+      this.service.setQuotationDocument(this.parameters, res => {
+        console.log(res);
+      });
+    }
+
+    if(this.transactionDocument) {
+      let approvers = this.transactionDocument.approvers;
+      if( approvers) {
+        if(approvers.length == 0) {
+
+        }
+      }
+    }
+
+  }
+
+  private sendTxn(txn: Txn) {
+    let key = this.selectorDepto.value;
+
+    if (key) {
+      this.service.setTransaction(
+        txn.document?.id as number,
+        key,
+        res => {
+          console.log(res);
+      });
+    }
   }
 
   private setPdfContainerSize(width: number, height: number) {

@@ -76,7 +76,7 @@
           </div>
         </div>
         <div class="row my-2">
-          <document-detail [type]="docType">
+          <document-detail [type]="docType" [isEditable]="isEditable" [parameters]="parameters" (onTransaction)="setParameters($event)">
           </document-detail>
         </div>
         <div class="row my-2 p-3">
@@ -113,7 +113,7 @@
           </div>
         </div>
 
-        <document-detail [type]="docType">
+        <document-detail [type]="docType" [isEditable]="isEditable" [parameters]="parameters" (onTransaction)="setParameters($event)">
         </document-detail>
 
       </div>
