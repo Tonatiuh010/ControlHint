@@ -67,7 +67,7 @@ export class ChecksComponent implements OnInit {
 
     this.hubService.setSubSignal((...args: any[]) =>{
 
-      this.services.getEmployeeChecks(2 as number, checks => {
+      this.services.getEmployeeChecks(args[0].hintConfig.employee.id as number, checks => {
         console.log(checks)
         this.Checks = checks
         this.name = checks.employee.name
