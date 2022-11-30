@@ -2,13 +2,11 @@
     <div class="d-flex align-items-center justify-content-between">
       <a routerLink="/home" class="logo d-flex align-items-center">
         <img src="assets/img/logo.png" alt="">
-        <span class="d-lg-block">CONTROL HINT</span>
+        <span class="d-lg-block">CTL HINT</span>
       </a>
       <i (click)="sidebarToggle()" class="bi bi-list toggle-sidebar-btn"></i>
     </div>
-    <div class="flex-grow-1 text-end d-lg-block">
-      <a class="link-primary p-4 fs-5" (click)="logout()">
-        <button class="btn btn-primary text-white" style="background-color: #000b6a;">Log out</button>
-      </a>
+    <div class="flex-grow-1 text-end fs-2 d-lg-block">
+      <a class="link-primary p-4" (click)="logout()"> &#10149; </a>
     </div>
  </header>
