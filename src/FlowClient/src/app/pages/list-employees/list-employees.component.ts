@@ -7,6 +7,8 @@ import { ControlContainer } from '@angular/forms';
 import { Shift } from 'src/interfaces/catalog/Shift';
 import { Position } from 'src/interfaces/catalog/Position';
 import { User } from 'src/interfaces/catalog/User';
+import { Flow } from "src/interfaces/api/Api"
+
 
 @Component({
   selector: 'app-list-employees',
@@ -18,6 +20,7 @@ export class ListEmployeesComponent implements OnInit {
   employees: Employee[] | undefined;
   selectedEmployee: Employee | undefined;
   modalEmployee?: Employee;
+  flows?: Flow[];
 
   constructor(
     private service : EmployeeService,

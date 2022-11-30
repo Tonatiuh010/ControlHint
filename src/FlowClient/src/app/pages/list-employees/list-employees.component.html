@@ -99,3 +99,48 @@
     </div>
   </div>
 </main>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Dispositivos</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table ">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Dispositivo</th>
+              <th scope="col">Flujo</th>
+              <th scope="col">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let flow of flows">
+              <th scope="row"><input class="form-check-input" type="checkbox" value=""
+                  id="flexCheckDefault"></th>
+              <td>{{flow.name}}</td>
+              <td>
+                <ng-template [ngIf]="flow.status" [ngIfElse]="enabledBlock">
+                  <span class="badge bg-success">Enabled</span>
+                </ng-template>
+
+                <ng-template #enabledBlock>
+                  <span class="badge bg-red-500">Disabled</span>
+                </ng-template>
+
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

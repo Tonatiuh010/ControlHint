@@ -32,6 +32,7 @@ export interface Step {
 export interface Flow {
   name: string;
   steps?: Step[];
+  status?: string;
   id: number;
 }
 
