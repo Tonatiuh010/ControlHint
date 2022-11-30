@@ -17,6 +17,7 @@ import { ApproverDocument } from 'src/interfaces/document/Approver';
 export class DocFlowComponent implements OnInit {
   selectorDepartment: FormControl = new FormControl();
   selectorType: FormControl = new FormControl();
+  inputApprover?: FormControl = new FormControl();
 
   showModalApproved?: boolean = false;
   showModalFlow?: boolean = false;
@@ -52,9 +53,6 @@ export class DocFlowComponent implements OnInit {
       }
     })
   }
-
-
-
 
   selectType() {
     let value = this.selectorType.value;

@@ -51,7 +51,7 @@
             <div class="p-2 rounded-top" style="background-color: #1853bf;">
               <div class="text-white fs-5 mx-3">Aprobadores</div>
             </div>
-            <div class="table-responsive" style="height: 28rem;">
+            <div class="table-responsive" style="height: 27rem;">
               <div class="border rounded p-2 m-4 row fs-5" *ngFor="let approverDocument of approverDocuments">
                 <div class="p-2 bd-highlight col-4">
                   {{ approverDocument.approver.fullName }}
@@ -93,10 +93,19 @@
                 <option *ngFor="let department of departments" selected value="{{department.code}}" >{{department.name}}</option>
               </select>
             </div>
-            <div class="table-responsive" style="height: 23rem;">
-
+            <div class="row mx-4 my-2">
+              <label class="text-muted fw-bold">Tipo de documento</label>
+              <select class="form-select" [formControl]="selectorType" (change)="selectType()" >
+                <option selected value="QUO">Cotizacion</option>
+                <option value="SALE">Formato de Venta</option>
+              </select>
+            </div>
+            <div class="table-responsive" style="height: 18rem;">
               <div class="border rounded p-2 m-4 d-flex justify-content-around fs-5">
                 <input class="p-2 bd-highlight form-control" placeholder="Key2">
+              </div>
+              <div class="border rounded p-2 m-4 d-flex justify-content-around fs-5">
+                <input class="p-2 bd-highlight form-control" placeholder="Key3">
               </div>
               <div class="border rounded p-2 m-4 d-flex justify-content-around fs-5">
                 <input class="p-2 bd-highlight form-control" placeholder="Key3">
