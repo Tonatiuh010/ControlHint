@@ -1,4 +1,4 @@
-    using System;
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Data;
@@ -12,7 +12,8 @@ using Engine.Services;
 using Engine.BO.AccessControl;
 using Engine.BL.Actuators;
 
-namespace Engine.DAL {
+namespace Engine.DAL
+{
     public class AccessControlDAL : BaseDAL
     {
         public delegate void DALCallback(AccessControlDAL dal);
@@ -582,5 +583,60 @@ namespace Engine.DAL {
 
             return result;
         }
+
+        public ResultInsert SetCheckAlt(CheckAlt CheckAlt, string txnUser)
+        {
+            ResultInsert result = new();
+            string sSp = SQL.SET_CHECK_ALT;
+
+            TransactionBlock(this, () =>
+            {
+                using var cmd = CreateCommand(sSp, CommandType.StoredProcedure);
+
+                IDataParameter pResult = CreateParameterOut("OUT_RESULT", MySqlDbType.String);
+
+                cmd.Parameters.Add(CreateParameter("IN_DEVICE", CheckAlt?.Device?.Id, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_EMPLOYEE", CheckAlt?.Employee?.Id, MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_VL_CHECK_DT", CheckAlt?.CheckDt, MySqlDbType.DateTime));
+                cmd.Parameters.Add(CreateParameter("IN_VL_TYPE", CheckAlt?.CheckType, MySqlDbType.String));
+
+                cmd.Parameters.Add(CreateParameter("IN_USER", txnUser, MySqlDbType.String));
+                cmd.Parameters.Add(pResult);
+
+                NonQueryBlock(cmd, () => GetResult(pResult, sSp, result));
+            },
+                (ex, msg) => SetExceptionResult("AccessControlDAL.SetCheckAlt", msg, ex, result),
+                () => SetResultInsert(result, CheckAlt)
+            );
+            return result;
+        }
+
+        public ResultInsert SetCheckEmlpoyee(Check check, string txnUser)
+        {
+            ResultInsert result = new ResultInsert();
+            string sSp = SQL.SET_CHECK_EMPLOYEE;
+
+            TransactionBlock(this, () =>
+            {
+                using var cmd = CreateCommand(sSp, CommandType.StoredProcedure);
+
+                IDataParameter pResult = CreateParameterOut("OUT_RESULT", MySqlDbType.String);
+
+                cmd.Parameters.Add(CreateParameter("IN_EMPLOYEE_ID", check?.Employee?.Id , MySqlDbType.Int32));
+                cmd.Parameters.Add(CreateParameter("IN_CHECK_DT",check?.CheckDt, MySqlDbType.DateTime));
+                cmd.Parameters.Add(CreateParameter("IN_TYPE", check?.CheckType, MySqlDbType.String));
+                cmd.Parameters.Add(CreateParameter("IN_DEVICE_ID", check?.Device?.Id, MySqlDbType.Int32));
+
+                cmd.Parameters.Add(CreateParameter("IN_USER", txnUser, MySqlDbType.String));
+                cmd.Parameters.Add(pResult);
+
+                NonQueryBlock(cmd, () => GetResult(pResult, sSp, result));
+            },
+                (ex, msg) => SetExceptionResult("AccessControlDAL.SetCheckEmployee", msg, ex, result),
+                () => SetResultInsert(result, check)
+            );
+            return result;
+        }
+
     }
 }

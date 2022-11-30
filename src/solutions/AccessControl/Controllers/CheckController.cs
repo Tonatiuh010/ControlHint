@@ -49,6 +49,25 @@ public class CheckController : CustomController
         return bl.GetCheck((int)insertResult?.InsertDetails?.Id);
     });
 
+    [HttpPost("checkEmployee")]
+    public Result SetCheckEmployee(dynamic obj) => RequestResponse(() => {
+        JsonObject jObj = JsonObject.Parse(obj.ToString());
+        return bl.SetCheckEmployee(new Check()
+        {
+            Id = ParseProperty<int?>.GetValue("id", jObj),
+            Employee = new Employee()
+            {
+                Id = ParseProperty<int>.GetValue("employeeId", jObj, OnMissingProperty)
+            },
+            CheckDt = ParseProperty<DateTime>.GetValue("checkDt", jObj),
+            CheckType = ParseProperty<string>.GetValue("checkType", jObj),
+            Device = new Engine.BO.FlowControl.Device()
+            {
+                Id = ParseProperty<int>.GetValue("deviceId", jObj)
+            }
+            
+        }, C.GLOBAL_USER);
+    });
     [HttpGet("employee/{id:int}")]
     public Result GetWeeklyChecks(int id) => RequestResponse(() =>
     {

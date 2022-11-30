@@ -18,6 +18,8 @@ namespace Engine.Constants {
         public const string SET_POSITION = "SET_POSITION";
         public const string SET_EMPLOYEE_HINT = "SET_EMPLOYEE_HINT";
         public const string SET_CONTROL_CHECK = "SET_CONTROL_CHECK";
+        public const string SET_CHECK_ALT = "SET_CHECK_ALT";
+
         public const string GET_ACCESS_LEVEL = "SELECT * from access_level";
         public const string GET_EMPLOYEE_DETAIL = "GET_EMPLOYEE_DETAIL";
         public const string GET_EMPLOYEE_ACCESS_LEVEL = "GET_EMPLOYEE_ACCESS_LEVEL";
@@ -27,6 +29,8 @@ namespace Engine.Constants {
         public const string GET_POSITIONS = "GET_POSITIONS";
         public const string GET_CHECKS = "GET_CHECKS";        
         public const string GET_CHECK_DETAILS = "GET_CHECK_DETAILS";
+        public const string SET_CHECK_EMPLOYEE = "SET_CHECK_EMPLOYEE";
+
         #endregion
 
         #region CTL_HINT

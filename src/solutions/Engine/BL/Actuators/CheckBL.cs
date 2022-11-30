@@ -67,5 +67,7 @@ namespace Engine.BL.Actuators
             return checks;
         }
         
+        public List<CheckDetails> GetCheckDetails(DateTime from, DateTime to) => Dal.GetCheckDetails(from, to);
+        public ResultInsert SetCheckEmployee(Check check) => Dal.SetCheckEmlpoyee(check, C.GLOBAL_USER);
     }
 }
