@@ -12,7 +12,7 @@
     },
     {
       "name": "ng test",
-      "type": "chrome",
+      "type": "pwa-chrome",
       "request": "launch",
       // "preLaunchTask": "npm: test",
       "url": "http://localhost:4200/"

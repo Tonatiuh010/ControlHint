@@ -16,20 +16,6 @@ export class ChecksComponent implements OnInit {
   devices? : Device[];
   deviceModal? : Device;
   Checks? : null;
-  lunesin? : any;
-  martesin? : any;
-  miercolesin? : any;
-  juevesin? : any;
-  viernesin? : any;
-  sabadoin? : any;
-  domingoin? : any;
-  lunesout? : any;
-  martesout? : any;
-  miercolesout? : any;
-  juevesout? : any;
-  viernesout? : any;
-  sabadoout? : any;
-  domingoout? : any;
   image? : any;
   name? : Checks;
   lastname? : Checks;
@@ -81,28 +67,15 @@ export class ChecksComponent implements OnInit {
 
     this.hubService.setSubSignal((...args: any[]) =>{
 
-      this.services.getEmployeeChecks(args[0].hintConfig.employee.id as number, checks => {
-
+      this.services.getEmployeeChecks(2 as number, checks => {
+        console.log(checks)
         this.Checks = checks
         this.name = checks.employee.name
         this.lastname = checks.employee.lastName
         this.job = checks.employee.job.alias
         this.shiftin = checks.employee.shift.inTime
         this.shiftout = checks.employee.shift.outTime
-        this.domingoin= checks.checks[0].in
-        this.lunesin = checks.checks[1].in
-        this.martesin= checks.checks[2].in
-        this.miercolesin= checks.checks[3].in
-        this.juevesin= checks.checks[4].in
-        this.viernesin= checks.checks[5].in
-        this.sabadoin= checks.checks[6].in
-        this.domingoout= checks.checks[0].out
-        this.lunesout = checks.checks[1].out
-        this.martesout= checks.checks[2].out
-        this.miercolesout= checks.checks[3].out
-        this.juevesout= checks.checks[4].out
-        this.viernesout= checks.checks[5].out
-        this.sabadoout= checks.checks[6].out
+        this.Checks = checks.checks
         this.image =  C.urls.accessControl + "employee/image/"+ args[0].hintConfig.employee.id.toString();
 
       })

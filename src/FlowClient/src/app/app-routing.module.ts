@@ -44,14 +44,15 @@ const routes: Routes = [
   /* OUR CRAZY PAGES */
 
   { path: 'login', component: LoginComponent },
-  { path: 'checks', component: ChecksComponent},
+  { path: 'home', component: ChecksComponent, canActivate: [AuthGuard]},
+  { path: 'checks', component: ChecksComponent, canActivate: [AuthGuard]},
   { path: 'employees', component: ListEmployeesComponent, canActivate: [AuthGuard] },
   { path: 'devices', component: DevicesComponent, canActivate: [AuthGuard] },
 
 
 
   { path: 'pages-error404', component: PagesError404Component },
-  { path: '**', redirectTo: '/pages-error404' },
+ 
 
   /* OUR CRAZY PAGES */
 

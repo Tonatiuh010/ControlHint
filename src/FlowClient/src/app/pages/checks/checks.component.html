@@ -1,4 +1,4 @@
-<main class="p-3">
+<main class="p-3" class="main text-break">
   <div class="container-fluid pagetitle">
     <h1>Access</h1>
     <!-- <nav class="bg-red-500">
@@ -77,23 +77,21 @@
               <tbody>
                 <tr>
                   <th scope="row">IN</th>
-                  <td [ngClass]="domingoin == null ? 'bg-danger' : 'bg-success'"></td>
-                  <td [ngClass]="lunesin == null ? 'bg-danger' : 'bg-success'"> </td>
-                  <td [ngClass]="martesin == null ? 'bg-danger' : 'bg-success'"></td>
-                  <td [ngClass]="miercolesin == null ? 'bg-danger' : 'bg-success'"></td>
-                  <td [ngClass]="juevesin == null ? 'bg-danger' : 'bg-success'"></td>
-                  <td [ngClass]="viernesin == null ? 'bg-danger' : 'bg-success'"></td>
-                  <td [ngClass]="sabadoin == null ? 'bg-danger' : 'bg-success'"></td>
+                  <ng-container *ngFor="let check of Checks">
+                    <td *ngIf="check.in != null" class="bg-success">
+                        {{ check.in.checkDt }}
+                    </td>
+                  </ng-container>
                 </tr>
                 <tr>
                   <th scope="row">OUT</th>
-                  <td [ngClass]="domingoout == null ? 'bg-danger' : 'bg-success'"></td>
-                  <td [ngClass]="lunesout == null ? 'bg-danger' : 'bg-success'"> </td>
-                  <td [ngClass]="martesout == null ? 'bg-danger' : 'bg-success'"></td>
-                  <td [ngClass]="miercolesout == null ? 'bg-danger' : 'bg-success'"></td>
-                  <td [ngClass]="juevesout == null ? 'bg-danger' : 'bg-success'"></td>
-                  <td [ngClass]="viernesout == null ? 'bg-danger' : 'bg-success'"></td>
-                  <td [ngClass]="sabadoout == null ? 'bg-danger' : 'bg-success'"></td>
+                  <ng-container *ngFor="let check of Checks">
+                    <td *ngIf="check.out != null" class="bg-success">
+                        {{check.in.checkDt}}
+                    </td>
+                    <td *ngifelse="check.in == null"></td>
+
+                  </ng-container>
                 </tr>
               </tbody>
             </table>

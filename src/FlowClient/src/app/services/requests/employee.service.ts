@@ -37,6 +37,7 @@ export class EmployeeService {
       "check/employee/" + id.toString() ,
       res => fn(res.data)
     )
+    console.log(id)
   }
 
   public getEmployeeImage(id: number, fn: (res: any) => void){
