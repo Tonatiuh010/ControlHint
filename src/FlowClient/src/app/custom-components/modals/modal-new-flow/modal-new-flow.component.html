@@ -1,0 +1,32 @@
+<button id="btn-show-modal-flow" class="d-none" type="button" data-bs-toggle="modal" data-bs-target="#modal-new-flow">
+</button>
+<div id="modal-new-flow" class="modal fade" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Nuevo flujo</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="closeModal()" ></button>
+      </div>
+      <div class="modal-body">
+        <div class="d-flex justify-content-evenly">
+          <div class="col-5">
+            <label class="text-muted fs-6 fw-bold">Departamento</label>
+            <select class="form-select">
+              <option value="">--Departamento--</option>
+            </select>
+          </div>
+          <div class="col-5">
+            <label class="text-muted fs-6 fw-bold">Tipo de documento</label>
+            <select class="form-select">
+              <option value="">--Documento--</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-close-modal-flow" type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="closeModal()" >Close</button>
+        <button type="button" class="btn btn-primary">Agregar</button>
+      </div>
+    </div>
+  </div>
+</div>

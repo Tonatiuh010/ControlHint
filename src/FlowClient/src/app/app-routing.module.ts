@@ -6,7 +6,7 @@ import { DashboardComponent } from './examples/dashboard/dashboard.component';
 import { DevicesComponent } from './pages/devices/devices.component';
 import { LoginComponent } from './pages/login/login.component';
 import { AuthGuard } from './services/auth.service';
-
+import { DocFlowComponent } from "./pages/doc-flow/doc-flow.component";
 
 import { AlertsComponent } from './components/alerts/alerts.component';
 import { AccordionComponent } from './components/accordion/accordion.component';
@@ -48,12 +48,8 @@ const routes: Routes = [
   { path: 'checks', component: ChecksComponent, canActivate: [AuthGuard]},
   { path: 'employees', component: ListEmployeesComponent, canActivate: [AuthGuard] },
   { path: 'devices', component: DevicesComponent, canActivate: [AuthGuard] },
-
-
-
+  { path: 'documents', component: DocFlowComponent, canActivate: [AuthGuard]},
   { path: 'pages-error404', component: PagesError404Component },
- 
-
   /* OUR CRAZY PAGES */
 
   /* SOURCE COMPONENTS!!! */

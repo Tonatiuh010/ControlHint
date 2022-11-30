@@ -1,0 +1,26 @@
+<button id="btn-show-modal" class="d-none" type="button" data-bs-toggle="modal" data-bs-target="#modal-approver">
+</button>
+<div id="modal-approver" class="modal fade" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Agregar aprobador</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="closeModal()" ></button>
+      </div>
+      <div class="modal-body">
+        <div class="">
+          <div class="">
+            <label class="text-muted fs-6 fw-bold">Lista de aprobadores</label>
+            <select class="form-select">
+              <option value="">--Lista--</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-close-modal" type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="closeModal()" >Close</button>
+        <button type="button" class="btn btn-primary">Agregar</button>
+      </div>
+    </div>
+  </div>
+</div>

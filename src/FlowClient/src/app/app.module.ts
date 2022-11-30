@@ -47,6 +47,10 @@ import { DevicesComponent } from './pages/devices/devices.component';
 import { ModalDeviceComponent } from './custom-components/modals/modal-device/modal-device.component';
 import { ModalDevicesComponent } from './custom-components/modals/modal-devices/modal-devices.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ModalEmployeeComponent } from 'src/app/custom-components/modals/modal-employee/modal-employee.component';
+import { DocFlowComponent } from './pages/doc-flow/doc-flow.component';
+import { ModalAppruvedComponent } from './custom-components/modals/modal-appruved/modal-appruved.component';
+import { ModalNewFlowComponent } from './custom-components/modals/modal-new-flow/modal-new-flow.component';
 
 
 @NgModule({
@@ -92,7 +96,11 @@ import { ReactiveFormsModule } from '@angular/forms';
     PagesBlankComponent,
     ChecksComponent,
     ListEmployeesComponent,
-    DevicesComponent
+    DevicesComponent,
+    ModalEmployeeComponent,
+    DocFlowComponent,
+    ModalAppruvedComponent,
+    ModalNewFlowComponent
   ],
   imports: [
     HttpClientModule,

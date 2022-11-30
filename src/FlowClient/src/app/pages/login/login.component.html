@@ -23,13 +23,13 @@
                       <span class="input-group-text">
                         @
                       </span>
-                      <input type="text" class="form-control" [formControl]="username" (input)="validateUsername()" required>
+                      <input type="text" class="form-control" [formControl]="username" (keyup.enter)="login()" (input)="validateUsername()" required>
                       <div *ngIf="!userFeedback" class="invalid-feedback d-block">Please enter your username.</div>
                     </div>
                   </div>
-                  <div class="col-12">
+                  <div class="col-12" input type="submit">
                     <label for="yourPassword" class="form-label">Password</label>
-                    <input type="password" class="form-control" [formControl]="password" (input)="validatePassword()" required>
+                    <input type="password" class="form-control" [formControl]="password" (keyup.enter)="login()" (input)="validatePassword()"  required>
                     <div *ngIf="!passwordFeedback" class="invalid-feedback d-block">Please enter your password!</div>
                   </div>
 
@@ -40,7 +40,7 @@
                   </div>
 
                   <div class="col-12">
-                    <button class="btn btn-primary w-100" (click)="login()"> Login </button>
+                    <button class="btn btn-primary w-100" (keyup.enter)="login()" (click)="login()"> Login </button>
                   </div>
                 </div>
               </div>

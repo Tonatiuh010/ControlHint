@@ -1,10 +1,11 @@
 import { Injectable, Type } from "@angular/core";
-import { combineLatest, Observable } from "rxjs";
+import { combineLatest, concatMap, Observable, startWith } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { BaseHttp as service } from "../base-http";
 import { C } from "src/interfaces/constants";
 import { Employee } from "src/interfaces/catalog/Employee";
 import { Check, Checks } from "src/interfaces/catalog/Check";
+import { Subject } from "@microsoft/signalr";
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +22,14 @@ export class EmployeeService {
   public getEmployees(fn: (res: Employee[]) => void) {
     this.service.getRequest(
       this.urlExtension,
-      res => fn(res.data as Employee[])
+      res => {
+        let employees : Employee[] = res.data as Employee[];
+        employees.map(e => {
+          e.image = (C.urls.accessControl + "employee/image/" + e.id);
+          return e;
+        });
+        fn(employees);
+      }
     );
   }
 
@@ -46,6 +54,21 @@ export class EmployeeService {
       res => fn(res.data)
     )
   }
+
+  public setEmployee(employee: Employee, image: string | undefined,fn: (res: any) => void){
+    this.service.postRequest(
+      this.urlExtension,
+      { image: image,
+        id: employee.id,
+        name: employee.name,
+        lastName: employee.lastName,
+        position: employee.position?.positionId,
+        shift: employee.shift?.id
+      },
+      res => fn(res)
+    );
+  }
+
 
   //SE PODRIA AGREGAR UN FILTRADO DE LOS EMPLEADOS POR DEPARTAMENTOS
   //CONSEGUIR EL PUESTO DEL TRABAJADOR

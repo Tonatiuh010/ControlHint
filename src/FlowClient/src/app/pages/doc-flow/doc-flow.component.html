@@ -1,0 +1,164 @@
+<app-modal-appruved [isNew]="showModalApproved" (onCloseModal)="closeApproved()"></app-modal-appruved>
+<app-modal-new-flow [isNew]="showModalFlow" (onCloseModal)="closeFlow()"></app-modal-new-flow>
+<main id="main" class="main text-break">
+  <div class="pagetitle">
+    <h1>Documentos</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/home">Home</a></li>
+        <li class="breadcrumb-item active">Documentos</li>
+      </ol>
+    </nav>
+  </div>
+
+  <div class="container-fluid !direction !spacing">
+    <div class="shadow mb-4 bg-white rounded">
+      <!--CARD DONDE SE SELECCIONARAN LOS DISPOSITIVOS DE ENTRADA-->
+      <!--AGREGAR PANTALLA QUE AGRENDE EL CONTENIDO DE LA PAGINA PRINCIPAL-->
+      <div class="p-2">
+        <div class="row">
+          <div class="col-2 mx-2">
+            <label class="text-muted fs-6 fw-bold"> Departamento </label>
+            <select class="form-select">
+              <option>--Prueba--</option>
+            </select>
+          </div>
+          <div class="col-2">
+            <label class="text-muted fs-6 fw-bold"> Tipo de documento </label>
+            <select class="form-select">
+              <option>--Prueba--</option>
+            </select>
+          </div>
+          <div class="col d-flex justify-content-end">
+            <button type="button" class="btn col-sm-1 text-center p-2 m-2 fs-5" style="background-color: #117c34;">
+              <i class="bi bi-search text-white"></i>
+            </button>
+            <button type="button" (click)="showFlow()" class="btn col-sm-1 text-center p-2 m-2 fs-5" style="background-color: #117c34;">
+              <i class="bx bxs-add-to-queue text-white"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid !direction !spacing">
+    <div>
+      <div class="row">
+        <div class="col">
+          <div class="bg-white shadow rounded">
+            <div class="p-2 rounded-top" style="background-color: #1853bf;">
+              <div class="text-white fs-5 mx-3">Aprobadores</div>
+            </div>
+            <div class="table-responsive" style="height: 28rem;">
+              <div class="border rounded p-2 m-4 d-flex justify-content-around fs-5">
+                <div class="p-2 bd-highlight">APP1 - APROBATORIO</div>
+                <div class="p-2 bd-highlight">1</div>
+                <div class="d-flex flex-row-reverse bd-highlight">
+                  <div class="bd-highlight mx-auto">
+                    <button type="button" class="btn text-danger">
+                      <i class="bi bi-x-square fs-4"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="border rounded p-2 m-4 d-flex justify-content-around fs-5">
+                <div class="p-2 bd-highlight">APP1 - APROBATORIO</div>
+                <div class="p-2 bd-highlight">1</div>
+                <div class="d-flex flex-row-reverse bd-highlight">
+                  <div class="bd-highlight mx-auto">
+                    <button type="button" class="btn text-danger">
+                      <i class="bi bi-x-square fs-4"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="border rounded p-2 m-4 d-flex justify-content-around fs-5">
+                <div class="p-2 bd-highlight">APP1 - APROBATORIO</div>
+                <div class="p-2 bd-highlight">1</div>
+                <div class="d-flex flex-row-reverse bd-highlight">
+                  <div class="bd-highlight mx-auto">
+                    <button type="button" class="btn text-danger">
+                      <i class="bi bi-x-square fs-4"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="border rounded p-2 m-4 d-flex justify-content-around fs-5">
+                <div class="p-2 bd-highlight">APP1 - APROBATORIO</div>
+                <div class="p-2 bd-highlight">1</div>
+                <div class="d-flex flex-row-reverse bd-highlight">
+                  <div class="bd-highlight mx-auto">
+                    <button type="button" class="btn text-danger">
+                      <i class="bi bi-x-square fs-4"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="border rounded p-2 m-4 d-flex justify-content-around fs-5">
+                <div class="p-2 bd-highlight">APP1 - APROBATORIO</div>
+                <div class="p-2 bd-highlight">1</div>
+                <div class="d-flex flex-row-reverse bd-highlight">
+                  <div class="bd-highlight mx-auto">
+                    <button type="button" class="btn text-danger">
+                      <i class="bi bi-x-square fs-4"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="border rounded p-2 m-4 d-flex justify-content-around fs-5">
+                <div class="p-2 bd-highlight">APP1 - APROBATORIO</div>
+                <div class="p-2 bd-highlight">1</div>
+                <div class="d-flex flex-row-reverse bd-highlight">
+                  <div class="bd-highlight mx-auto">
+                    <button type="button" class="btn text-danger">
+                      <i class="bi bi-x-square fs-4"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex flex-row-reverse bd-highlight">
+              <div class="bd-highlight m-4">
+                <button type="button" (click)="showApproved()" class="btn px-5" style="background-color: #117c34;">
+                  <i class="bx bxs-add-to-queue fs-5 text-white"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--Flow Section-->
+        <div class="col">
+          <div class="bg-white shadow rounded">
+            <div class="p-2 rounded-top" style="background-color: #1853bf;">
+              <div class="text-white fs-5 mx-3">Flujo</div>
+            </div>
+            <div class="table-responsive" style="height: 28rem;">
+              <div class="col m-4 d-flex justify-content-around fs-5">
+                <select class="form-select">
+                  <option>depto input (Key1)</option>
+                  <option>depto input (Key2)</option>
+                  <option>depto input (Key3)</option>
+                </select>
+              </div>
+              <div class="border rounded p-2 m-4 d-flex justify-content-around fs-5">
+                <input class="p-2 bd-highlight form-control" placeholder="Key2">
+              </div>
+              <div class="border rounded p-2 m-4 d-flex justify-content-around fs-5">
+                <input class="p-2 bd-highlight form-control" placeholder="Key2">
+              </div>
+            </div>
+            <div class="d-flex flex-row-reverse bd-highlight">
+              <div class="bd-highlight m-4">
+                <button type="button" class="btn px-5" style="background-color: #117c34;">
+                  <i class="bx bxs-save fs-5 text-white"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
