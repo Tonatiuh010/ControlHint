@@ -78,7 +78,7 @@
                 <tr>
                   <th scope="row">IN</th>
                   <ng-container *ngFor="let check of Checks">
-                    <td *ngIf="check.in != null" class="bg-success">
+                    <td *ngIf="check.in != null" class="bg-success text-white fw-bolder">
                         {{ check.in.checkDt }}
                     </td>
                   </ng-container>
@@ -86,11 +86,9 @@
                 <tr>
                   <th scope="row">OUT</th>
                   <ng-container *ngFor="let check of Checks">
-                    <td *ngIf="check.out != null" class="bg-success">
+                    <td *ngIf="check.out != null" class="bg-success text-white fw-bolder">
                         {{check.in.checkDt}}
                     </td>
-                    <td *ngifelse="check.in == null"></td>
-
                   </ng-container>
                 </tr>
               </tbody>

@@ -68,6 +68,17 @@ export class ChecksComponent implements OnInit {
     this.hubService.setSubSignal((...args: any[]) =>{
 
       this.services.getEmployeeChecks(args[0].hintConfig.employee.id as number, checks => {
+
+        if (checks.checks.in != null) {
+          let dt = new Date(checks.checks.in.checkDt)
+          dt.toLocaleTimeString() 
+        }
+
+        if (checks.checks.out != null) {
+          let dt = new Date(checks.checks.out.checkDt)
+          dt.toLocaleTimeString() 
+        }
+
         console.log(checks)
         this.Checks = checks
         this.name = checks.employee.name
