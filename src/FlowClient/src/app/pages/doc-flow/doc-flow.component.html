@@ -1,12 +1,12 @@
 <app-modal-approved [isNew]="showModalApproved" (onCloseModal)="closeApproved()"></app-modal-approved>
 <app-modal-new-flow [isNew]="showModalFlow" (onCloseModal)="closeFlow()"></app-modal-new-flow>
 <main id="main" class="main text-break">
-  <div class="pagetitle">
+  <div class="pagetitle" style="cursor: default;">
     <h1>Documentos</h1>
     <nav>
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a routerLink="/home">Home</a></li>
-        <li class="breadcrumb-item active">Documentos</li>
+        <li class="breadcrumb-item active" >Documentos</li>
       </ol>
     </nav>
   </div>
@@ -17,24 +17,24 @@
       <!--AGREGAR PANTALLA QUE AGRENDE EL CONTENIDO DE LA PAGINA PRINCIPAL-->
       <div class="p-2">
         <div class="row">
-          <div class="col-2 mx-2">
+          <div class="col-3 mx-2">
             <label class="text-muted fs-6 fw-bold"> Departamento </label>
-            <select class="form-select" [formControl]="selectorDepartment">
+            <select class="form-select" [formControl]="selectorDepartment" style="cursor: pointer;">
               <option *ngFor="let department of departments" selected value="{{department.code}}" >{{department.name}}</option>
             </select>
           </div>
-          <div class="col-2">
+          <div class="col-3">
             <label class="text-muted fs-6 fw-bold"> Tipo de documento </label>
-            <select class="form-select" [formControl]="selectorType" (change)="selectType()" >
+            <select class="form-select" [formControl]="selectorType" (change)="selectType()" style="cursor: pointer;">
               <option selected value="QUO">Cotizacion</option>
               <option value="SALE">Formato de Venta</option>
             </select>
           </div>
           <div class="col d-flex justify-content-end">
-            <button (click)="searchFlow()" type="button" class="btn col-sm-1 text-center p-2 m-2 fs-5" style="background-color: #117c34;">
+            <button (click)="searchFlow()" type="button" class="btn col-2 text-center p-2 m-2 fs-5" style="background-color: #117c34;">
               <i class="bi bi-search text-white"></i>
             </button>
-            <button type="button" (click)="showFlow()" class="btn col-sm-1 text-center p-2 m-2 fs-5" style="background-color: #117c34;">
+            <button type="button" (click)="showFlow()" class="btn col-2 text-center p-2 m-2 fs-5" style="background-color: #117c34;">
               <i class="bx bxs-add-to-queue text-white"></i>
             </button>
           </div>
@@ -49,11 +49,11 @@
         <div class="col">
           <div class="bg-white shadow rounded">
             <div class="p-2 rounded-top" style="background-color: #1853bf;">
-              <div class="text-white fs-5 mx-3">Aprobadores</div>
+              <div class="text-white fs-5 mx-3" style="cursor: default;">Aprobadores</div>
             </div>
             <div class="table-responsive" style="height: 27rem;">
-              <div class="border rounded p-2 m-4 row fs-5" *ngFor="let approverDocument of approverDocuments">
-                <div class="p-2 bd-highlight col-4">
+              <div class="border rounded p-2 m-4 row fs-6" *ngFor="let approverDocument of approverDocuments"  style="cursor: default;">
+                <div class="p-2 bd-highlight col-5">
                   {{ approverDocument.approver.fullName }}
                 </div>
                 <div class="p-2 bd-highlight col-2">
@@ -62,10 +62,10 @@
                 <div class="p-2 bd-highlight col-4">
                   {{ approverDocument.name}}
                 </div>
-                <div class="d-flex flex-row-reverse bd-highlight col-2">
+                <div class="d-flex flex-row-reverse bd-highlight col-1">
                   <div class="bd-highlight mx-auto">
                     <button type="button" class="btn text-danger">
-                      <i class="bi bi-x-square fs-4"></i>
+                      <i class="bi bi-x-square"></i>
                     </button>
                   </div>
                 </div>
@@ -85,17 +85,17 @@
         <div class="col">
           <div class="bg-white shadow rounded">
             <div class="p-2 rounded-top" style="background-color: #1853bf;">
-              <div class="text-white fs-5 mx-3">Flujo</div>
+              <div class="text-white fs-5 mx-3" style="cursor: default;">Flujo</div>
             </div>
-            <div class="row mx-4 my-2">
+            <div class="row mx-4 my-2" >
               <label class="text-muted fw-bold">Departamento</label>
-              <select class="form-select" [formControl]="selectorDepartment">
+              <select class="form-select" [formControl]="selectorDepartment" style="cursor: pointer;">
                 <option *ngFor="let department of departments" selected value="{{department.code}}" >{{department.name}}</option>
               </select>
             </div>
             <div class="row mx-4 my-2">
               <label class="text-muted fw-bold">Tipo de documento</label>
-              <select class="form-select" [formControl]="selectorType" (change)="selectType()" >
+              <select class="form-select" [formControl]="selectorType" (change)="selectType()" style="cursor: pointer;" >
                 <option selected value="QUO">Cotizacion</option>
                 <option value="SALE">Formato de Venta</option>
               </select>

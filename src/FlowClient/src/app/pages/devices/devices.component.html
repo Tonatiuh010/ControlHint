@@ -1,6 +1,6 @@
 
 <device-modal (onDeviceAction)="addDevice($event)" [device]="deviceModal"></device-modal>
-<main id="main" class="main">
+<main id="main" class="main" style="cursor: default;">
   <div class="pagetitle">
     <h1>Flujo de dipositivos </h1>
     <nav class="bg-red-500">
@@ -27,7 +27,7 @@
                 <th scope="col"> &#9863; </th>
               </tr>
             </thead>
-            <tbody  >
+            <tbody style="cursor: pointer;">
               <tr *ngFor="let device of devices" (click)="selectDevice(device)" >
                 <th scope="row">#{{device.id}}</th>
                 <td>{{device.name}}</td>
