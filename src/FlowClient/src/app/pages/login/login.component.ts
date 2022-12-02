@@ -42,6 +42,7 @@ export class LoginComponent implements OnInit {
         if (msg == C.keyword.OK) {
           localStorage.setItem('isLoggedIn', "true");
           localStorage.setItem('type', authRes.data2.userType);
+          localStorage.setItem('id', authRes.data2.id);
           this.route.navigate(["/home"]);
         } else {
           this.message = "¡Usuario o Contraseña incorrecta!";

@@ -18,6 +18,7 @@ import { DataBody } from 'src/interfaces/catalog/DataBody';
   templateUrl: './document.component.html',
 })
 export class DocumentComponent implements OnInit {
+  flow? : string;
   noImg : string = C['no-image'];
   width: number = 0;
   docId? : number;
@@ -125,6 +126,7 @@ export class DocumentComponent implements OnInit {
   }
 
   setParameters(parameters: SaleParameters | QuotationParameters) {
+    this.pdfSrc = undefined;
     this.parameters = parameters;
 
     if(this.docId && this.transactionDocument) {
@@ -156,6 +158,40 @@ export class DocumentComponent implements OnInit {
       });
     }
 
+  }
+
+  isApproved() : boolean {
+    if(this.transactionDocument) {
+      if(this.transactionDocument.approvers && this.transactionDocument.approvers.length > 0) {
+        let res : boolean = true;
+
+        this.transactionDocument.approvers.forEach(x => {
+          if(x.status != C.Status.APPROVED) {
+            res = false;
+            return;
+          }
+        });
+
+        return res;
+
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
+  closeModal(device: Device) {
+    this.flow = undefined;
+  }
+
+  openModal() {
+    this.flow = "SIGN";
+  }
+
+  goToLink(url: string) {
+    window.open(url, "_blank");
   }
 
   private sendTxn(documentId: number) {

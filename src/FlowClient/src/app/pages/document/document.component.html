@@ -1,4 +1,4 @@
-
+<flow-modal [flow]="flow" (onDeviceAction)="closeModal($event)"></flow-modal>
 <main id="main" class="main" style="cursor: default;">
   <div class="pagetitle">
     <h1> Documento </h1>
@@ -13,6 +13,16 @@
   <div class="row" >
 
     <div id="pdf-view" class="col-7">
+
+      <div class="col-12 " >
+        <div class=" border shadow p-1 bg-white mb-3">
+          <button *ngIf="pdfSrc" (click)="goToLink(pdfSrc)" class="btn col-1 offset-md-3 btn-primary mx-2 align-self-end">
+            <i class="bi bi-file-earmark-arrow-down-fill"></i>
+          </button>
+          <button (click)="openModal()" class="btn col-1 btn-success mx-2  align-self-end"  > ✎ </button>
+        </div>
+      </div>
+
       <div class="border shadow card p-1">
         <h5 class="card-title text-center py-1">
           Vista
@@ -54,7 +64,12 @@
                 Estado
               </h5>
               <h2 class="text-center mb-0 mx-auto w-100">
-                <span class="badge bg-success w-100">Aprobado</span>
+                <ng-template [ngIf]="isApproved()" [ngIfElse]="enabledBlock3">
+                  <span class="badge bg-success w-100">Aprobado</span>
+                </ng-template>
+                <ng-template #enabledBlock3>
+                  <span class="badge bg-warning w-100">En Proceso</span>
+                </ng-template>
               </h2>
             </div>
           </div>
@@ -64,12 +79,21 @@
                 Aprobadores
               </h5>
               <ul *ngIf="transactionDocument?.approvers" class="list-group list-group-flush">
-                <li *ngFor="let approver of transactionDocument?.approvers" class="list-group-item text fs-6 text-center d-flex d-flex d-flex justify-content-between">
-                  <label> {{approver?.documentDetail?.approver?.fullName}} </label>
-                  <label class="fw-bold"> {{approver?.documentDetail?.name}} </label>
-                  <span class="badge bg-success mt-1">
-                    Aprobado
-                  </span>
+                <li *ngFor="let approver of transactionDocument?.approvers" class="list-group-item text">
+                  <div class="row text-center fs-6 justify-content-between">
+                    <label class="col-4"> {{approver?.documentDetail?.approver?.fullName}} </label>
+                    <label class="col-4 fw-bold"> {{approver?.documentDetail?.name}} </label>
+                    <ng-template [ngIf]="approver.status == 'APPROVED'" [ngIfElse]="enabledBlock4">
+                      <span  class="col-4 badge bg-success mt-1">
+                        Aprobado
+                      </span>
+                    </ng-template>
+                    <ng-template #enabledBlock4>
+                      <span  class="col-4 badge bg-warning mt-1">
+                        En Proceso
+                      </span>
+                    </ng-template>
+                  </div>
                 </li>
               </ul>
             </div>

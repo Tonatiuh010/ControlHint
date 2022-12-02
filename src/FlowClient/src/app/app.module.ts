@@ -56,6 +56,8 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { DocumentComponent } from './pages/document/document.component';
 import { DocumentDetailComponent } from './custom-components/forms/document-detail.component';
 import { ItemComponent } from './custom-components/badgets/badget-item/item.component';
+import { ObservingComponent } from './custom-components/observing-device/observing-device.component';
+import { ModalFlowComponent } from './custom-components/modals/modal-flow/modal-flow.component';
 
 @NgModule({
   declarations: [
@@ -108,7 +110,9 @@ import { ItemComponent } from './custom-components/badgets/badget-item/item.comp
     HomeComponent,
     DocumentComponent,
     DocumentDetailComponent,
-    ItemComponent
+    ItemComponent,
+    ModalFlowComponent,
+    ObservingComponent
   ],
   imports: [
     HttpClientModule,

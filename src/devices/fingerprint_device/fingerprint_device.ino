@@ -19,11 +19,11 @@ const String TYPE_FINGER_MODEL = "FINGER_MODEL";
 
 char *ssid = "IZZI-99D0"; // "UTT-CUERVOS"; // "test-ard";
 char *pass = "VBBPMSZNNEJV";  // "CU3RV@S2022"; //  "12345678";
-String deviceName = "ESP-FG-TNT";
+String deviceName = "Pasillo_01";
 String model = "ESP-32";
 
-String host = "https://flowcontrol9a.azurewebsites.net/api/"; 
-String domain = "flowcontrol9a.azurewebsites.net"; 
+String host = "https://flowcontrol-9a.azurewebsites.net/api/"; 
+String domain = "flowcontrol-9a.azurewebsites.net"; 
 int port = 80;
 
 // "http://172.17.4.85:81/api/"; // "http://192.168.0.125:81/api/"; //

@@ -1,46 +1,54 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Flow } from 'src/interfaces/api/Api';
 import { Device } from 'src/interfaces/catalog/Device';
-import { FlowService as service } from '../../../services/requests/flow.service';
+import { FlowService } from '../../../services/requests/flow.service';
 import { DeviceService as deviceService } from '../../../services/requests/device.service';
 import { FormControl } from '@angular/forms';
 import { DataBody } from 'src/interfaces/catalog/DataBody';
 import { C } from 'src/interfaces/constants';
 
 @Component({
-  selector: 'device-modal',
-  templateUrl: './modal-device.component.html',
+  selector: 'flow-modal',
+  templateUrl: './modal-flow.component.html',
 })
-export class ModalDeviceComponent implements OnInit {
-  flows?: Flow[];
+export class ModalFlowComponent implements OnInit {
+  devices?: Device[];
   selector: FormControl = new FormControl();
-  @Input() device? : Device;
+  flowObj?: Flow;
+  @Input() flow? : string;
   @Output() onDeviceAction = new EventEmitter<Device>();
 
-  constructor( private service : service, private devService : deviceService) {
-    service.getFlows(flows => {
-      this.flows = flows;
-      if(this.flows && this.flows.length > 0) {
-        this.selector.setValue(this.flows[0].id);
+  constructor(
+    private devService : deviceService,
+    private flowService: FlowService
+  ) {
+  }
+
+  ngOnInit(): void {
+    this.flowService.getFlows(flows => {
+      this.flowObj = flows.find(x => x.name == this.flow)
+    });
+
+    this.devService.getDevices(devs => {
+      this.devices = devs;
+      if(this.devices && this.devices.length > 0) {
+        this.selector.setValue(this.devices[0].id);
       }
     });
   }
 
-  ngOnInit(): void {
-  }
-
   ngOnChanges() {
-    if (this.device) {
+    if (this.flow) {
       this.showModal();
     }
   }
 
   setFlow() {
-    if(this.device) {
-      let flowId: number = +this.selector.value;
-      let deviceId : number = this.device.id;
+    if(this.flowObj) {
+      let flowId: number = this.flowObj.id ;
+      let deviceId : number = +this.selector.value
 
-      this.service.setDevFlow(deviceId, flowId, (res : DataBody) => {
+      this.flowService.setDevFlow(deviceId, flowId, (res : DataBody) => {
 
         if (res.status == C.keyword.OK) {
           this.devService.getDevice(deviceId, d => {

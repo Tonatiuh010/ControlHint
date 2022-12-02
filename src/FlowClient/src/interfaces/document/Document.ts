@@ -6,6 +6,7 @@ export interface DocType {
 }
 
 export interface SaleParameters {
+  name?: string;
   place: string;
   date: Date;
   item: string;
