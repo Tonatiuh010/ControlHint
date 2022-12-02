@@ -45,7 +45,7 @@ export class LoginComponent implements OnInit {
           localStorage.setItem('id', authRes.data2.id);
           this.route.navigate(["/home"]);
         } else {
-          this.message = "Password or Username is incorrect!";
+          this.message = "¡Usuario o Contraseña incorrecta!";
         }
       });
     }

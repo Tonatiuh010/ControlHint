@@ -1,4 +1,4 @@
-<main>
+<main style="cursor: default;">
   <div class="container">
     <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
       <div class="container">
@@ -13,24 +13,24 @@
             <div class="card mb-3 shadow">
               <div class="card-body">
                 <div class="pt-4 pb-2">
-                  <h5 class="card-title text-center pb-0 fs-4">Login to Your Account</h5>
-                  <p class="text-center small">Enter your username & password to login</p>
+                  <h5 class="card-title text-center pb-0 fs-4">Ingresa tu cuenta</h5>
+                  <p class="text-center small">Ingresa tu nombre de usuario y contraseña</p>
                 </div>
                 <div class="row g-3 needs-validation" >
                   <div class="col-12">
-                    <label for="yourUsername" class="form-label">Username</label>
+                    <label for="yourUsername" class="form-label">Nombre de usuario</label>
                     <div class="input-group has-validation">
                       <span class="input-group-text">
                         @
                       </span>
                       <input type="text" class="form-control" [formControl]="username" (keyup.enter)="login()" (input)="validateUsername()" required>
-                      <div *ngIf="!userFeedback" class="invalid-feedback d-block">Please enter your username.</div>
+                      <div *ngIf="!userFeedback" class="invalid-feedback d-block">¡Por favor, ingresa tu nombre de usuario!</div>
                     </div>
                   </div>
                   <div class="col-12" input type="submit">
-                    <label for="yourPassword" class="form-label">Password</label>
+                    <label for="yourPassword" class="form-label">Contraseña</label>
                     <input type="password" class="form-control" [formControl]="password" (keyup.enter)="login()" (input)="validatePassword()"  required>
-                    <div *ngIf="!passwordFeedback" class="invalid-feedback d-block">Please enter your password!</div>
+                    <div *ngIf="!passwordFeedback" class="invalid-feedback d-block">¡Por favor, ingresa tu contraseña!</div>
                   </div>
 
                   <div class="col-12">
@@ -40,7 +40,7 @@
                   </div>
 
                   <div class="col-12">
-                    <button class="btn btn-primary w-100" (keyup.enter)="login()" (click)="login()"> Login </button>
+                    <button class="btn btn-primary w-100" (keyup.enter)="login()" (click)="login()"> Ingresar </button>
                   </div>
                 </div>
               </div>

@@ -1,5 +1,5 @@
 <employee-modal [employee]="modalEmployee" (onCloseModal)="closeModal()"></employee-modal>
-<main id="main" class="main text-break">
+<main id="main" class="main text-break" style="cursor: default;">
   <div class="pagetitle">
     <h1>Lista de empleados</h1>
     <nav>
@@ -12,7 +12,7 @@
   <div> <!--AGREGAR UN RESPONSIVE A LA TABLA-->
     <div *ngIf="employees" class="container-fluid !direction !spacing ">
       <div class="row">
-        <div class="col-10">
+        <div class="col-8">
           <div class="card text-left">
             <div class="card-body">
               <h5 class="card-title">Empleados
@@ -50,7 +50,7 @@
           </div>
         </div>
 
-        <div class="col-2" *ngIf="selectedEmployee as employee">
+        <div class="col-4" *ngIf="selectedEmployee as employee">
           <div class="card">
             <picture class="m-auto p-3">
               <img src="{{ employee.image }}" class="img-fluid rounded d-block" alt="">

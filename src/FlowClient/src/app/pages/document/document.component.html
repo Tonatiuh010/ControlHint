@@ -1,5 +1,5 @@
 <flow-modal [flow]="flow" (onDeviceAction)="closeModal($event)"></flow-modal>
-<main id="main" class="main">
+<main id="main" class="main" style="cursor: default;">
   <div class="pagetitle">
     <h1> Documento </h1>
     <nav class="bg-red-500">
@@ -122,14 +122,14 @@
                 Crear Documento
               </h5>
               <div class="col-10 mx-auto mb-3">
-                <select class="form-select" [formControl]="selectorType" (change)="selectType()" >
+                <select class="form-select" [formControl]="selectorType" (change)="selectType()" style="cursor: pointer;">
                   <option selected value="QUO">Cotizacion</option>
                   <option value="SALE">Formato de Venta</option>
                 </select>
               </div>
               <div class="col-10 mx-auto mb-3">
                 <label class="form-label text center"> Departamento </label>
-                <select class="form-select" [formControl]="selectorDepto" >
+                <select class="form-select" [formControl]="selectorDepto" style="cursor: pointer;">
                   <option *ngFor="let depto of departaments" value="{{depto.code}}" > {{depto.name}} </option>
                 </select>
               </div>
