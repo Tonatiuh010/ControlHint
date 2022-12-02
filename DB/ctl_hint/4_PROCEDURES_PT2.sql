@@ -33,6 +33,7 @@ DELIMITER ;
 -- SET @msg = '';
 -- CALL GET_FLOW(NULL, NULL, NULL, @msg);
 -- SELECT @msg;
+use ctl_hint;
 
 /* ############################# GET_FLOW_PARAMETERS ############################### */
 DROP PROCEDURE IF EXISTS GET_FLOW_PARAMETERS;

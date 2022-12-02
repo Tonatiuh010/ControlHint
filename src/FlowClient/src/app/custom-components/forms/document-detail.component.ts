@@ -61,6 +61,7 @@ export class DocumentDetailComponent implements OnInit,  OnChanges {
   }
 
   ngOnInit(): void {
+    this.clearForms();
     this.preparaComponent();
     this.law.setValue("Ley #100 Venta Justa");
   }
@@ -154,19 +155,20 @@ export class DocumentDetailComponent implements OnInit,  OnChanges {
   private setSaleForm(parameters: SaleParameters) {
     var dt = new Date(parameters.date);
     this.type = C.DocumentType.Sale;
-    this.documentName.setValue(parameters.docName);
+    this.documentName.setValue(parameters.name);
+    //this.quoName.setValue(parameters.docName);
     this.date.setValue(dt.toISOString().split('T')[0]);
     this.item.setValue(parameters.item);
     this.law.setValue(parameters.law);
+    this.place.setValue(parameters.place);
     this.customerAddress.setValue(parameters.customerAddress);
     this.customerNum.setValue(parameters.customerNum);
-    this.customerPlace.setValue(parameters.place);
+    this.customerPlace.setValue(parameters.customerPlace);
     this.customerSign.setValue(parameters.customerSign);
     this.salesAddress.setValue(parameters.salesAddress);
     this.salesNum.setValue(parameters.salesNum);
     this.salesPlace.setValue(parameters.salesPlace);
     this.salesSign.setValue(parameters.salesSign);
-    this.law.setValue(parameters.law);
     this.total.setValue(parameters.total);
   }
 
@@ -190,7 +192,7 @@ export class DocumentDetailComponent implements OnInit,  OnChanges {
       docName: this.documentName.value,
       date: this.date.value,
       item: this.item.value,
-      place: this.law.value,
+      place: this.place.value,
       customerAddress: this.customerAddress.value,
       customerNum: this.customerNum.value,
       customerName: this.customerPlace.value,
@@ -277,7 +279,6 @@ export class DocumentDetailComponent implements OnInit,  OnChanges {
       this.salesNum.value &&
       this.salesPlace.value &&
       this.salesSign.value &&
-      this.law.value &&
       this.total.value
     ))
     {
@@ -296,7 +297,7 @@ export class DocumentDetailComponent implements OnInit,  OnChanges {
     this.quoName.disable()
     this.client.disable()
     this.contact.disable()
-    this.notes.value.disable()
+    this.notes.disable()
   }
 
   private disableSaleForm() {
@@ -313,7 +314,6 @@ export class DocumentDetailComponent implements OnInit,  OnChanges {
     this.salesNum.disable();
     this.salesPlace.disable();
     this.salesSign.disable();
-    this.law.disable();
     this.total.disable();
   }
 
@@ -325,7 +325,7 @@ export class DocumentDetailComponent implements OnInit,  OnChanges {
     this.quoName.setValue('');
     this.client.setValue('');
     this.contact.setValue('');
-    this.notes.value.setValue('');
+    this.notes.setValue('');
   }
 
   private cleanSaleForm() {
@@ -342,7 +342,6 @@ export class DocumentDetailComponent implements OnInit,  OnChanges {
     this.salesNum.setValue('');
     this.salesPlace.setValue('');
     this.salesSign.setValue('');
-    this.law.setValue('');
     this.total.setValue('');
   }
 
