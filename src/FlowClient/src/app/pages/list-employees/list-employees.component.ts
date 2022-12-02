@@ -38,7 +38,7 @@ export class ListEmployeesComponent implements OnInit {
     this.service.getEmployees(employees => {
       this.employees = employees;
     })
-    
+
     this.services.getDevices(devices => {
       this.devices = devices;
       this.sortDevices();
@@ -61,7 +61,7 @@ export class ListEmployeesComponent implements OnInit {
     this.removeFromGroups();
     this.hubService.addToGroup(this.deviceView.name);
 
-  
+
   }
   private removeFromGroups() {
 
@@ -121,6 +121,13 @@ export class ListEmployeesComponent implements OnInit {
     }
   }
 
+  registerHint(){
+    if(this.deviceView && this.selectedEmployee){
+      this.services.setEmployeeHint(this.deviceView, this.selectedEmployee, res => {
+        console.log(res);
+      })
+    }
+  }
 
 
   closeModal(): void {
